@@ -1,0 +1,63 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SyntheticAudit",
+          "version": "fixture-1",
+          "rules": [
+            {
+              "id": "DEMO001",
+              "name": "Boundary review",
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            }
+          ]
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "exitCode": 0
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "src/example.py"
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleIndex": 0,
+          "message": {
+            "text": "Synthetic candidate. Confirm the guard and attacker path before triage."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "baselineState": "unchanged",
+          "suppressions": [
+            {
+              "kind": "external",
+              "status": "underReview",
+              "justification": "Synthetic example; no suppression is applied by this reader."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,11 @@ check in render review is original guidance based on that distinction. Fixed PSN
 mandatory loops, Figma exports, and platform presets were not adopted. Observed October 26,
 2026; recheck when the capture contract changes. No upstream code is bundled.
 
+## October 26 reference-loop review
+
+[Review-sheet sources](sources-review-sheets.md#paired-reference-review-october-26-2026)
+records the pinned comparison implementations, original local helper and proof limits.
+
 ## October 25 painted-short review
 
 [Painted-material sources](sources-painted.md) records the public Shorts Animator assessment,

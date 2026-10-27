@@ -107,6 +107,17 @@ prompts and media were not established. Recheck the selected item before use.
 | [Motionin](https://www.motionin.design/) | A requested expressive section needs a prompt/spec reference | Its FAQ describes section prompts/specs and a separate studio service; do not assume a complete website or accepted runtime output from one prompt |
 | [Collect UI](https://collectui.com/) | Broader website/interface inspiration is useful | Current homepage describes curated designs; it does not establish captured production flows. For shipped-screen and flow research, start with [Mobbin](sites/12-mobbin.md) |
 
+## Design tooling references
+
+Observed **2026-10-26**. Consult these when the task needs machinery beyond visual
+inspiration. Source inspection establishes the interfaces below; neither tool was run.
+These are research options, not required installs or replacements for project design owners.
+
+| Reference | Use when | Material limit |
+| --- | --- | --- |
+| [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/28b3b8dee8c976df4fa3e94aed4e092ad43fcb03) | Palette, typography or stack advice needs searchable data and persisted recommendations | MIT source; font and asset rights remain separate. Search can return no match. Stack retrieval is separate from design-system generation; check applicability to the installed stack before adopting advice |
+| [Impeccable](https://github.com/pbakaus/impeccable/tree/989c484c091d26f10fa102767eefc0da2e62ec67) | A confirmed design-review need calls for structured detection or live browser variants | Apache-2.0 source. README describes an engine download and harness hooks on some installation paths; inspect the chosen path before authorized use. Detection is a review aid; runtime quality remains unverified |
+
 ## How to read the evidence
 
 Supplemental motion sources reviewed October 7 UTC, October 6 Pacific, 2026:

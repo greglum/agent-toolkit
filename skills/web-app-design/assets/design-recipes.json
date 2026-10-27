@@ -1,0 +1,613 @@
+{
+  "schema_version": 1,
+  "authorship": "Original catalog synthesis. Recipes and colors are candidates, not external aesthetic findings or copied source data. Sources support contrast and token semantics only.",
+  "sources": [
+    {
+      "id": "wcag22-contrast",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "observed": "2026-10-26",
+      "section": "Success Criterion; contrast thresholds and relative luminance",
+      "rights": "Reference only; W3C document rights. No text or color dataset copied."
+    },
+    {
+      "id": "dtcg-2025-10",
+      "url": "https://www.designtokens.org/tr/2025.10/format/",
+      "observed": "2026-10-26",
+      "section": "Design token; aliases/references",
+      "rights": "Reference only; W3C Community Final Specification Agreement. No schema copied."
+    },
+    {
+      "id": "wcag22-nontext",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html",
+      "observed": "2026-10-26",
+      "section": "Success Criterion 1.4.11; component and graphical contrast",
+      "rights": "Reference only; W3C document rights. No text copied."
+    }
+  ],
+  "recipes": [
+    {
+      "id": "workbench",
+      "title": "Object workbench",
+      "tags": [
+        "workbench",
+        "master-detail",
+        "triage",
+        "case",
+        "queue",
+        "investigation"
+      ],
+      "summary": "Keep a queue and the selected object in one working context.",
+      "use_when": "People repeatedly select objects and act on their details.",
+      "avoid_when": "The task is mostly reading a single long document.",
+      "rationale": "Preserved context reduces repeated navigation while objects change.",
+      "composition": [
+        "Show object identity and status before metadata.",
+        "Keep list selection and detail actions stable.",
+        "At narrow widths use a clear back path that restores selection."
+      ],
+      "type_roles": {
+        "heading": "Use existing compact heading roles.",
+        "body": "Keep detail prose readable at the product body size.",
+        "data": "Align comparable values and preserve identifiers."
+      },
+      "palette": {
+        "surface": "#F7F9FC",
+        "text": "#17243A",
+        "accent": "#174FA3",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "data-table",
+      "title": "Comparable data table",
+      "tags": [
+        "table",
+        "rows",
+        "comparison",
+        "inventory",
+        "sorting",
+        "filtering",
+        "tables"
+      ],
+      "summary": "Use columns to compare records and preserve row identity.",
+      "use_when": "People scan the same attributes across many records.",
+      "avoid_when": "Records have unrelated shapes or mostly long narrative content.",
+      "rationale": "Shared alignment makes differences easier to locate than separate cards.",
+      "composition": [
+        "Place identity in a stable first column.",
+        "Keep sort, filter and selection state visible.",
+        "Expose overflow values and actions to keyboard and pointer."
+      ],
+      "type_roles": {
+        "heading": "Keep section titles subordinate to the data.",
+        "body": "Use existing readable cell text.",
+        "data": "Use tabular figures for comparable numbers."
+      },
+      "palette": {
+        "surface": "#FFFFFF",
+        "text": "#222222",
+        "accent": "#494949",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "monitoring",
+      "title": "Operational monitoring",
+      "tags": [
+        "monitoring",
+        "incident",
+        "alerts",
+        "telemetry",
+        "uptime",
+        "operations",
+        "dashboard",
+        "dashboards"
+      ],
+      "summary": "Lead with exceptions, freshness and the next useful action.",
+      "use_when": "People watch changing system states and investigate exceptions.",
+      "avoid_when": "The screen is a periodic narrative report.",
+      "rationale": "A stable visual structure helps readers distinguish new evidence from layout movement.",
+      "composition": [
+        "Show timestamp and units next to each current value.",
+        "Group exceptions by action or affected system.",
+        "Preserve historical context and provide a text/table view of charts."
+      ],
+      "type_roles": {
+        "heading": "Use concise status headings.",
+        "body": "Keep alert explanations readable.",
+        "data": "Align units and use tabular numbers; do not rely on color alone."
+      },
+      "palette": {
+        "surface": "#151A21",
+        "text": "#E8EDF4",
+        "accent": "#9DC7FA",
+        "on_accent": "#102238"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "long-form",
+      "title": "Multi-section form",
+      "tags": [
+        "form",
+        "input",
+        "validation",
+        "submission",
+        "application",
+        "wizard",
+        "forms"
+      ],
+      "summary": "Group decisions and keep entered values through recovery.",
+      "use_when": "People provide several related pieces of information.",
+      "avoid_when": "The task needs one immediate search or command.",
+      "rationale": "Clear groups and recovery paths reduce repeated entry without hiding required decisions.",
+      "composition": [
+        "Group fields by the decision they support.",
+        "Put instructions before the affected field.",
+        "Keep inline errors, a linked summary when needed, and input on failed save."
+      ],
+      "type_roles": {
+        "heading": "Use short group headings.",
+        "body": "Keep labels, hints and errors legible.",
+        "data": "Use the native input font and distinguish read-only values."
+      },
+      "palette": {
+        "surface": "#F7F9FC",
+        "text": "#17243A",
+        "accent": "#174FA3",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "Preference settings",
+      "tags": [
+        "settings",
+        "preferences",
+        "configuration",
+        "toggles",
+        "account",
+        "setting"
+      ],
+      "summary": "Make each setting, its effect and its save state clear.",
+      "use_when": "People change persistent preferences or account configuration.",
+      "avoid_when": "A consequential multi-step process needs staged review.",
+      "rationale": "Exposing effects and save state prevents uncertain or accidental changes.",
+      "composition": [
+        "Group controls by the behavior they change.",
+        "State whether changes save immediately or need confirmation.",
+        "Keep pending, failed and restored values visible."
+      ],
+      "type_roles": {
+        "heading": "Use existing section hierarchy.",
+        "body": "Use direct explanatory sentences.",
+        "data": "Align related labels and retain native control semantics."
+      },
+      "palette": {
+        "surface": "#FFFFFF",
+        "text": "#222222",
+        "accent": "#494949",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "editorial",
+      "title": "Long-form reading",
+      "tags": [
+        "editorial",
+        "article",
+        "reading",
+        "journal",
+        "essay",
+        "publication",
+        "blog"
+      ],
+      "summary": "Prioritize reading rhythm, source context and a useful text measure.",
+      "use_when": "The main task is sustained reading.",
+      "avoid_when": "The main task is comparing many short records.",
+      "rationale": "A calm reading column lets structure and language carry the hierarchy.",
+      "composition": [
+        "Keep body measure and line height comfortable with real text.",
+        "Use headings that explain the argument.",
+        "Keep links, captions and source context accessible."
+      ],
+      "type_roles": {
+        "heading": "Use an existing serif role if the product has one.",
+        "body": "Use the established reading font and size.",
+        "data": "Keep dates and references secondary but legible."
+      },
+      "palette": {
+        "surface": "#FAF7F0",
+        "text": "#29251F",
+        "accent": "#72502D",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "documentation",
+      "title": "Technical documentation",
+      "tags": [
+        "documentation",
+        "reference",
+        "guide",
+        "api",
+        "code",
+        "manual",
+        "docs"
+      ],
+      "summary": "Connect a navigable hierarchy to exact examples and reference details.",
+      "use_when": "People need to locate instructions or precise technical facts.",
+      "avoid_when": "The page exists mainly to persuade a first-time buyer.",
+      "rationale": "Location and examples should remain clear while readers move between overview and detail.",
+      "composition": [
+        "Expose current location and related sections.",
+        "Keep examples near the concepts they demonstrate.",
+        "Make long code and tables reachable without breaking the page."
+      ],
+      "type_roles": {
+        "heading": "Use a clear heading ladder.",
+        "body": "Preserve readable prose and descriptive links.",
+        "data": "Use the existing monospace role for code, not for every label."
+      },
+      "palette": {
+        "surface": "#FFFFFF",
+        "text": "#222222",
+        "accent": "#494949",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "commerce",
+      "title": "Product comparison",
+      "tags": [
+        "commerce",
+        "catalog",
+        "products",
+        "shopping",
+        "retail",
+        "purchase",
+        "ecommerce"
+      ],
+      "summary": "Keep product differences, prices and purchase conditions comparable.",
+      "use_when": "People assess options before choosing a product.",
+      "avoid_when": "An editorial story is the primary task.",
+      "rationale": "Consistent comparison facts help people choose without decoding decorative differences.",
+      "composition": [
+        "Keep identity, price, units and availability together.",
+        "Use consistent image bounds and truthful option descriptions.",
+        "Show selection, added-item feedback and recovery on failed action."
+      ],
+      "type_roles": {
+        "heading": "Use the existing product-title role.",
+        "body": "Keep descriptions concise and conditions visible.",
+        "data": "Align prices and units; label discounts explicitly."
+      },
+      "palette": {
+        "surface": "#F4F8F5",
+        "text": "#192D23",
+        "accent": "#235C40",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "pricing",
+      "title": "Plan selection",
+      "tags": [
+        "pricing",
+        "plans",
+        "subscription",
+        "tiers",
+        "billing"
+      ],
+      "summary": "Explain plan differences and commitments before the action.",
+      "use_when": "People compare service plans with different constraints.",
+      "avoid_when": "The product has one fixed-price action with no comparison.",
+      "rationale": "Comparable limits and terms matter more than giving each option equal decoration.",
+      "composition": [
+        "Align the facts that differ across plans.",
+        "Expose billing period, limits and material conditions.",
+        "Preserve the comparison and action when columns stack."
+      ],
+      "type_roles": {
+        "heading": "Use direct plan names.",
+        "body": "Keep terms and caveats readable.",
+        "data": "Align price periods and quantities."
+      },
+      "palette": {
+        "surface": "#FCF6F3",
+        "text": "#38251F",
+        "accent": "#98462F",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "search-results",
+      "title": "Search and retrieval",
+      "tags": [
+        "search",
+        "results",
+        "query",
+        "retrieval",
+        "facets",
+        "discovery",
+        "filter",
+        "filters"
+      ],
+      "summary": "Keep the query, result identity and refinement path together.",
+      "use_when": "People find specific records or refine a collection.",
+      "avoid_when": "The collection is small and predictable enough for direct navigation.",
+      "rationale": "Visible query state and informative result summaries help readers judge relevance.",
+      "composition": [
+        "Show active query and refinements.",
+        "Distinguish no records from no matches and failed retrieval.",
+        "Preserve selection and search context when opening a result."
+      ],
+      "type_roles": {
+        "heading": "Use result headings that identify their object.",
+        "body": "Show relevant snippets without inventing relevance.",
+        "data": "Keep counts and selected facets readable."
+      },
+      "palette": {
+        "surface": "#F7F9FC",
+        "text": "#17243A",
+        "accent": "#174FA3",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "conversation",
+      "title": "Conversation and drafting",
+      "tags": [
+        "chat",
+        "conversation",
+        "assistant",
+        "composer",
+        "messages",
+        "drafting",
+        "messaging"
+      ],
+      "summary": "Support reading, composing and inspecting a response in one stable flow.",
+      "use_when": "People exchange messages and may inspect attached evidence.",
+      "avoid_when": "A deterministic form better expresses the required input.",
+      "rationale": "Stable reading position and clear pending/error state protect the ongoing conversation.",
+      "composition": [
+        "Keep draft text through navigation and failed sends.",
+        "Make streaming, cancellation and retry state explicit.",
+        "Keep long code, tables and citations reachable."
+      ],
+      "type_roles": {
+        "heading": "Use thread and section headings sparingly.",
+        "body": "Use the existing reading font for messages.",
+        "data": "Keep code and evidence labels distinct without weakening contrast."
+      },
+      "palette": {
+        "surface": "#151A21",
+        "text": "#E8EDF4",
+        "accent": "#9DC7FA",
+        "on_accent": "#102238"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    },
+    {
+      "id": "onboarding",
+      "title": "First useful action",
+      "tags": [
+        "onboarding",
+        "first-run",
+        "setup",
+        "activation",
+        "getting-started"
+      ],
+      "summary": "Help a new user complete the first task that makes the product useful.",
+      "use_when": "The user needs initial context or configuration before normal work.",
+      "avoid_when": "Regular users already understand the task and need speed.",
+      "rationale": "An observable first outcome gives setup steps a clear purpose.",
+      "composition": [
+        "Name the first useful outcome.",
+        "Ask only for information needed for that outcome.",
+        "Provide a resumable path and explain what remains after interruption."
+      ],
+      "type_roles": {
+        "heading": "Use task-specific headings.",
+        "body": "Give short reasons for required inputs.",
+        "data": "Show progress in words and preserve entered configuration."
+      },
+      "palette": {
+        "surface": "#F4F8F5",
+        "text": "#192D23",
+        "accent": "#235C40",
+        "on_accent": "#FFFFFF"
+      },
+      "contrast_pairs": [
+        {
+          "foreground": "text",
+          "background": "surface",
+          "kind": "normal"
+        },
+        {
+          "foreground": "on_accent",
+          "background": "accent",
+          "kind": "normal"
+        }
+      ],
+      "sources": [
+        "wcag22-contrast",
+        "dtcg-2025-10"
+      ]
+    }
+  ]
+}

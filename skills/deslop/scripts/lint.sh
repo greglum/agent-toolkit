@@ -25,6 +25,7 @@ cp "$here/../vale/.vale.ini" "$cache/.vale.ini" || exit 2
 if ! { [ -d "$cache/styles/write-good" ] && [ -d "$cache/styles/proselint" ] && [ -d "$cache/styles/Readability" ]; }; then
   vale --config "$cache/.vale.ini" sync >/dev/null || {
     echo "Vale style sync failed; prose check did not run." >&2
+    echo "Cold setup needs access to Vale's package registry and downloads; network failures can appear as invalid package URLs." >&2
     exit 2
   }
 fi

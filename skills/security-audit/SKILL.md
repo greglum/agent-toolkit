@@ -1,6 +1,7 @@
 ---
 name: security-audit
 description: Audit a repository's security boundaries and verify suspected vulnerabilities; remediate confirmed findings when requested. Use for whole-system security reviews and audit follow-up, rather than routine diff review or a search for variants of one known bug.
+compatibility: Source and shell access support the audit. Bundled local SARIF interpretation uses Python 3.10+ without dependencies. Scanners and independent workers are optional; missing execution or coverage remains explicit.
 ---
 
 # Security audit and remediation
@@ -36,6 +37,8 @@ when they affect the requested system; source configuration alone is not live-st
 Build a coverage ledger: surface, invariant, source anchors, method, observation, and gap.
 Use current source and lockfiles; historical reports are leads requiring a recheck.
 A scan supplements this map. Successful scans cover their tested rules and paths only.
+For existing local SARIF reports, use the bundled [SARIF evidence reader](references/sarif-ledger.md)
+to retain candidates, source identity and scanner execution gaps without starting a scan.
 Mark irrelevant lanes with a reason and missing lanes as unavailable or not run.
 Finish with every discovered entry point assigned to an owner or a named coverage gap.
 

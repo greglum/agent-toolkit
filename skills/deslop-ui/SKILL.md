@@ -52,6 +52,8 @@ bundled scripts from this skill's directory and targets from the destination rep
    value, a computed style), the layer, and the smallest fix that replaces the default with a
    decision.
    For accessibility claims, use [evidence by state and method](references/accessibility-evidence.md).
+   When `fit-surface` is available, its browser collector supplies structured geometry
+   observations; review them against the design owner rather than treating them as defects.
    Judge paint at rest from computed values: skip elements mid-transition or held at zero
    opacity, and exempt disabled controls from the text contrast minimum.
 5. **Rank.** Order by what a user of this product would notice first, not by ease. Structural

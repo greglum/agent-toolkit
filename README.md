@@ -87,6 +87,9 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and contributions
 
+For generated 3D props, the [film mesh checks](skills/motion-film/references/material-3d.md#qualify-an-imported-mesh)
+cover coarse inputs, scene scale and exported geometry cost.
+
 Source notes stay beside the skill they inform. Adapted text and values retain
 credit in [third-party notices](THIRD_PARTY_NOTICES.md).
 
