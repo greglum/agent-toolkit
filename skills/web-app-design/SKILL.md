@@ -4,6 +4,7 @@ description: >-
   Build or redesign a web app from researched references, or document its existing design
   language in DESIGN.md. To audit generic or AI-looking UI use deslop-ui; for interaction
   motion use ui-motion; to make an existing surface fit widths and states use fit-surface.
+compatibility: Design-reference search and draft briefs use bundled Python 3.10+ scripts with no network dependency. Rendered verification needs the destination's browser rig; without it, report visual acceptance unverified.
 ---
 
 # Web app design
@@ -40,6 +41,10 @@ record](references/design-synthesis.md#deriving-a-design-record), deliver that r
 its evidence, then stop before direction selection or product edits.
 
 ## 2. Choose references that solve the actual problem
+
+For an offline starting direction or explicit color-pair check, use the bundled
+[design reference tool](references/design-reference-tool.md). Its original task recipes
+produce draft candidates, not accepted product rules or a maintained framework-advice database.
 
 Inspect the user's supplied references first. For discovery, read [the resource
 index](references/resource-index.md), then only the site pages relevant to the question. For an

@@ -5,8 +5,10 @@ Use this for the running application after reading its own verification contract
 1. Record source/build revision, browser, viewport, palette, motion preference, relevant data,
    and the action that reaches each changed state. Reuse existing fixtures for controlled
    comparison. Source inspection, fixtures, and live behavior are separate evidence.
-2. Use a visible or headless browser: a hidden or background tab renders no frames, so
-   transitions stay at time zero and timings read as stuck. Exercise the real action at normal speed. Check pending, success, error/retry, and long
+2. Use a visible or headless browser and record the page's visibility state. Background pages
+   can suspend animation frames and stall a timeline at its current position. Verify progress
+   before treating a stalled reading as a product defect. Exercise the real action at normal
+   speed. Check pending, success, error/retry, and long
    content where they exist. Repeat or reverse it before the transition completes. Inspect the
    actual handoff, including outgoing content; endpoint screenshots cannot expose a blank
    intermediate state, delayed action, or stranded layer.

@@ -66,6 +66,7 @@ checks:
     source_revision: exact source and input identity for this output
     source: NOT RUN
     captures_and_seeks: NOT RUN
+    reference_conformance: NOT RUN
     playback: NOT RUN
     listening: NOT RUN
     encoded_metadata: NOT RUN

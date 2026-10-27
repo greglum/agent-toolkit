@@ -24,12 +24,21 @@ remain crisp and readable outside highly reflective, moving surfaces.
 ## Qualify an imported mesh
 
 For an image-generated or downloaded prop, distinguish geometry, textures, rig and animation.
-A successful mesh export establishes only the stages that ran. Save the selected asset and
-its generator/weight revision and input identity in the existing asset ledger. Apply the
-[production rights checks](production.md#establish-the-production-contract) before use.
+A successful mesh export establishes only the stages that ran. For image-conditioned
+coarse-to-fine refinement, confirm the coarse mesh and reference image depict the same object.
+Save each intermediate coarse mesh, reference image and preprocessing. When isolating
+refinement, hold those inputs fixed; vary only the refiner or setting being compared.
+For end-to-end comparisons, preserve each run's coarse mesh instead of requiring identical
+coarse inputs. Check global structure before refinement: structural errors may persist.
+For single-image reconstruction, unseen surfaces may be plausible completions. Save the
+selected asset and its generator/weight revision and input identity in the existing asset
+ledger. Apply the [production rights checks](production.md#establish-the-production-contract) before use.
 
 Import it into the target scene and check scale, orientation, origin, silhouette, normals,
 material and texture bindings, and geometry cost under the shot's actual camera and light.
+For image-conditioned assets, check shot-visible views beyond the input image. Record any
+normalization and restore the intended scene scale. An extraction-grid label is not a
+triangle count or render budget; inspect the exported mesh and measure the moving shot.
 For a deforming subject, test the required rig and pose range; a rigid prop needs no rig.
 Render the shortest motion that exposes the needed rotation, contact or deformation before
 reusing the asset across a series. Keep any repair and the accepted asset with the scene.
@@ -128,3 +137,14 @@ separates meshes, materials, skins and animations. It corroborates those distinc
 not the quality of a generated asset. Living schema, redistribution rights not assessed.
 Recheck on generator, format, importer or shot changes. No mesh generation, scene import or
 paired skill/control evaluation was run for this refinement.
+
+Hi3D v1.0 supplies the coarse-refinement example behind this clarification:
+[pipeline](https://github.com/hi3d-official/Hi3Dv1.0/blob/13657ad09afaa92e350b461a1cd66399e44a59c4/docs/pipeline.md),
+[reproduction](https://github.com/hi3d-official/Hi3Dv1.0/blob/13657ad09afaa92e350b461a1cd66399e44a59c4/docs/reproduction.md),
+and [scope](https://github.com/hi3d-official/Hi3Dv1.0/blob/13657ad09afaa92e350b461a1cd66399e44a59c4/README.md#scope-and-reproducibility).
+Observed October 27, 2026. Geometry only; its custom Hi3D license covers specified code and
+weights, excludes sample media, and treats standalone outputs separately. No code or assets
+are reused. Independent [glTF sections 3.4 and 3.7](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html)
+define scene units and mesh primitives separately. The portable checks above are original
+synthesis, not a requirement to use Hi3D or its hardware. Recheck on input, generator, terms,
+format or scene changes; generation and paired behavioral proof remain unrun.

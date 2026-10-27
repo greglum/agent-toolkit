@@ -31,8 +31,10 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`find-docs`](../skills/find-docs/SKILL.md) | Resolve uncertain technical behavior against exact-version primary documentation. | Automatic |
 | [`fit-surface`](../skills/fit-surface/SKILL.md) | Measure and fix a web surface across viewports, chrome, themes, and content states. | Automatic |
 | [`global-code-review`](../skills/global-code-review/SKILL.md) | Review a diff against user-specified and repository coding standards. | Automatic |
+| [`graph-engineering`](../skills/graph-engineering/SKILL.md) | Trace source-backed dependencies and change impact, then verify affected consumers. | Automatic |
 | [`guided-review`](../skills/guided-review/SKILL.md) | Build a human reading guide for a PR or significant diff. | Automatic |
 | [`harden-skill`](../skills/harden-skill/SKILL.md) | Audit, revise, and behavior-test an existing skill across supported agent clients. | By name |
+| [`loop-engineering`](../skills/loop-engineering/SKILL.md) | Run bounded improve, review, and verify iterations against fixed acceptance conditions. | Automatic |
 | [`monitor-pr`](../skills/monitor-pr/SKILL.md) | Watch PR events and independently assess CI, reviews, and readiness. | Automatic |
 | [`motion-film`](../skills/motion-film/SKILL.md) | Create and check films, with rendered, audio, export, and editable-handoff proof. | Automatic |
 | [`polish-animations`](../skills/polish-animations/SKILL.md) | Coordinate the full interface-motion assessment, build, review, and verification loop. | By name |

@@ -38,7 +38,8 @@ them. Preserve the repository's design system, primitives, and library choices.
 
 3. **Measure the matrix.** Read [measuring](references/measuring.md) for the method, traps,
    and state matrix. For phone, tablet, or installed-web-app surfaces, also use [mobile
-   fit](references/mobile-fit.md). For each box, chrome state, and theme, reset scroll positions, then
+   fit](references/mobile-fit.md). Use the bundled [browser collector](references/browser-collector.md)
+   for repeatable geometry evidence when the existing rig supports it. For each box, chrome state, and theme, reset scroll positions, then
    compare document `scrollWidth` with `clientWidth`, each scroller's scroll size with its
    client size, and element edges with their container's edges. Check height against the
    budget. Quote the viewport with every number. Then drive the data states that apply. A

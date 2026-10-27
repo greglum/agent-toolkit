@@ -58,6 +58,11 @@ upstream script was run.
   discovery: one job per reference, 2 fps plus consecutive-frame sampling, measured, estimated
   and proposed labels, shots as events, and four-field corrections from an independent
   critic. Its constant subtle push is not adopted.
+- [rari, "Motion Engineering: Build a Video Studio Around Opus 5.5"](https://x.com/0xwhrrari/status/2105643919119696297),
+  X article, October 1, 2026, observed October 27. No reuse license established. The earliest
+  of these articles; it confirms the brief, gates, shots as events, contact sheets, seekable
+  frames and separate format compositions above. Nothing new adopted. Its follow-up
+  [tool list](https://x.com/0xwhrrari/status/2115104061204632000) (October 27) adds no guidance.
 - Original script and claim rules, written October 23, 2026: open on the claim, one
   takeaway, plain words, single qualifiers, said/shown agreement, and a judgment pass after
   the scanners. Check claims against the primary record rather than a summary, since a

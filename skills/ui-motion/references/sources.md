@@ -1,5 +1,15 @@
 # Sources and adaptation
 
+## October 27 visibility timing correction
+
+[MDN Page Visibility API](https://github.com/mdn/content/blob/21ed9a1338b207e8a39064583c19d9f720235235/files/en-us/web/api/page_visibility_api/index.md)
+describes browser policies that suspend background animation-frame callbacks and throttle
+timers. Observed October 27, 2026; the linked file revision was verified. This is a technical
+reference, with no upstream prose or code copied. Departure: inspect actual visibility and
+timeline progress rather than assume that every hidden animation is at time zero. Keep
+normal-speed and lifecycle checks. Recheck when the browser, animation driver, visibility
+policy or observed timing changes. This guidance does not prove frame delivery or smoothness.
+
 ## October 23 studio and gesture review
 
 The [studio round trip](visual-editors.md) records its Motion sources and limits.

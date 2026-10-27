@@ -64,6 +64,23 @@ browser/renderer, dimensions, fonts, palette, motion mode, fixed data, assets, s
    filters or 3D layers, profile the affected scene under the same conditions. Offline render
    speed does not prove a smooth player.
 
+## Compare an adopted reference
+
+For a requested reference match, compare the draft with the relationships adopted in its
+[reference spec](direction.md#study-a-reference). Match events such as first motion, title
+landing, payoff and cut boundaries; different lengths or frame rates need explicit time
+pairs. Record the expected relationship, allowed difference, observed result and evidence.
+Use the project's comparison tool, or the bundled [paired-frame extractor](pair-event-frames.md).
+Inspect consecutive frames for motion and listen for sound cues; paired stills alone cannot
+settle whether an entrance is a beat late. A changed brand or layout need not match pixels.
+
+Keep this conformance pass separate from the [blind critique](production.md#run-the-critique-loop),
+whose reviewer first sees the film without its brief. Tie findings to the reviewed render.
+Fix the owning cue or scene input, then recapture its affected events and neighboring handoffs.
+A shared timing change can invalidate later scenes even when its source diff is one line.
+Missing reference media leaves the requested match unverified; obtain an accessible reference
+before claiming fidelity. Continue independent checks under the existing brief.
+
 ## Check execution and coverage
 
 Read each audit section's execution status and sampled times, not just its finding count.
