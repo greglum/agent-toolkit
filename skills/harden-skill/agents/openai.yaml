@@ -1,0 +1,6 @@
+interface:
+  display_name: "Harden Skill"
+  short_description: "Audit, revise, and verify skills"
+  default_prompt: "Use $harden-skill to audit and evidence-test an existing skill or the declared portfolio."
+policy:
+  allow_implicit_invocation: false

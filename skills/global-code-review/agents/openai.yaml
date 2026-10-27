@@ -1,0 +1,3 @@
+interface:
+  display_name: "Global Code Review"
+  short_description: "Review a diff against your own coding standards"

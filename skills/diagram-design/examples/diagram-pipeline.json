@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "type": "architecture",
+  "title": "From source code to an explorable diagram",
+  "summary": "One checked graph drives the diagram, component inspection, tracing and portable exports.",
+  "revision": "Synthetic workflow fixture; source locators point to this skill bundle",
+  "mainPath": [
+    "source",
+    "model",
+    "cli",
+    "svg",
+    "viewer",
+    "reader"
+  ],
+  "nodes": [
+    {
+      "id": "source",
+      "label": "Source owners",
+      "kind": "artifact",
+      "x": 48,
+      "y": 180,
+      "detail": "The agent inspects source and records the revision. The tool does not scan a repository or infer topology.",
+      "sources": [
+        "SKILL.md: Ground the story"
+      ]
+    },
+    {
+      "id": "model",
+      "label": "Graph JSON",
+      "kind": "artifact",
+      "x": 508,
+      "y": 180,
+      "detail": "Stable node and edge identities preserve meaning across diagrams and comparisons.",
+      "sources": [
+        "scripts/graph-model.mjs: validateGraph"
+      ]
+    },
+    {
+      "id": "cli",
+      "label": "Input validation",
+      "kind": "gate",
+      "x": 968,
+      "y": 180,
+      "detail": "Reject invalid identities, endpoints, main paths and geometry before delivering HTML.",
+      "sources": [
+        "scripts/draw-graph.mjs: main",
+        "scripts/graph-model.mjs: validateGraph"
+      ]
+    },
+    {
+      "id": "skill",
+      "label": "Diagram skill",
+      "kind": "component",
+      "x": 48,
+      "y": 480,
+      "detail": "Owns source grounding, diagram choice and rendered verification.",
+      "sources": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "id": "viewer",
+      "label": "Standalone viewer",
+      "kind": "component",
+      "x": 508,
+      "y": 480,
+      "detail": "One offline HTML file contains the graph, inline SVG, styles and trusted interaction code.",
+      "sources": [
+        "assets/graph-viewer.js"
+      ]
+    },
+    {
+      "id": "svg",
+      "label": "SVG renderer",
+      "kind": "component",
+      "x": 968,
+      "y": 480,
+      "detail": "Keeps conditions on edges and rejects overlapping nodes, labels and routes through unrelated nodes.",
+      "sources": [
+        "scripts/graph-svg.mjs: renderSvg"
+      ]
+    },
+    {
+      "id": "question",
+      "label": "Reader question",
+      "kind": "actor",
+      "x": 48,
+      "y": 780,
+      "detail": "Defines the audience, scope and primary path before drawing.",
+      "sources": [
+        "SKILL.md: Ground the story"
+      ]
+    },
+    {
+      "id": "reader",
+      "label": "Component inspection",
+      "kind": "actor",
+      "x": 508,
+      "y": 780,
+      "detail": "Search components, inspect details and sources, then trace reach or a directed route.",
+      "sources": [
+        "assets/graph-viewer.js: update and inspectNode"
+      ]
+    },
+    {
+      "id": "exports",
+      "label": "SVG and PNG exports",
+      "kind": "artifact",
+      "x": 968,
+      "y": 780,
+      "detail": "Exports the active snapshot and selection. PNG dimensions are 2400 by 1260; the view is contained without cropping.",
+      "sources": [
+        "assets/graph-export.js"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "source-model",
+      "from": "source",
+      "to": "model",
+      "label": "authored evidence",
+      "sources": [
+        "SKILL.md: source ledger"
+      ]
+    },
+    {
+      "id": "model-cli",
+      "from": "model",
+      "to": "cli",
+      "label": "checked input",
+      "sources": [
+        "scripts/draw-graph.mjs: main"
+      ]
+    },
+    {
+      "id": "cli-svg",
+      "from": "cli",
+      "to": "svg",
+      "label": "render",
+      "condition": "valid model",
+      "sources": [
+        "scripts/draw-graph.mjs: buildHtml"
+      ]
+    },
+    {
+      "id": "svg-viewer",
+      "from": "svg",
+      "to": "viewer",
+      "label": "inline SVG",
+      "sources": [
+        "scripts/draw-graph.mjs: buildHtml"
+      ]
+    },
+    {
+      "id": "viewer-reader",
+      "from": "viewer",
+      "to": "reader",
+      "label": "inspect and trace",
+      "sources": [
+        "assets/graph-viewer.js"
+      ]
+    },
+    {
+      "id": "viewer-exports",
+      "from": "viewer",
+      "to": "exports",
+      "label": "capture selection",
+      "via": [
+        [
+          618,
+          670
+        ],
+        [
+          1078,
+          670
+        ]
+      ],
+      "sources": [
+        "assets/graph-export.js"
+      ]
+    },
+    {
+      "id": "skill-model",
+      "from": "skill",
+      "to": "model",
+      "label": "guides authoring",
+      "via": [
+        [
+          158,
+          375
+        ],
+        [
+          618,
+          375
+        ]
+      ],
+      "sources": [
+        "SKILL.md: Build durable artifacts"
+      ]
+    },
+    {
+      "id": "question-skill",
+      "from": "question",
+      "to": "skill",
+      "label": "defines scope",
+      "sources": [
+        "SKILL.md: Ground the story"
+      ]
+    }
+  ]
+}

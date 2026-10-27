@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tune Tests"
+  short_description: "Audit, prune, or speed up a test suite"
+  default_prompt: "Use $tune-tests to audit this test suite and return a scored ledger without edits."
+policy:
+  allow_implicit_invocation: false

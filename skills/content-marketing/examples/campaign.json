@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "campaign": {
+    "id": "demo-workflow",
+    "audience": "Developers improving their review workflow",
+    "goal": "Send interested developers to an inspectable workflow example",
+    "hypothesis": "A concrete failure and repair will prompt more useful visits than a tool list",
+    "owned_site": "https://example.com",
+    "review_on": "2026-11-01",
+    "measurement": "Synthetic planning example only; request actual first-seven-day outbound-click and tagged-session exports after publication",
+    "decision_rule": "Use the first complete window to establish a baseline, not declare a winner. Stop for a broken or misleading promise; revise from specific reader feedback. Choose a numerical target from actual prior results before the next comparison."
+  },
+  "claims": [
+    {
+      "id": "workflow",
+      "statement": "The demonstration shows a review workflow",
+      "source_url": "https://example.com/workflow",
+      "locator": "Synthetic fixture, not a verified public demonstration",
+      "checked_at": "2026-10-25",
+      "status": "unverified"
+    }
+  ],
+  "items": [
+    {
+      "id": "linkedin-lesson",
+      "platform": "linkedin",
+      "format": "post",
+      "placement": "post",
+      "title": "What a passing check did not tell us",
+      "hook": "Show a specific review gap and the evidence that resolved it",
+      "outline": ["State the observed problem", "Show the inspection and result", "Link the inspectable workflow"],
+      "cta": "Read the workflow example",
+      "destination_url": "https://example.com/workflow",
+      "link_access": "unknown",
+      "claim_ids": ["workflow"],
+      "measure": "First-seven-day external-link visits from the personal post report; website sessions only if campaign capture is verified"
+    },
+    {
+      "id": "youtube-walkthrough",
+      "platform": "youtube",
+      "format": "video",
+      "placement": "description",
+      "title": "Review one change from source to evidence",
+      "hook": "Open with the actual failure, then trace the correction",
+      "outline": ["Show the starting behavior", "Trace the responsible source", "Apply the correction", "Show the final check and limitation"],
+      "cta": "Inspect the linked workflow",
+      "destination_url": "https://example.com/workflow",
+      "link_access": "unknown",
+      "claim_ids": ["workflow"],
+      "measure": "First-seven-day video views and outbound traffic separately; verify description-link access first"
+    }
+  ],
+  "observations": []
+}

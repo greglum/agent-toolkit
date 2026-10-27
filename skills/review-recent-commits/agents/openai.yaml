@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Recent Commits"
+  short_description: "Evidence-based review of committed Git changes"
+  default_prompt: "Use $review-recent-commits to assess recent committed work without editing it."
+policy:
+  allow_implicit_invocation: false

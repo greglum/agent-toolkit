@@ -1,0 +1,10 @@
+{
+  "note": "Codex-only skills: workflows whose generic names could shadow a project's own Claude Code skills, so the installer gives them no Claude link. Review this list before adding a global name that could shadow a project skill.",
+  "codex_only": [
+    "acp",
+    "create-pr",
+    "review-pending-changes",
+    "review-pr",
+    "review-recent-commits"
+  ]
+}

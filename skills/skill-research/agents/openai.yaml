@@ -1,0 +1,6 @@
+interface:
+  display_name: "Skill Research"
+  short_description: "Vet linked sources and improve the skill catalog"
+  default_prompt: "Use $skill-research to vet the supplied URLs with independent web research and harvest supported lessons into this skill catalog, or run a catalog sweep when no URLs are supplied."
+policy:
+  allow_implicit_invocation: false

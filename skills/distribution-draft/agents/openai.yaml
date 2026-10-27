@@ -1,0 +1,6 @@
+interface:
+  display_name: "Distribution Draft"
+  short_description: "Draft social posts from owned content"
+  default_prompt: "Use $distribution-draft to turn content I own into LinkedIn and X drafts for my review."
+policy:
+  allow_implicit_invocation: false

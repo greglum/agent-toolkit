@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web App Design"
+  short_description: "Turn real UI references into polished web apps"
+  default_prompt: "Use $web-app-design to improve this app's UX/UI with relevant design references and verify the result in the running app."

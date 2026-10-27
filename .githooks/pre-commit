@@ -1,0 +1,5 @@
+#!/bin/sh
+# Run the same catalog checks as CI, then scan staged changes for secrets.
+set -e
+sh "$(git rev-parse --show-toplevel)/scripts/verify.sh"
+gitleaks git --pre-commit --staged --no-banner --redact

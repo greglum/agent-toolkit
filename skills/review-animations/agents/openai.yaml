@@ -1,0 +1,3 @@
+interface:
+  display_name: "Review Animations"
+  short_description: "Strict read-only motion review with a Block or Approve verdict"

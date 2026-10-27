@@ -1,0 +1,5 @@
+# Source snapshots keep portable deliverables and omit internal research and release planning.
+docs/research export-ignore
+docs/research/** export-ignore
+docs/maintainers export-ignore
+docs/maintainers/** export-ignore
