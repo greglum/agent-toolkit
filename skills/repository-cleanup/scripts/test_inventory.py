@@ -1,8 +1,11 @@
 """Consequential inventory boundaries, exercised against real disposable Git repos."""
+import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from inventory import Inventory
 
@@ -77,6 +80,57 @@ class InventoryTests(unittest.TestCase):
         result = Inventory(str(self.repo)).collect("main")
         self.assertFalse(result["complete"])
         self.assertTrue(any(error["error"] == "missing worktree path" for error in result["errors"]))
+
+    def test_shared_clone_lenders_relative_environment_and_unavailable_evidence(self):
+        lender = self.root / "lender ü"
+        self.repo.rename(lender)
+        self.repo = lender
+        borrower = self.root / "borrower"
+        self.git("clone", "--shared", str(lender), str(borrower))
+        relocated = self.root / "lender ü\npaused"
+        lender.rename(relocated)
+        lender = relocated
+        self.repo = lender
+        objects = lender / ".git/objects"
+        file = borrower / ".git/objects/info/alternates"
+        # Use Git's quoted-path syntax to retain the newline in a relative lender path.
+        relative = os.path.relpath(objects, borrower / ".git/objects")
+        file.write_text(json.dumps(relative, ensure_ascii=False) + "\n")
+        before = file.read_bytes()
+        refs = self.git("show-ref", repo=borrower)
+        result = Inventory(str(borrower)).collect("main")
+        self.assertTrue(result["complete"], result["errors"])
+        storage = result["object_storage"]
+        self.assertEqual(storage["alternate_object_directories"], [str(objects)])
+        self.assertEqual(storage["common_alternates_file"], str(file))
+        self.assertIn("unknown", storage["outside_borrowers"])
+        self.assertEqual(file.read_bytes(), before)
+        self.assertEqual(self.git("show-ref", repo=borrower), refs)
+        # The same dependency may be injected by the calling environment, not a file.
+        file.unlink()
+        with patch.dict(os.environ, {"GIT_ALTERNATE_OBJECT_DIRECTORIES": json.dumps(str(objects), ensure_ascii=False)}):
+            result = Inventory(str(borrower)).collect("main")
+        self.assertTrue(result["complete"], result["errors"])
+        self.assertEqual(result["object_storage"]["alternate_object_directories"], [str(objects)])
+        self.assertTrue(result["object_storage"]["environment_alternates_present"])
+        file.write_bytes(before)
+        moved = self.root / "preserved-lender"
+        lender.rename(moved)
+        result = Inventory(str(borrower)).collect("main")
+        self.assertFalse(result["complete"])
+        self.assertIsNone(result["object_storage"]["alternate_object_directories"])
+        self.assertTrue(any(error["status"] == 0 and "count-objects" in error["args"]
+                            for error in result["errors"]))
+        # Only independent objects plus a native integrity/functional check remove the dependency.
+        moved.rename(lender)
+        self.git("repack", "-a", "-d", repo=borrower)
+        file.unlink()
+        lender.rename(moved)
+        self.git("fsck", "--full", repo=borrower)
+        self.assertEqual(self.git("show", "main:tracked", repo=borrower), "base")
+        result = Inventory(str(borrower)).collect("main")
+        self.assertTrue(result["complete"], result["errors"])
+        self.assertEqual(result["object_storage"]["alternate_object_directories"], [])
 
     def test_bare_and_invalid_base_do_not_invent_clean_evidence(self):
         bare = self.root / "bare.git"

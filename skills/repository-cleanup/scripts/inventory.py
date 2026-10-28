@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Read local Git evidence. Never fetch, reset, prune or delete resources."""
 import argparse
+import ast
 import datetime
 import json
 import os
@@ -13,18 +14,41 @@ class Inventory:
         self.repo = repo
         self.errors = []
 
-    def git(self, *args, repo=None):
+    def git(self, *args, repo=None, require_no_diagnostics=False):
         target = str(repo or self.repo)
         result = subprocess.run(
             ["git", "-C", target, *args], capture_output=True,
             env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
-        if result.returncode:
+        if result.returncode or (require_no_diagnostics and result.stderr):
             self.errors.append({"repo": target, "args": list(args),
                                 "status": result.returncode,
                                 "error": os.fsdecode(result.stderr).strip()})
             return None
         return os.fsdecode(result.stdout)
+
+    def object_storage(self, common):
+        directory = self.git("rev-parse", "--path-format=absolute", "--git-path", "objects")
+        # Native Git resolves relative, chained and environment alternates. Diagnostics can
+        # report an unavailable lender even when count-objects exits zero.
+        counts = self.git("-c", "core.quotePath=true", "count-objects", "-v",
+                          require_no_diagnostics=True)
+        alternates = [] if counts is not None else None
+        for line in (counts or "").splitlines():
+            if line.startswith("alternate: "):
+                value = line.removeprefix("alternate: ")
+                # With quotePath=true, Git quotes non-ASCII bytes as C octal escapes.
+                path = os.fsdecode(ast.literal_eval(value).encode("latin-1")) if value.startswith('"') else value
+                alternates.append(path)
+        return {
+            "directory": directory.strip() if directory is not None else None,
+            "common_alternates_file": str(Path(common) / "objects/info/alternates"),
+            "effective_alternates_file": str(Path(directory.strip()) / "info/alternates") if directory is not None else None,
+            "alternate_object_directories": alternates,
+            "environment_alternates_present": bool(os.environ.get("GIT_ALTERNATE_OBJECT_DIRECTORIES")),
+            "environment_object_directory_present": bool(os.environ.get("GIT_OBJECT_DIRECTORY")),
+            "outside_borrowers": "unknown: lender inspection cannot enumerate outside borrowers",
+        }
 
     def ancestry(self, head, base):
         value = self.git("rev-list", "--left-right", "--count", f"{base}...{head}")
@@ -76,10 +100,13 @@ class Inventory:
         return trees
 
     def collect(self, base_ref):
-        base = self.git("rev-parse", "--verify", f"{base_ref}^{{commit}}")
         common = self.git("rev-parse", "--path-format=absolute", "--git-common-dir")
-        if base is None or common is None:
+        if common is None:
             return {"errors": self.errors, "complete": False}
+        storage = self.object_storage(common.strip())
+        base = self.git("rev-parse", "--verify", f"{base_ref}^{{commit}}")
+        if base is None:
+            return {"object_storage": storage, "errors": self.errors, "complete": False}
         base = base.strip()
         raw = self.git("for-each-ref", "--format=%(refname)%00%(objectname)%00%(upstream)%00%(symref)",
                        "refs/heads", "refs/remotes")
@@ -96,7 +123,7 @@ class Inventory:
         result = {
             "observed_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "repo": str(Path(self.repo).resolve()), "common_dir": common.strip(),
-            "base_ref": base_ref, "base_sha": base,
+            "base_ref": base_ref, "base_sha": base, "object_storage": storage,
             "remote_evidence": "cached only; reconcile live refs, PRs and protections separately",
             "remotes": remotes, "refs": refs, "worktrees": self.worktrees(base),
             "stashes": [dict(zip(("ref", "sha", "subject"), line.split("\0", 2)))

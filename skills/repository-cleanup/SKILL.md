@@ -39,6 +39,14 @@ detached heads, locks, prunable entries, registered nested worktrees, harness-ow
 recovery refs, stashes and ignored assets. Check repository-owned hidden worktree directories
 for unregistered checkouts; inspect those directories, not unrelated projects or sessions.
 Inventory submodules and nested repositories separately before deleting any parent directory.
+Inspect Git object dependencies: common and effective `objects/info/alternates`, resolved
+alternate object stores and environment-provided alternates. The helper uses native
+`git count-objects -v` and retains unavailable-path diagnostics, including exit-zero errors.
+[Git documents these alternate paths](https://git-scm.com/docs/git-count-objects).
+Its evidence describes this repository's lenders, not every borrower of its objects. A
+lender cannot prove that no outside shared or reference clone depends on it; record that
+uncertainty and check known related clones without a global filesystem crawl. Inspect the
+common store separately if an environment object-directory override hides its dependencies.
 Remote-tracking refs without a configured matching remote are local snapshots, not live
 remote branches. Unavailable remote, activity or filesystem evidence means unknown, never absent.
 
@@ -115,6 +123,14 @@ Build an exact-target action list from the ledger. Preserve default, protected, 
 active, locked and uncertain resources. Prefer the harness's archive/restore lifecycle for
 managed worktrees; absence from the current chat's attachment list does not prove unmanaged
 ownership. Follow the existing refresh-worktree procedure when only updating a checkout.
+
+Preserve lender repositories while any known borrower still depends on their object
+stores. Before authorized lender removal, dissociate each known borrower through native Git,
+then verify its effective/default alternates, `git fsck --full` and required history/files
+independently of that lender. Preserve active or unresolved borrowers and lenders in place.
+A verified complete bundle is recovery coverage only; it never authorizes breaking a
+borrower. Account for object dependencies before archiving or deleting temporary clones too;
+[Git explains the shared-clone risk](https://git-scm.com/docs/git-clone).
 
 Before deletion, retain each removed tip and verify a recovery bundle or equivalent archive
 outside every removal target. A Git bundle does not include dirty files, untracked files,
