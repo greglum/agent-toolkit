@@ -32,6 +32,8 @@ prove squash equivalence or approve deletion. Keep its output private: paths and
 can disclose local details. Exit 2 means incomplete inventory and blocks affected deletions.
 
 Reconcile the output with live remote refs and all pages of open, merged and closed PRs.
+Verify listing coverage includes drafts and automated authors; connector defaults may omit
+bot PRs. Cross-check listed PR heads against live branch heads and investigate omissions.
 Include remotes without tracking refs, refspec exclusions, branches without upstreams,
 detached heads, locks, prunable entries, registered nested worktrees, harness-owned trees,
 recovery refs, stashes and ignored assets. Check repository-owned hidden worktree directories
@@ -152,4 +154,6 @@ items with reasons, failed actions, unavailable evidence and unrun checks. Verif
 checkouts and dirty state were preserved. Run the same assessment again: completed items
 must need no further mutation. Do not report a clean repository while recoveries, required
 checks, ownership decisions or remote verification remain open. A recurring invocation
-starts from current evidence and fresh authority, never an old deletion list.
+starts from fresh evidence and verified current task authority. Reuse still-valid
+authorization; reassess its scope rather than requiring a new grant on every run. Build
+a new action list from that evidence.
