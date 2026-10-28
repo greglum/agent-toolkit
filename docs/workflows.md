@@ -31,6 +31,7 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Retrieve exact technical documentation | [find-docs](../skills/find-docs/SKILL.md) | Current repository implementation | Version-matched primary references |
 | Resume or reassess existing PR work | [continue-pr](../skills/continue-pr/SKILL.md) | Repository implementation and publication workflow | Recovered intent, current architecture, preserved contributors and checked continuation |
 | Watch CI and review on a PR | [monitor-pr](../skills/monitor-pr/SKILL.md) | Authorized fixes and repository delivery gates | Resumable events, independently verified readiness and a stopped watcher |
+| Clean stale branches and worktrees | [repository-cleanup](../skills/repository-cleanup/SKILL.md) | Delegated recovery, repository delivery and safe cleanup | Every resource accounted for, useful work landed or preserved, exact-target removal and recovery proof |
 | Assess and refresh worktrees | [refresh-worktrees](../skills/refresh-worktrees/SKILL.md) | Repository setup and checks | Preserved local work and verified base/revision identity |
 
 Explicit workflows require a named invocation. Use `/name` in Claude Code or `$name` in

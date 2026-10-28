@@ -41,6 +41,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`postgres-investigate`](../skills/postgres-investigate/SKILL.md) | Investigate PostgreSQL query, lock, connection, and row-security behavior. | Automatic |
 | [`reconcile-metric`](../skills/reconcile-metric/SKILL.md) | Trace a disputed aggregate to source records and recalculate it independently. | Automatic |
 | [`refresh-worktrees`](../skills/refresh-worktrees/SKILL.md) | Assess and refresh Git worktrees while preserving local and uncertain work. | Automatic |
+| [`repository-cleanup`](../skills/repository-cleanup/SKILL.md) | Recover useful unfinished work and clean verified completed branches and worktrees. | Automatic |
 | [`repurpose-long-video`](../skills/repurpose-long-video/SKILL.md) | Select context-preserving short clips from cleared footage and produce an edit list. | Automatic |
 | [`review-animations`](../skills/review-animations/SKILL.md) | Audit existing motion for purpose, timing, interruption, cost, and reduced motion. | Automatic |
 | [`review-integration`](../skills/review-integration/SKILL.md) | Review client/API contracts, transformations, validation, and error handling. | By name |
