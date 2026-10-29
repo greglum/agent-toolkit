@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { accessSync, constants, realpathSync, statSync } from 'node:fs';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -6,6 +7,23 @@ import { collectSurface } from './collect-surface.mjs';
 
 const [playwrightPath, destination] = process.argv.slice(2);
 if (!playwrightPath || !destination) throw new Error('Usage: node check-browser.mjs playwright/index.mjs output-folder');
+// Keep each collector independently installable. Preflight explicit browsers before creating evidence.
+const configured = process.env.CHROME_PATH || undefined;
+let executablePath;
+if (configured) {
+  try {
+    executablePath = realpathSync(configured);
+    if (!statSync(executablePath).isFile()) throw new Error('Expected a file');
+    accessSync(executablePath, constants.X_OK);
+  } catch (cause) {
+    throw new Error('CHROME_PATH must name an executable headless browser; use a headless shell or Chrome for Testing', { cause });
+  }
+  // Installed Chrome grows the macOS keychain on every launch (Chromium issue 577651758).
+  const installedChrome = /(?:^|[/\\])(?:Google Chrome(?: (?:Beta|Canary|Dev))?\.app|google-chrome(?:-stable|-beta|-unstable)?)(?:[/\\]|$)|^\/opt\/google\/chrome(?:-beta|-unstable)?(?:\/|$)/i;
+  if ([configured, executablePath].some(path => installedChrome.test(path))) {
+    throw new Error('CHROME_PATH must not use installed Google Chrome; use a headless shell or Chrome for Testing');
+  }
+}
 const { chromium } = await import(pathToFileURL(resolve(playwrightPath)).href);
 const output = resolve(destination);
 await mkdir(output, { recursive: true });
@@ -34,7 +52,7 @@ const fixture = `<!doctype html><html lang="en"><meta charset="utf-8"><title>Sur
 <div id="rtl"><div>Intentional RTL scroller</div></div><input id="secret" value="DO-NOT-COLLECT-INPUT-VALUES">
 <div id="shadow"></div><iframe title="Uninspected frame" srcdoc="<p>Frame content</p>"></iframe>
 <div class="spacer"></div></main></html>`;
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true, executablePath });
 try {
   const context = await browser.newContext({ offline: true, viewport: { width: 1000, height: 800 }, reducedMotion: 'reduce' });
   const page = await context.newPage();

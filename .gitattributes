@@ -6,3 +6,7 @@ docs/maintainers/** export-ignore
 # Unadopted design prototypes stay outside public snapshots.
 skills/web-app-design/assets/variant-review.html export-ignore
 skills/web-app-design/scripts/review_variants.py export-ignore
+# Development delivery tooling; published copies run the hosted Check workflow instead.
+scripts/local-ci.py export-ignore
+scripts/merge-local-ci.py export-ignore
+scripts/test_local_ci.py export-ignore

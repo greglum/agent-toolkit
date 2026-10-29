@@ -67,7 +67,7 @@ stages. Follow the destination project's checks. A source assessment, rendered r
 deployment check supply different evidence; report any missing dimension. Worker support
 and permission to delegate depend on the harness and task.
 
-See [curation](curation.md) for documentation ownership and [verification](verification.md)
+See [verification](verification.md)
 for the catalog's automated checks.
 
 ## PR lifecycle

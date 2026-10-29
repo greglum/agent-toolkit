@@ -7,7 +7,7 @@ Checks, per skills/<name>/SKILL.md:
 - `name` matches the folder and is lowercase hyphen-case, at most 64 characters;
 - `description` is at most 1024 characters, the Agent Skills limit, and within the
   catalog budget: 360 for a model-invoked skill, 600 for an explicit-only one;
-- no em dash in Markdown prose outside fenced code (authoring rule 10);
+- no em dash in Markdown prose outside fenced code (catalog writing rule);
 - every relative Markdown link resolves inside its skill bundle, and a `#fragment` on a
   Markdown target matches a heading anchor there (GitHub slugs, fenced code ignored);
 - no machine-specific home path (/Users/<name>/), email address, or /private/tmp path;

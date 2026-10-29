@@ -103,9 +103,12 @@ contacts and speech have been checked. Keep unverified lip sync or anatomy expli
 Keep originals intact. Record cut decisions in the existing timeline or edit list: source
 identity, selected audio track, source in/out, output placement, and any speed change.
 For speech-led edits, use a compact time-labelled transcript to compare takes, retaining raw
-word timings, speakers and meaningful sound events for cut decisions. See the
-[speech-editing sources](sources-editing.md) for this refinement. A phrase summary loses
-interior word boundaries. First assemble the main speech cut, selecting the better complete
+word timings, speakers and meaningful sound events for cut decisions. Check whether the
+transcript is verbatim: an ASR system can omit fillers, repetitions and false starts while
+those sounds remain in the recording. Keep a cleaned reading copy separate; verify proposed
+removals against the source audio rather than treating missing transcript words as silence.
+See the [speech-editing sources](sources-editing.md). A phrase summary loses interior word
+boundaries. First assemble the main speech cut, selecting the better complete
 take and removing only repetitions, fillers and pauses that add no meaning. Check the retained
 sentences in context before building an intro from them; moving a line must preserve its
 meaning. Add B-roll, reframing and other polish after those cut decisions settle. Check
@@ -118,6 +121,14 @@ actual mapping. Derive captions and overlay cues from that mapping once, then ch
 encoded joins against the intended placement. Reuse [narration checks](narration.md#produce-and-time-the-audio)
 for caption accuracy and listening. Finish when every retained range resolves to its source
 and track, and each changed join and its cues agrees with the encoded output.
+
+For exposure or color changes, compare the same source frame before and after the correction
+under the same crop and viewing conditions. Map output times back through the edit list;
+equal timestamps in raw and trimmed videos can show different moments. Reuse the project's
+comparison view or [paired-frame extractor](pair-event-frames.md), then inspect native-size
+frames for skin tone and lost highlight or shadow detail. Check moving footage and adjacent
+shots for changes that a favorable still hides. These checks qualify a correction; they do
+not supply automatic relighting or subject masks.
 
 ## Mixed footage and generated plates
 

@@ -57,7 +57,14 @@ Use the existing axe-core rig for accessibility and preserve its incomplete resu
 
 ## Exercise the bundled browser fixture
 
-With an existing Node.js, Playwright and local Chrome installation:
+With an existing Node.js and Playwright installation, and Playwright's Chrome Headless Shell at the version of the Playwright package you pass
+(install it with that package's CLI: `playwright install chromium-headless-shell`), or a
+`CHROME_PATH` naming another headless shell or Chrome for Testing. Never Google Chrome: on macOS
+each launch of it adds keychain keys that are never removed (Chromium issue 577651758).
+Explicit paths must name executable files. The checker resolves symlinks and rejects known
+installed Chrome names before importing Playwright or creating output. With `CHROME_PATH`
+unset or empty, Playwright selects its bundled headless browser. These checks prevent known
+operator mistakes; they do not attest arbitrary browser binaries.
 
 ```bash
 node scripts/check-browser.mjs /path/to/playwright/index.mjs /path/to/evidence
