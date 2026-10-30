@@ -55,10 +55,17 @@ Use two only when each run is materially expensive, such as a deployment, long e
 job, or paid high-volume call. State the cost reason. A `full benchmark` may add cases, but
 case variety matters more than count.
 
+When extending an existing suite, keep proven regression cases separate from capability
+cases that probe remaining weaknesses. Report both groups separately. A high regression
+pass rate is useful preservation evidence; add harder capability cases without discarding
+those checks or imposing a universal target pass rate. Freeze each comparison's cases;
+changes to cases or graders require rerunning both arms and the no-skill control.
+
 For every case, write the user-like prompt, fixed inputs, expected outcome, and checkable
 assertions before comparing outputs. Fix the noise bar (the smallest difference that counts)
-and the apply gate under Grading before the first run. Remove assertions that both versions
-pass trivially; they do not measure the skill's value.
+and the apply gate under Grading before the first run. Remove trivial assertions that add
+no evidence. Keep required safety and regression assertions even when both versions pass,
+but exclude those shared passes from claims of added value.
 
 Match the bar to the skill's nature. For a judgment skill (planning, review, slicing), state
 the outcome a competent practitioner would reach and the smells that make an output bad, not
@@ -118,8 +125,10 @@ appropriateness, and usability. A pass requires concrete output or transcript ev
 section titles and self-reported success are insufficient.
 
 Before trusting a judge, grade a known-good answer and an empty answer with it; it must pass
-the first and fail the second. Pair one outcome check with one process check per case, and
-when they disagree, suspect the judge before the skill.
+the first and fail the second. Pair one outcome check with one process check per case.
+Bind the process check to required behavior, such as authorization or source preservation,
+and accept other valid tool sequences. When outcome and process grades disagree, inspect
+the trace and grader before blaming the skill; preserve mandatory safety assertions.
 
 Prefer a code check over a judge when the criterion is objective, and give each judge one
 failure mode with a pass or fail verdict. When a judge grades many cases, measure it against
@@ -214,3 +223,12 @@ Do not hide failed assertions behind an aggregate score.
 Delete the workspace after the final report by default. With `keep eval artifacts`, move or
 create it at a user-approved persistent path, exclude secrets and unnecessary input copies,
 and report the exact location. Never silently add eval artifacts to the target repository.
+
+## Source scope
+
+The regression/capability distinction and flexible process checks draw on Anthropic's
+[Demystifying evals for AI agents](https://www.anthropic.com/research/demystifying-evals-for-ai-agents),
+published January 9, 2026; sections "Capability vs. regression evals" and "Step 5: Design
+graders thoughtfully", observed October 29, 2026, Pacific/Honolulu. Reuse rights are
+unestablished; original paraphrase only. Recheck on changed guidance or contrary trials.
+This does not prescribe a model, pass-rate target, new runner or additional authority.

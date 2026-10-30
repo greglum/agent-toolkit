@@ -58,6 +58,10 @@ structural decision being tested. Include the current surface as the baseline. A
 short comparison can settle an obvious choice; render candidates when geometry or interaction
 is what remains uncertain. Do not generate variants for an already settled local correction.
 
+For a portable screenshot comparison with human feedback, build the optional
+[offline review board](variant-review.md). It embeds supplied images and capture/source
+identities; it does not capture screens, generate variants, or validate their claims.
+
 Judge each candidate by the task: what can the user find, compare, or act on without opening
 another view or decoding a truncated label? Preserve required information and actions while
 changing their emphasis. Record the chosen direction and its tradeoff in the existing brief,
