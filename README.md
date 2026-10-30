@@ -22,6 +22,7 @@ of his work. This repository holds the installable bundles and usage documentati
 | Understand a large change before reviewing it | [guided-review](skills/guided-review/SKILL.md) | A reading guide tied to the actual diff |
 | Investigate a disputed dashboard number | [reconcile-metric](skills/reconcile-metric/SKILL.md) | An independent calculation with the difference explained |
 | Explain a system and explore its relationships | [diagram-design](skills/diagram-design/SKILL.md) | A diagram or standalone graph viewer |
+| Explore a system's parts and behavior | [system-anatomy](skills/system-anatomy/SKILL.md) | A source-grounded interactive anatomy or cutaway |
 | Check a rendered film | [motion-film](skills/motion-film/SKILL.md) | Source, playback and export checks using its production tools |
 | Turn a conversation into buildable work | [to-spec](skills/to-spec/SKILL.md) | A spec with scope, decisions and acceptance conditions |
 
@@ -89,6 +90,9 @@ From the clone's root, run `sh scripts/verify.sh` for the automated checks. See
 For a longer explanation with a runnable example, see [how the toolkit works](docs/overview.md).
 
 ## Sources and credits
+
+For physical mechanisms, the [modeling guide and offline example](skills/system-anatomy/references/mechanisms.md)
+cover parameter provenance, model limits, numerical checks and synchronized controls/readouts.
 
 For noisy improvement work, the [measurement procedure](skills/loop-engineering/SKILL.md#freeze-the-contract)
 records unchanged-run variation and confirms selected or combined changes.
