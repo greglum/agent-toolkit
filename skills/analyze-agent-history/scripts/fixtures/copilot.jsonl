@@ -1,0 +1,5 @@
+{"type":"session.start","data":{"sessionId":"synthetic-copilot-b","version":1}}
+{"id":"human-a","type":"user.message","data":{"source":"user","content":"I already asked you to verify before changing files."}}
+{"id":"injection-a","type":"user.message","data":{"source":"system","content":"I already asked you to preserve the files."}}
+{"id":"agent-a","type":"user.message","agentId":"synthetic-child","data":{"content":"I already asked you to preserve the files."}}
+{"id":"autopilot-a","type":"user.message","data":{"isAutopilotContinuation":true,"content":"I already asked you to preserve the files."}}

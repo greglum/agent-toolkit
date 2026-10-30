@@ -22,3 +22,35 @@ changes or a real run demonstrates a gap. These references describe methods, not
   root Apache-2.0, with separate reference notices. Look beyond the initial reporting scope
   for effective upstream guards. Departure: authenticated attackers remain in scope; no
   reference text or OWASP notices are imported.
+
+
+Reviewed October 29, 2026:
+
+- [Jim Manico's Grim Prompter](https://github.com/jmanico/grim-prompter/tree/076ec0d32c9eec0e09bfdee22b57121f49b26022),
+  MIT. Inspected the runbook, control evidence definitions, change reviewer and tool credential
+  boundaries. Original synthesis adds control evidence states, a bounded baseline-review
+  procedure and effective tool-authority tracing. No upstream text, code or schema is bundled.
+  Departures: keep the existing audit owner and authority gates; no fixed architecture catalog,
+  cumulative JSON contract, installation, or claim of automated analysis or validation.
+- [OWASP Threat Modeling Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html),
+  System Modeling, Response and Mitigations, and Review and Validation; and
+  [OWASP practical threat modeling](https://devguide.owasp.org/en/04-design/01-threat-modeling/07-practical-threat-modeling/),
+  assumptions, ongoing refinement and incremental scope. Independently support the method,
+  not the prompt library's accuracy. Living pages, no copied text.
+- [MCP tools specification, 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)
+  and [Invariant Labs' April 1, 2025 tool-poisoning experiments](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks).
+  Discovery metadata and updates are a separate input surface; the experiments demonstrate
+  steering in the tested client, not a vulnerability in every current client. No payloads copied.
+
+Recheck on source, protocol, credential design or baseline-format changes, or when a bounded
+trial exposes a missing step. These are procedural refinements; blind/control evaluation
+and native automatic selection remain untested.
+
+
+An October 29, 2026 repository trial reproduced response-status disclosure during dependency
+errors and verified a bounded correction with synthetic failures. It also exposed archived
+probes in broad implementation search results. The resulting original refinements cover
+failure-state response contracts, preserved detection, and current versus carried evidence.
+No project code, private findings or payloads are bundled. This supplied-skill run has no
+no-skill control and does not establish comparative benefit. Recheck when a real audit or
+blind comparison contradicts these procedures.

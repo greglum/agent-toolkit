@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "experiment": "synthetic-build-time",
+  "metric": "elapsed",
+  "unit": "seconds",
+  "direction": "lower",
+  "workload": "fixture-v1",
+  "profile": "same-host-cold-cache",
+  "control": "base",
+  "unchanged": "repeat",
+  "arms": {
+    "base": "revision-a",
+    "repeat": "revision-a",
+    "candidate": "revision-b"
+  },
+  "rounds": {
+    "unchanged": [
+      "a1",
+      "a2"
+    ],
+    "discovery": [
+      "d1",
+      "d2"
+    ],
+    "confirmation": [
+      "c1",
+      "c2"
+    ]
+  },
+  "minimum_pairs": 2,
+  "minimum_improvement": 5,
+  "maximum_unchanged_delta": 2,
+  "guard_contract": "fixture-output-and-check-set-v1"
+}

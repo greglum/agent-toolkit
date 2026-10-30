@@ -11,6 +11,10 @@ source video, masks, poses or camera motion. Confirm the exact checkpoint and pi
 that control. A motion module can require a matching base model and extra conditioning
 weights; a workflow editor is not itself a video checkpoint.
 
+For a source-video edit, state what may change and what must remain. If the selected path
+uses a mask, preview it with the prepared source before inference. Verify the pipeline's
+mask polarity and spatial/frame alignment after resizing, cropping or sampling.
+
 Use the production contract's rights and authority checks for every selected component.
 Trace optional prompt rewriting, image captioning and workflow nodes as well as the main
 generator: record which run locally, which send inputs elsewhere, and any separate charges.
@@ -56,6 +60,11 @@ action, prompt adherence, subject and prop identity, contact, occlusion, flicker
 both shot boundaries. Inspect any crop, interpolation or upscale separately. Correct file
 metadata and a promising still cannot accept temporal behavior.
 
+For source-video edits, compare corresponding decoded source and output frames against the
+change/preserve contract. For a localized edit, inspect the edited region, its moving boundary
+and areas meant to remain unchanged. Review unintended changes through playback. Mask
+conditioning alone does not prove preservation.
+
 Place exact labels, UI, logos and captions in the existing editable composition when their
 accuracy matters. Keep generated illustration distinct from evidence of real activity.
 Import only a qualified take; record its source interval, crop/scale and retiming in the
@@ -65,6 +74,17 @@ Finish when the take fits its recorded role and delivery contract, or retain the
 next decision. A model run does not by itself complete the film or its publication.
 
 ## Sources and limits
+
+The source-edit checks were added October 29, 2026, in original words, informed by Alibaba's
+[VACE input contract](https://github.com/ali-vilab/VACE/blob/48eb44f1c4be87cc65a98bff985a26976841e9f3/UserGuide.md#31-vace-recognizable-inputs)
+and [mask encoding](https://github.com/ali-vilab/VACE/blob/48eb44f1c4be87cc65a98bff985a26976841e9f3/vace/models/wan/wan_vace.py#L115-L129),
+Apache-2.0 code. The pin is dated October 17, 2025. Independent
+[Edit-A-Video research](https://proceedings.mlr.press/v222/shin24a.html), Chaehun Shin and
+colleagues, PMLR 2024, Abstract, identifies unwanted temporal changes outside the edit as a
+separate failure. Paper reuse rights were not assessed; no text, code or media copied.
+This adds acceptance guidance, not a mask processor or inference runner. Runtime and
+blind/control evaluation remain unrun. Recheck when mask semantics, preprocessing or the
+preservation contract changes.
 
 Original procedure, observed October 26, 2026; ideas restated, no upstream code or media copied.
 The following pinned implementations establish behavior, not local quality or performance:

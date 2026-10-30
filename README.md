@@ -15,6 +15,9 @@ of his work. This repository holds the installable bundles and usage documentati
 
 | If you want to | Start with | What you get |
 | --- | --- | --- |
+| Compare noisy measurements | [compare-experiments](skills/compare-experiments/SKILL.md) | Paired effects, failed/missing observations and confirmation evidence |
+| Order a set of pull requests | [plan-pr-stack](skills/plan-pr-stack/SKILL.md) | Candidate dependency waves and unresolved ordering decisions |
+| Review selected agent-history exports | [analyze-agent-history](skills/analyze-agent-history/SKILL.md) | Text-free correction candidates and coverage limits |
 | Check a web page across widths and states | [fit-surface](skills/fit-surface/SKILL.md) | A measured layout and accessibility check |
 | Understand a large change before reviewing it | [guided-review](skills/guided-review/SKILL.md) | A reading guide tied to the actual diff |
 | Investigate a disputed dashboard number | [reconcile-metric](skills/reconcile-metric/SKILL.md) | An independent calculation with the difference explained |
@@ -86,6 +89,25 @@ From the clone's root, run `sh scripts/verify.sh` for the automated checks. See
 For a longer explanation with a runnable example, see [how the toolkit works](docs/overview.md).
 
 ## Sources and credits
+
+For noisy improvement work, the [measurement procedure](skills/loop-engineering/SKILL.md#freeze-the-contract)
+records unchanged-run variation and confirms selected or combined changes.
+Its [source notes](skills/loop-engineering/references/sources.md#noisy-measurements-and-confirmation)
+record the Lever revision and intentional departures.
+
+For generated video edits, the [source and mask checks](skills/motion-film/references/generated-plates.md)
+cover prepared input alignment and unintended changes outside the edit.
+
+For editable films, the [saved-source handoff checks](skills/motion-film/references/production.md#verify-an-editable-studio-handoff)
+cover saved edit targets as well as reopening and export.
+
+For threat-model updates, the [baseline-review procedure](skills/security-audit/references/baseline-review.md)
+preserves scenario IDs and separates resolved threats from retired ones. The
+[failure-state checks](skills/security-audit/references/coverage.md#response-contracts-under-failure)
+cover response guarantees and preserved failure detection.
+
+For linked X sources, the [recovery procedure](skills/skill-research/references/source-intake.md#x-post-and-article-recovery)
+checks other permitted browsers and rendered text when a reader or browser backend fails.
 
 For generated 3D props, the [film mesh checks](skills/motion-film/references/material-3d.md#qualify-an-imported-mesh)
 cover coarse inputs, scene scale and exported geometry cost.

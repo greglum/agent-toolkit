@@ -1,7 +1,7 @@
 ---
 name: repurpose-long-video
 description: "Cut short vertical clips from a long video the user owns or has licensed: word-level transcript, scored candidates snapped to sentences, overlap suppression, context checks, subject-tracked reframing, and a per-clip edit list. Uses existing local tools. Film and export rules: motion-film. Posting copy: distribution-draft. Campaigns: content-marketing."
-compatibility: Needs the project's existing ffmpeg and ffprobe (or equivalent) and a transcriber the user already has that gives word timestamps. The selection script needs Python 3.10 or newer, standard library only. Without a tool, finish the steps it does not block and report the rest unverified. No installs, paid APIs, or hosted providers without the user's authority.
+compatibility: Requires existing ffmpeg/ffprobe or equivalent, a word-timestamp transcriber, and motion-film for caption/export acceptance. Selection needs Python 3.10+, standard library only. If tools or the companion are missing, continue independent selection work and report final export acceptance blocked. No installs, paid APIs or hosted providers without user authority.
 ---
 
 # Repurpose long video
@@ -32,7 +32,9 @@ duration range, and aspect are set, and the destination limits are cited with th
 Find what the project already has: a media cutter and probe (such as ffmpeg and ffprobe),
 a transcriber with word timestamps, and any subject detector. Use them as found. Installing
 a tool, calling a paid or hosted service, or choosing a provider needs the user's authority;
-ask rather than pick. When a tool is missing, name the steps it blocks.
+ask rather than pick. Check that the `motion-film` companion is available before
+caption/export work; if absent, continue independent steps and mark final export acceptance
+blocked. When a tool is missing, name the steps it blocks.
 
 Done when each later step has a named tool or is marked blocked, with the user told.
 

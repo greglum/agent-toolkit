@@ -20,6 +20,14 @@ dimension and a fixed threshold. Unknown or unrun evidence stays unknown; an ave
 a self-assigned score cannot substitute for a required dimension. Keep an independent
 acceptance case when tuning against examples, and do not rewrite it to make a result pass.
 
+For timed or stochastic outcomes, run the existing instrument on unchanged content to
+estimate variation. Before trying a change, fix the sampling plan and a useful improvement
+threshold. Compare baseline and candidate with matched workloads, cache state and execution
+conditions; interleave runs when drift could bias the result. Preserve individual samples,
+failed attempts and missing observations. A difference within the observed uncertainty is
+inconclusive. When selecting among several candidates or combining accepted changes, reserve
+fresh measurements to confirm the final result against the same contract.
+
 **Ready:** another reader can decide pass, fail or unknown from the contract and artifacts.
 
 ## Run a whole iteration

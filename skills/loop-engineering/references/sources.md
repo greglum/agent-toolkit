@@ -26,3 +26,24 @@ community detection, semantic search, reflection or visualization.
 Recheck when tool versions, graph direction/schema, extraction scope or backend behavior
 change, or a repository trial contradicts a procedure. The dated research report carries
 capability comparisons and trial evidence.
+
+## Noisy measurements and confirmation
+
+Observed October 29, 2026, Pacific/Honolulu. Original synthesis; no upstream text or code adapted.
+
+- [Lever](https://github.com/github/lever/tree/f859d0aa2be96981157ee0480655c84877e3cd98),
+  GitHub, Inc., MIT, revision dated October 28, 2026. `find-the-loop` steps 3-7,
+  `templates/loop-card.md` and `experiment-arms` steps 8-12 inform unchanged-run
+  variation, matched work, visible failures and confirmation of combined changes.
+- [NIST confirmation runs](https://itl.nist.gov/div898/handbook/pri/section4/pri46.htm),
+  NIST/SEMATECH e-Handbook, section 5.4.6, living page. Supports confirming selected
+  settings in comparable conditions. Reuse rights unassessed; no copied content.
+- [NIST multiple comparisons](https://www.itl.nist.gov/div898/handbook/prc/section4/prc47.htm),
+  section 7.4.7, living page. Separate per-comparison confidence does not establish
+  confidence in a selected winner. Fresh confirmation reduces reuse of selection evidence;
+  it is not a substitute for a statistical method suited to the design.
+
+Departures: sample size and summary statistics depend on the instrument and intended effect.
+No fixed repeat count, automatic KEEP verdict, provider roster, CI-writing driver, saved
+permission dial or scheduler is adopted. Deterministic decisive checks keep the one-pass path.
+Recheck when the measurement design changes or a matched trial contradicts the procedure.
