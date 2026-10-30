@@ -85,18 +85,19 @@ From the clone's root, run `sh scripts/verify.sh` for the automated checks. See
 
 For a longer explanation with a runnable example, see [how the toolkit works](docs/overview.md).
 
-## Sources and contributions
+## Sources and credits
 
 For generated 3D props, the [film mesh checks](skills/motion-film/references/material-3d.md#qualify-an-imported-mesh)
 cover coarse inputs, scene scale and exported geometry cost.
 
+For recorded footage, the [speech-editing notes](skills/motion-film/references/sources-editing.md#october-27-video-editor-review)
+explain verbatim transcript checks and matched-frame correction review.
+
 Source notes stay beside the skill they inform. Adapted text and values retain
 credit in [third-party notices](THIRD_PARTY_NOTICES.md).
 
-See [curation](docs/curation.md) for adoption and retirement decisions,
-[authoring](docs/authoring.md) before changing a skill, and
-[contribution guidance](CONTRIBUTING.md) for the checks to run.
 Existing users can follow the [name migration guide](docs/migrations.md).
+Report problems and requests through [issues](CONTRIBUTING.md).
 
 ## License
 

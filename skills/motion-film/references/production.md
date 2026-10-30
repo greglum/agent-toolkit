@@ -86,7 +86,13 @@ direction, stop for that approval after gate 2; otherwise record each result and
 5. **Full pass.** Final resolution and audio, reviewed with
    [capture and export review](render-review.md) and the critique loop.
 6. **Formats.** Each variant recomposed from the same timeline, plus poster, captions,
-   transcript and the delivery package below.
+   transcript and the delivery package below. When the brief asks for approval of the primary
+   cut, start them only after it; variants of a rejected cut are wasted renders.
+
+When a brief makes a gate wait for the user, ask its exact question with the frames the moment
+they are ready. A wait no one raised holds the work as surely as a failure. Run the source gates
+(lint, types) before an expensive render, and stop only the processes your own run started, by
+PID, never by a pattern another session's renders also match.
 
 ## Prove the difficult shot first
 

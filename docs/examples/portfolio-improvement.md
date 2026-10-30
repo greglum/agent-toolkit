@@ -49,8 +49,8 @@ before selecting a bounded implementation. A supported no-change result is valid
 Keep a short record with the source revision, route/state, finding, owner, disposition,
 and evidence location. Separate worker reports help preserve disagreements. For a skill
 comparison, add a fresh no-skill control on the same input and revision. Keep expected
-findings out of both prompts. Use an author-independent judge, as described in
-[authoring](../authoring.md#evaluating). One pair cannot establish general superiority.
+findings out of both prompts. Use a judge who did not write
+either prompt. One pair cannot establish general superiority.
 
 ## Round 2: make the accepted changes
 

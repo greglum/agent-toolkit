@@ -76,7 +76,10 @@ the script is locked after the claim check.
    caption text even if alignment needs a spoken-form transcript. Use a checked phrase-level
    cue when word timing cannot be resolved; keep word highlights disabled for that interval.
    Check cue occurrence, lead-in, complete sentence ending,
-   and tail hold against the scene duration.
+   and tail hold against the scene duration. Land each on-screen beat on the words that name
+   it, looked up by the word's text so a re-voice fails loudly; evenly spaced beats drifted
+   up to 1.4 s from their words in a measured case. Keep paid takes outside the worktree, so
+   a lost checkout cannot take them, and listen to every re-voiced line before it ships.
    Preserve the source manifest and its text/audio identity. A new picture, line, or take must
    not leave stale timing or speech behind. For a shared track, verify scene intervals and
    conversion between track time and scene time. Missing or mismatched required narration

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { accessSync, constants, realpathSync, statSync } from 'node:fs';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -7,6 +8,23 @@ import { validateGraph } from './graph-model.mjs';
 
 const [playwrightPath, destination, axePath] = process.argv.slice(2);
 if (!playwrightPath || !destination) throw new Error('Usage: node check-browser.mjs playwright/index.mjs output-folder [axe.min.js]');
+// Keep each collector independently installable. Preflight explicit browsers before creating evidence.
+const configured = process.env.CHROME_PATH || undefined;
+let executablePath;
+if (configured) {
+  try {
+    executablePath = realpathSync(configured);
+    if (!statSync(executablePath).isFile()) throw new Error('Expected a file');
+    accessSync(executablePath, constants.X_OK);
+  } catch (cause) {
+    throw new Error('CHROME_PATH must name an executable headless browser; use a headless shell or Chrome for Testing', { cause });
+  }
+  // Installed Chrome grows the macOS keychain on every launch (Chromium issue 577651758).
+  const installedChrome = /(?:^|[/\\])(?:Google Chrome(?: (?:Beta|Canary|Dev))?\.app|google-chrome(?:-stable|-beta|-unstable)?)(?:[/\\]|$)|^\/opt\/google\/chrome(?:-beta|-unstable)?(?:\/|$)/i;
+  if ([configured, executablePath].some(path => installedChrome.test(path))) {
+    throw new Error('CHROME_PATH must not use installed Google Chrome; use a headless shell or Chrome for Testing');
+  }
+}
 const { chromium } = await import(pathToFileURL(resolve(playwrightPath)).href);
 const output = resolve(destination);
 await mkdir(output, { recursive: true });
@@ -16,7 +34,7 @@ const before = validateGraph(JSON.parse(await readFile(new URL('../examples/diag
 const files = { diagram: join(output, 'diagram.html'), comparison: join(output, 'comparison.html') };
 await writeFile(files.diagram, await buildHtml(after));
 await writeFile(files.comparison, await buildHtml(after, before));
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ headless: true, executablePath });
 const checks = {}, errors = [], requests = [];
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, offline: true, reducedMotion: 'reduce' });

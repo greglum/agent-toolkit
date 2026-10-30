@@ -87,7 +87,14 @@ The portable model, rendering and input-boundary regressions run with:
 python3 -m unittest discover -s <skill>/scripts -p 'test_*.py'
 ```
 
-Browser checks additionally use an installed Playwright package and Chrome:
+Browser checks additionally use an installed Playwright package and its Chrome Headless Shell at the version of the Playwright package you pass
+(install it with that package's CLI: `playwright install chromium-headless-shell`), or a
+`CHROME_PATH` naming another headless shell or Chrome for Testing. Never Google Chrome: on macOS
+each launch of it adds keychain keys that are never removed (Chromium issue 577651758).
+Explicit paths must name executable files. The checker resolves symlinks and rejects known
+installed Chrome names before importing Playwright or creating output. With `CHROME_PATH`
+unset or empty, Playwright selects its bundled headless browser. These checks prevent known
+operator mistakes; they do not attest arbitrary browser binaries.
 
 ```bash
 node <skill>/scripts/check-browser.mjs <path-to-playwright-index.mjs> output-folder [path-to-axe.min.js]

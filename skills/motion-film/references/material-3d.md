@@ -81,6 +81,8 @@ Test motion blur and temporal samples with seekable state; they evaluate interme
 Do not make the production export depend on live diagnostic overlays.
 
 Measure final-profile render cost on this shot before committing the series to the effect.
+Time one frame in each candidate engine first: a GPU rasterizer (Blender EEVEE) rendered
+plate frames in about 3 s where CPU path tracing (Cycles) took 79 to 566 s in one measured case.
 Keep the successful clip as a visual reference with its source and settings. If the effect
 misses the deadline or readability budget, use a simpler authored version with the same
 meaning and check it again. A software-rendered export can behave differently from the

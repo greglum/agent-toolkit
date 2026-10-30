@@ -1,7 +1,9 @@
 # Compare reference and draft frames
 
-Use this only for a reference match with known local media and adopted events. Reuse the
-project's comparison tool first. Otherwise the bundled
+Use this for a reference match or a before/after correction check with known local media
+and explicit time pairs. For a trimmed edit, map each output time to its source time first;
+the extractor does not infer that mapping. Reuse the project's comparison tool first.
+Otherwise the bundled
 [extractor](../scripts/pair_event_frames.py) needs Python 3 and installed FFmpeg:
 
 ```sh

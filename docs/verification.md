@@ -15,8 +15,8 @@ against real media. Optional browser, graphics, document and provider tools are
 listed in the selected skill. No provider call or dependency install is part of
 this command. Tests use local fixtures and mocked boundaries where appropriate.
 
-The GitHub Check workflow runs the same command on its configured runner. The optional
-repository pre-commit hook adds a staged secret scan and requires Gitleaks. Keep any existing global hook policy; run these checks
+The optional repository pre-commit hook adds a staged secret scan and requires
+Gitleaks. Keep any existing global hook policy; run these checks
 manually or integrate them through the hook owner instead of replacing it blindly.
 
 For a local snapshot secret scan with an installed Gitleaks:
