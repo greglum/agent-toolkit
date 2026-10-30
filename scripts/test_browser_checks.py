@@ -1,4 +1,4 @@
-"""Pin browser-selection failures at the two collector CLI boundaries, without launching browsers."""
+"""Pin browser-selection failures at the collector CLI boundaries, without launching browsers."""
 
 import json
 import os
@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-SKILLS = ("diagram-design", "fit-surface")
+SKILLS = ("diagram-design", "fit-surface", "web-app-design")
 
 
 class BrowserSelectionChecks(unittest.TestCase):
@@ -37,16 +37,18 @@ class BrowserSelectionChecks(unittest.TestCase):
     def probe(self, skill, configured):
         directory = self.root / skill
         directory.mkdir(exist_ok=True)
-        output = directory / "evidence"
-        marker = directory / "launch.json"
+        attempt = Path(tempfile.mkdtemp(prefix="probe-", dir=directory))
+        output = attempt / "evidence"
+        marker = attempt / "launch.json"
         env = os.environ.copy()
         env.pop("CHROME_PATH", None)
         env["MOCK_LAUNCH_LOG"] = str(marker)
         if configured is not None:
             env["CHROME_PATH"] = str(configured)
+        script = "check-variant-browser.mjs" if skill == "web-app-design" else "check-browser.mjs"
+        arguments = [str(self.mock), str(self.mock), str(output)] if skill == "web-app-design" else [str(self.mock), str(output)]
         result = subprocess.run(
-            [self.node, str(REPO / "skills" / skill / "scripts" / "check-browser.mjs"),
-             str(self.mock), str(output)],
+            [self.node, str(REPO / "skills" / skill / "scripts" / script), *arguments],
             env=env, text=True, capture_output=True, check=False,
         )
         return result, output, marker

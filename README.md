@@ -106,6 +106,10 @@ preserves scenario IDs and separates resolved threats from retired ones. The
 [failure-state checks](skills/security-audit/references/coverage.md#response-contracts-under-failure)
 cover response guarantees and preserved failure detection.
 
+For skill evaluations, the [case and grading protocol](skills/harden-skill/references/evaluation.md)
+separates regression protection from capability probes and checks required behavior while
+allowing valid alternative methods.
+
 For linked X sources, the [recovery procedure](skills/skill-research/references/source-intake.md#x-post-and-article-recovery)
 checks other permitted browsers and rendered text when a reader or browser backend fails.
 

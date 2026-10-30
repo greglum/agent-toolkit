@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>__TITLE__ · Variant review</title>
+<style>
+  :root { color-scheme: light dark; font: 100%/1.5 system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: Canvas; color: CanvasText; }
+  main { max-width: 110rem; margin: auto; padding: clamp(1rem, 3vw, 3rem); }
+  h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.15; margin: 0 0 1rem; overflow-wrap: anywhere; }
+  h2 { font-size: 1.25rem; margin: 0; overflow-wrap: anywhere; }
+  h2 span { font-weight: normal; }
+  p { max-width: 75ch; overflow-wrap: anywhere; }
+  header { margin-bottom: 2rem; }
+  #variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: 2rem; }
+  article { min-width: 0; border-top: 2px solid; padding-top: 1rem; }
+  img { display: block; width: 100%; height: auto; margin: 1rem 0; border: 1px solid GrayText; }
+  fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+  legend { font-weight: 600; margin-bottom: 1rem; }
+  label { display: block; }
+  .choice { display: flex; align-items: center; gap: .75rem; min-height: 44px; margin: .5rem 0; cursor: pointer; }
+  input[type=radio] { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+  textarea { width: 100%; min-height: 7rem; resize: vertical; font: inherit; padding: .75rem; border: 1px solid; background: Canvas; color: CanvasText; }
+  button { min-height: 44px; font: inherit; padding: .6rem 1rem; cursor: pointer; }
+  :focus-visible { outline: 3px solid Highlight; outline-offset: 3px; }
+  details { margin: 1rem 0; }
+  summary { min-height: 44px; display: list-item; align-content: center; cursor: pointer; }
+  code { overflow-wrap: anywhere; }
+  footer { border-top: 1px solid; margin-top: 2rem; padding-top: 1rem; }
+  #status { min-height: 1.5em; }
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>__TITLE__</h1>
+<p>__QUESTION__</p>
+<p><strong>Declared capture:</strong> __CONTEXT__</p>
+<p>Compare the screenshots. A selection does not authorize implementation or publication.</p>
+<p id="status" role="status" aria-live="polite">Screenshots and identities are available below.</p>
+</header>
+<noscript><p>Compare the screenshots and source identities below. Enable JavaScript to add notes and download review JSON.</p></noscript>
+<form id="review" autocomplete="off">
+<fieldset><legend>Compare variants</legend><div id="variants">__CARDS__</div></fieldset>
+<footer>
+<button id="download" type="submit" hidden disabled>Download review JSON</button>
+<details><summary>Review identity</summary><code>__IDENTITY__</code></details>
+<p>This HTML embeds screenshot bytes. Review JSON contains identities, your selection and notes. Notes stay in this tab until downloaded and are not stored between visits. Review both files before sharing.</p>
+</footer>
+</form>
+</main>
+<script id="review-data" type="application/json">__REVIEW_DATA__</script>
+<script>
+'use strict';
+const data = JSON.parse(document.getElementById('review-data').textContent);
+const form = document.getElementById('review');
+const status = document.getElementById('status');
+const download = document.getElementById('download');
+let dirty = false;
+document.querySelectorAll('.feedback').forEach(element => { element.hidden = false; });
+download.hidden = false;
+status.textContent = 'Checking images…';
+const pending = Array.from(document.querySelectorAll('img'), (image, index) => new Promise((resolve, reject) => {
+  const failed = () => reject(new Error('An image could not be displayed. Check the input files and rebuild.'));
+  const ready = () => {
+    const size = data.variants[index].image_size;
+    if (!image.naturalWidth) failed();
+    else if (image.naturalWidth !== size.width || image.naturalHeight !== size.height) {
+      reject(new Error('Image size differs from the manifest. Correct image_size and rebuild.'));
+    } else resolve();
+  };
+  if (image.complete) ready();
+  else { image.onload = ready; image.onerror = failed; }
+}));
+Promise.all(pending).then(() => {
+  status.textContent = data.variants.length + ' images ready. Select a variant to export your review.';
+  download.disabled = false;
+}).catch(error => { status.textContent = error.message; });
+form.addEventListener('input', () => { dirty = true; });
+window.addEventListener('beforeunload', event => {
+  if (dirty) { event.preventDefault(); event.returnValue = ''; }
+});
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!form.reportValidity() || download.disabled) return;
+  const result = {
+    ...data, preferred: form.querySelector('input[name="preferred"]:checked').value,
+    variants: data.variants.map(variant => ({ ...variant, notes: document.getElementById('notes-' + variant.id).value }))
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(result, null, 2) + '\n'], {type: 'application/json'}));
+  const link = document.createElement('a');
+  link.href = url; link.download = 'variant-review-' + data.board_sha256.slice(0, 12) + '.json';
+  link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  status.textContent = 'Review file prepared. Confirm the browser saved it before closing this tab.';
+});
+</script>
+</body>
+</html>
