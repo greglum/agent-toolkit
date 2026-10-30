@@ -178,6 +178,9 @@ When a visual editor or editable handoff is requested, identify its actual edit 
 source code, composition props, a project file, or only a session draft. Preserve the current
 source and user edits before applying another editor or agent's changes. Reconcile a stale
 preview against current source; keep one writer for the same scene at a time.
+When saved edits target clip IDs or element selectors, preserve those targets or migrate
+the bindings during a scene rewrite. Verify that each saved edit still reaches its intended
+target; keeping the override data alone does not preserve the visible edit.
 
 Exercise a representative copy or style edit and a timing edit through the promised editor.
 Save through its supported path, inspect the source or project diff, then reopen in a fresh

@@ -12,6 +12,11 @@ behavior are different outcomes. Skills provide procedures; authority comes from
 | Reconcile CI/review | [monitor-pr](../skills/monitor-pr/SKILL.md) | Live endpoints, current gates, unresolved findings and watcher ownership | Ready, waiting or blocked, independently assessed from event notifications |
 | Merge or hand off | Repository delivery workflow | Verified gates, action authority and final head | Open and unmerged, or verified merge commit, according to the request |
 
+For several dependent PRs, [plan-pr-stack](../skills/plan-pr-stack/SKILL.md) can build candidate
+waves from a supplied snapshot. Unknown file coverage, outside dependencies and ambiguous
+overlap remain explicit. This ordering artifact does not establish readiness; each landing
+still requires fresh repository gates and action authority.
+
 For a requested fix-and-review loop, set a bounded round/time budget in the task record.
 Use the existing harness/model unless the user chose another. Give a reviewer the original
 intent, fixed comparison and checks. Independently verify its findings. Track stable IDs;

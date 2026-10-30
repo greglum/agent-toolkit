@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "observed_at": "2026-10-30T00:00:00Z",
+  "repository": "github.com/example/project",
+  "default_branch": "main",
+  "prs": [
+    {
+      "number": 101,
+      "head": {
+        "repository": "github.com/example/project",
+        "branch": "storage-contract",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "base": {
+        "repository": "github.com/example/project",
+        "branch": "main",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        "src/storage.py"
+      ],
+      "depends_on": []
+    },
+    {
+      "number": 102,
+      "head": {
+        "repository": "github.com/example/project",
+        "branch": "storage-client",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "base": {
+        "repository": "github.com/example/project",
+        "branch": "storage-contract",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        "src/client.py",
+        "contracts/api.json"
+      ],
+      "depends_on": []
+    },
+    {
+      "number": 110,
+      "head": {
+        "repository": "github.com/example/project",
+        "branch": "api-schema",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "base": {
+        "repository": "github.com/example/project",
+        "branch": "main",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        "contracts/api.json"
+      ],
+      "depends_on": []
+    },
+    {
+      "number": 111,
+      "head": {
+        "repository": "github.com/example/project",
+        "branch": "api-docs",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "base": {
+        "repository": "github.com/example/project",
+        "branch": "api-schema",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        "docs/api.md"
+      ],
+      "depends_on": []
+    },
+    {
+      "number": 120,
+      "head": {
+        "repository": "github.com/example/project",
+        "branch": "search-ui",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "base": {
+        "repository": "github.com/example/project",
+        "branch": "main",
+        "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        "web/search.ts"
+      ],
+      "depends_on": [
+        {
+          "repository": "github.com/example/project",
+          "number": 99,
+          "state": "unknown",
+          "evidence": "reviewed dependency declaration in supplied fixture"
+        }
+      ]
+    }
+  ],
+  "orderings": [
+    {
+      "before": 110,
+      "after": 102,
+      "reason": "API producer schema precedes the storage client; synthetic design review"
+    }
+  ]
+}

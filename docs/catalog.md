@@ -13,9 +13,11 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | --- | --- | --- |
 | [`acp`](../skills/acp/SKILL.md) | Review task-owned changes, commit them in cohesive groups, and push to the authorized destination. | By name, Codex only |
 | [`agent-readiness`](../skills/agent-readiness/SKILL.md) | Assess a repository for agent work, then plan and implement supported improvements. | Automatic |
+| [`analyze-agent-history`](../skills/analyze-agent-history/SKILL.md) | Analyze supplied agent-history exports into text-free correction candidates and coverage counts. | Automatic |
 | [`animate`](../skills/animate/SKILL.md) | Build interface motion with purposeful timing, interruption, and reduced-motion behavior. | Automatic |
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
 | [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Measure codebase quality against a fixed rubric with source evidence. | Automatic |
+| [`compare-experiments`](../skills/compare-experiments/SKILL.md) | Compare paired observations with visible missing/failure evidence and selected-candidate confirmation. | Automatic |
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan source-backed website, YouTube and LinkedIn content, then compare matched measurement windows. | Automatic |
 | [`continue-pr`](../skills/continue-pr/SKILL.md) | Recover inherited work or reassess an old PR before continuing it. | Automatic |
 | [`create-pr`](../skills/create-pr/SKILL.md) | Create a PR after checking the repository, head, base, push destination, and existing PRs. | By name, Codex only |
@@ -37,6 +39,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`loop-engineering`](../skills/loop-engineering/SKILL.md) | Run bounded improve, review, and verify iterations against fixed acceptance conditions. | Automatic |
 | [`monitor-pr`](../skills/monitor-pr/SKILL.md) | Watch PR events and independently assess CI, reviews, and readiness. | Automatic |
 | [`motion-film`](../skills/motion-film/SKILL.md) | Create and check films, with rendered, audio, export, and editable-handoff proof. | Automatic |
+| [`plan-pr-stack`](../skills/plan-pr-stack/SKILL.md) | Plan candidate dependency waves from a supplied PR snapshot, without claiming merge readiness. | Automatic |
 | [`polish-animations`](../skills/polish-animations/SKILL.md) | Coordinate the full interface-motion assessment, build, review, and verification loop. | By name |
 | [`postgres-investigate`](../skills/postgres-investigate/SKILL.md) | Investigate PostgreSQL query, lock, connection, and row-security behavior. | Automatic |
 | [`reconcile-metric`](../skills/reconcile-metric/SKILL.md) | Trace a disputed aggregate to source records and recalculate it independently. | Automatic |

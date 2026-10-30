@@ -1,0 +1,5 @@
+{"type":"session_meta","payload":{"id":"synthetic-codex-a","source":"cli"}}
+{"type":"response_item","payload":{"type":"message","role":"developer","content":[{"type":"input_text","text":"I already asked you to preserve the files"}]}}
+{"type":"response_item","payload":{"type":"message","role":"user","content":[{"type":"input_text","text":"You did not verify the fixture"}]}}
+{"timestamp":"2026-01-01T00:00:00Z","type":"event_msg","payload":{"type":"user_message","message":"You did not verify the result. Preserve the existing files."}}
+{"type":"event_msg","payload":{"type":"agent_message","message":"I already asked"}}

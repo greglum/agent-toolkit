@@ -34,9 +34,16 @@ not that the post is unavailable. Use the following sequence for `x.com` and `tw
    need not rediscover the same 403. Keep the supplied URL in the ledger. For a status URL,
    open `https://x.com/<author>/status/<id>` without share parameters. Preserve a supplied
    direct Article path. Switch away from a failed reader rather than retrying URL spellings.
+   If that browser backend is disabled or fails, inspect the available browser/app inventory
+   and try another permitted route, including native browser controls such as Safari when
+   supported. One backend's failure does not establish that all browsers are unavailable.
+   Respect the user's browser restrictions; do not change settings, launch a prohibited
+   browser, or route around an approval rejection.
 2. Read the rendered accessibility tree or DOM snapshot. An Article can appear in full
    inside its status page. If only a preview appears, follow its visible Article link or
    expansion control. Use the actual destination the page exposes; do not guess Article IDs.
+   Accessibility output can truncate a long text node even when the whole post is rendered.
+   Inspect screenshots and scroll through the omitted text before claiming full coverage.
 3. Confirm author, title or opening text, displayed date, and the end of the body. Read all
    sections, expanding or scrolling as needed. Separate the author's body from replies,
    quoted posts, profile links, and recommendations. Record an unknown display timezone
@@ -45,7 +52,7 @@ not that the post is unavailable. Use the following sequence for `x.com` and `tw
    actual destinations and record both when needed. Cite the canonical original post for
    its claims, and the destination source for evidence checked there. Keep a compact ledger
    of the recovery method, body coverage, missing media, and access limits.
-5. If the browser is unavailable or still blocked, search once by exact post ID, or by author
+5. After available permitted browser routes fail, search once by exact post ID, or by author
    and distinctive title, for an author-published copy. Verify identity and completeness.
    Search snippets, embedded previews, mirrors, and summaries are leads; label any recovered
    copy's provenance and omissions. An unofficial copy alone does not establish a full

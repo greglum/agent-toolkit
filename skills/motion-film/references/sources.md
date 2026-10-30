@@ -1,5 +1,19 @@
 # Sources and adaptation
 
+## October 29 OpenFilm review
+
+The saved-edit binding check in [studio handoff](production.md#verify-an-editable-studio-handoff)
+is original guidance informed by OpenFilm contributors' MIT-licensed
+[override application](https://github.com/openfilm/openfilm/blob/de5a98bd46e2edfe8a98a6ca5343f925f71d53ff/packages/openfilm/src/overrides.mjs)
+and [missing-target warning](https://github.com/openfilm/openfilm/blob/de5a98bd46e2edfe8a98a6ca5343f925f71d53ff/packages/openfilm/src/look.mjs#L56-L64).
+Observed October 29, 2026; the pin is dated the same day. Saved selector overrides can outlive
+their targets after a page rewrite. Independent [Upwelling research](https://www.inkandswitch.com/upwelling/),
+Ink & Switch, March 2023, section Automatic merging is necessary but not sufficient, supports
+reviewing preserved intent after merges; its prose-editor findings do not evaluate OpenFilm.
+Living-page reuse rights were not established. No source text, code or media copied.
+Recheck when editor bindings, scene identity or save behavior changes. This refinement does
+not supply an editor or capture orchestrator. Runtime and blind/control evaluation were not run.
+
 ## October 26 design showcase review
 
 Elaya's [design-to-motion](https://github.com/elayadesign/ai-design-skills/blob/a2735a3eaf092eaaffb6dc17df25de33ef3bd048/skills/design-to-motion/SKILL.md),

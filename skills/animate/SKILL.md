@@ -4,14 +4,14 @@ description: >-
   Build web UI motion that earns its place: gate purpose and frequency, pick the cheapest
   tool, then set properties, timing, interruption, exit, and reduced motion from project
   tokens. Edits code. Use to animate an element, add a transition, or build a
-  find-animation-opportunities row. Grade results with review-animations.
+  find-animation-opportunities row. Review the implemented motion against the project contract.
 ---
 
 # Animate
 
 Turn one motion request, or one ledger row from `find-animation-opportunities`, into an
-implementation that passes `review-animations` the first time. Make each decision, state it
-in one line, and write the code. Do not offer a menu of options.
+implementation with checked motion behavior. State each decision in one line and write
+the code. Do not offer a menu of options.
 
 Two failures matter, and the first is worse: animating something that should not move, and
 animating the right thing with the wrong ingredients.
@@ -77,9 +77,11 @@ animating the right thing with the wrong ingredients.
 8. **Verify, then get it graded.** Run the project's required gates. Run the app through its
    own verification workflow and exercise the change at normal speed, on rapid repeat and
    reversal, with reduced motion, and by keyboard; follow `ui-motion`'s rendered review when
-   it is installed. Then invoke `review-animations` on your diff and fix every Block finding.
-   Done when the gates pass and the review has no Block, or the blocker is stated with the
-   evidence that would settle it.
+   it is installed. If `review-animations` is available, review the diff and fix every Block
+   finding. Otherwise inspect the diff against steps 1-7, label that self-review and record
+   the unavailable companion review. Keep the rendered checks and project gates mandatory.
+   Done when required checks pass and no verified blocker remains, or the blocker is stated
+   with the evidence that would settle it.
 
 For common components, start from the matching entry in [recipes](references/recipes.md)
 and adapt it to the project's tokens and primitives.

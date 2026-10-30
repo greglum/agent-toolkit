@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Audit a repository's security boundaries and verify suspected vulnerabilities; remediate confirmed findings when requested. Use for whole-system security reviews and audit follow-up, rather than routine diff review or a search for variants of one known bug.
+description: Audit security boundaries, build or update a source-grounded threat model, and verify suspected vulnerabilities; remediate confirmed findings when requested. Use for whole-system security reviews and audit follow-up, rather than routine diff review or variants of one known bug.
 compatibility: Source and shell access support the audit. Bundled local SARIF interpretation uses Python 3.10+ without dependencies. Scanners and independent workers are optional; missing execution or coverage remains explicit.
 ---
 
@@ -35,10 +35,19 @@ and the invariants each owner enforces. Read the narrow applicable lanes in
 when they affect the requested system; source configuration alone is not live-state proof.
 
 Build a coverage ledger: surface, invariant, source anchors, method, observation, and gap.
-Use current source and lockfiles; historical reports are leads requiring a recheck.
+Use current source and lockfiles. Scope implementation discovery to current owners; label
+historical reports and archived probes as carried evidence or leads requiring a recheck.
+Repeated reports are not independent corroboration.
 A scan supplements this map. Successful scans cover their tested rules and paths only.
 For existing local SARIF reports, use the bundled [SARIF evidence reader](references/sarif-ledger.md)
 to retain candidates, source identity and scanner execution gaps without starting a scan.
+For material controls, distinguish documentation claims, proposed designs, observed
+implementation, and tested enforcement. Link each to its evidence and affected paths; a
+passing parser or configuration check does not prove effectiveness. Record assumptions
+and residual exposure without turning missing evidence into a vulnerability.
+
+For a requested review against a prior threat model, follow
+[baseline review](references/baseline-review.md) before updating its findings.
 Mark irrelevant lanes with a reason and missing lanes as unavailable or not run.
 Finish with every discovered entry point assigned to an owner or a named coverage gap.
 
