@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Slider-crank mechanism</title>
+  <style>/* INLINE_STYLE */</style>
+</head>
+<body>
+  <a class="skip" href="#mechanism">Skip to mechanism</a>
+  <main id="mechanism">
+    <header>
+      <h1>From rotation to a straight stroke</h1>
+      <p>A slider-crank links a rotating arm to a sliding block. Change the crank angle
+        to see how the connecting rod carries that motion.</p>
+    </header>
+    <figure>
+      <svg viewBox="0 0 680 300" role="img" aria-labelledby="drawing-title drawing-description">
+        <title id="drawing-title">Slider-crank at a quarter turn</title>
+        <desc id="drawing-description">The crank points upward. The rod joins its tip to a block
+          on a horizontal guide. Dimensions are illustrative.</desc>
+        <path class="track" d="M260 160H530M260 220H530"/>
+        <path class="axis" d="M55 190H585"/>
+        <circle class="orbit" cx="120" cy="190" r="80"/>
+        <line id="rod" class="part rod" x1="120" y1="110" x2="346.27417" y2="190"/>
+        <line id="crank" class="part crank" x1="120" y1="190" x2="120" y2="110"/>
+        <rect id="slider" class="part slider" x="320.27417" y="166" width="52" height="48" rx="3"/>
+        <circle class="joint" cx="120" cy="190" r="9"/>
+        <circle id="pin" class="joint" cx="120" cy="110" r="7"/>
+        <circle id="wrist" class="joint" cx="346.27417" cy="190" r="7"/>
+      </svg>
+      <figcaption>The crank rotates about the fixed left joint. The block stays on its
+        horizontal guide. The rod keeps the two moving joints 120 mm apart.</figcaption>
+    </figure>
+    <section class="console" aria-label="Mechanism controls and readings">
+      <div>
+        <fieldset id="controls" disabled>
+          <legend>Set the pose</legend>
+          <label for="angle">Crank angle <output id="angle-value" for="angle">90°</output></label>
+          <input id="angle" name="angle" type="range" min="0" max="360" value="90" step="1">
+          <div class="actions">
+            <button id="step" type="button">Advance 15°</button>
+            <button id="reset" type="button">Reset to 90°</button>
+          </div>
+          <fieldset class="parts">
+            <legend>Inspect a part</legend>
+            <label><input type="radio" name="part" value="assembly" checked>Assembly</label>
+            <label><input type="radio" name="part" value="crank">Crank</label>
+            <label><input type="radio" name="part" value="rod">Rod</label>
+            <label><input type="radio" name="part" value="slider">Slider</label>
+          </fieldset>
+        </fieldset>
+        <p id="inspection" aria-live="polite">Assembly: the crank, rod and slider share the
+          same calculated pose. Selecting a part highlights it without changing the model.</p>
+      </div>
+      <dl aria-label="Calculated readings">
+        <div><dt>Slider position from fixed joint</dt><dd><output id="position">113.14</output> mm</dd></div>
+        <div><dt>Displacement from 0° position</dt><dd><output id="displacement">46.86</output> mm</dd></div>
+        <div><dt>Rod angle from horizontal</dt><dd><output id="rod-angle">−19.47</output>°</dd></div>
+      </dl>
+    </section>
+    <noscript><p>The drawing shows the 90° pose. Interactive controls need JavaScript;
+      the model and dimensions are described below.</p></noscript>
+    <section class="model" aria-labelledby="model-title">
+      <h2 id="model-title">What this model explains</h2>
+      <p>This is an ideal planar linkage with illustrative dimensions: a 40 mm crank radius
+        and a 120 mm rod. It calculates position, with rigid links, frictionless joints
+        and no offset between the crank centre and slider guide. It does not calculate
+        force, pressure, speed or the behavior of a particular machine.</p>
+      <details>
+        <summary>Equations and checks</summary>
+        <p>For crank angle θ, radius r and rod length L, the crank pin is
+          (r cos θ, r sin θ). The slider lies at x = r cos θ + √(L² − r² sin² θ).
+          Displacement is r + L − x. The rod uses the right-hand assembly branch.</p>
+        <p>At 0° the slider is 160 mm from the fixed joint. At 180° it is 80 mm away.
+          At 90° it is approximately 113.137 mm away. These are analytical checks of an
+          illustrative model, not measurements. The model covers 0° to 360° and requires L &gt; r &gt; 0.</p>
+      </details>
+    </section>
+  </main>
+  <script>
+    /* INLINE_MODEL */
+    /* INLINE_CONTROLS */
+  </script>
+</body>
+</html>

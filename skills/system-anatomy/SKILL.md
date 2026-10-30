@@ -1,6 +1,7 @@
 ---
 name: system-anatomy
 description: Create a source-grounded interactive anatomy, cutaway, or isometric explainer of a system or mechanism. Use when parts, layers, and user-controlled state changes teach how it works. For ordinary architecture graphs use diagram-design; for timeline videos use motion-film.
+compatibility: The optional offline slider-crank example builder needs Node.js 18+. Without Node, author the figure using the project's existing tools; the mechanism guidance does not require the bundled example or a graphics library.
 ---
 
 # System anatomy
@@ -25,6 +26,10 @@ interiors. A photograph or finish reference cannot establish hidden construction
 or tolerances. Label invented internals as illustrative. Keep fabrication deliverables with
 a CAD/drafting workflow: identify missing authoritative dimensions, units, fits and standards
 before handing off; never label this explanatory figure as fabrication-ready.
+
+For a moving physical mechanism or calculated physical readouts, read
+[mechanism modeling](references/mechanisms.md) before choosing inputs or drawing geometry.
+It includes a runnable offline example; software metaphors do not need that branch.
 
 Use the smallest fitting output: a standalone HTML figure with inline SVG and local controls,
 or a component in an existing app when requested. Prefer native browser features and installed
