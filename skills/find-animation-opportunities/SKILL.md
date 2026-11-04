@@ -94,8 +94,9 @@ A proposal names the trigger, what moves, the properties, origin or path, the ti
 (or a band when the project has none; `animate` picks the exact value), interruption
 behavior, and the reduced-motion variant. Owner is the component or primitive to change.
 
-**Rejected candidates** (required, 2 to 6): location, what was considered, and the gate that
-rejected it. This list is what separates the ledger from a wishlist.
+**Rejected candidates:** location, what was considered, and the gate that rejected it.
+Report the actual rejections without a minimum count. If none were found, say so and name
+the searched surfaces; do not invent candidates to fill the ledger.
 
 **Non-motion fixes:** geometry or state defects found during the sweep.
 

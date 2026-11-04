@@ -1,6 +1,6 @@
 ---
 name: motion-film
-description: "Create, edit, audit, or render films: product demos, explainers, data graphics, motion graphics, music-led typography, and character animation. Reuse the project's renderer and verify the requested output. For application interaction motion, use ui-motion instead."
+description: "Create, edit, audit, or render films: live action, animated shorts, mixed footage and animation, product demos, explainers, motion graphics, and character animation. Plan shots and continuity, reuse the project's renderer, and verify the output. For application interaction motion, use ui-motion instead."
 compatibility: Needs the project's existing renderer and capture surface, plus a way to inspect encoded output, such as ffprobe. Without them, do a source-only review and report rendered, encoded, and playback acceptance as unverified.
 ---
 
@@ -28,7 +28,9 @@ formats to that skill. Thumbnail production owns the images; this skill owns the
    embedded or standalone delivery, format, dimensions, fps, duration budget, and audio scope.
    Reuse known decisions and prior approved briefs. For an existing film, preserve its player,
    opening/replay policy, content revision, and engine seams. Choose the existing renderer
-   before introducing one. For generated video, including a replacement take, read
+   before introducing one. For live action, animated narrative shorts, or animation combined
+   with footage, read [film craft and continuity](references/film-craft.md).
+   For generated video, including a replacement take, read
    [generated plates](references/generated-plates.md). For application films, read [application film setup](references/app-films.md)
    for a new film, a source refresh, or scenes using environment data. For a film that teaches
    a concept or mechanism, read [explainer films](references/explainers.md). Finish with the

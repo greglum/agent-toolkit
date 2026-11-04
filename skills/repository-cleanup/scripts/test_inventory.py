@@ -142,6 +142,22 @@ class InventoryTests(unittest.TestCase):
         self.assertFalse(invalid["complete"])
         self.assertTrue(invalid["errors"])
 
+    def test_inventory_does_not_execute_configured_monitor_or_write_index(self):
+        marker = self.root / "monitor-ran"
+        monitor = self.root / "monitor"
+        monitor.write_text('#!/bin/sh\nprintf ran > "' + str(marker) + '"\nprintf "token\\0"\n')
+        monitor.chmod(0o755)
+        self.git("config", "core.fsmonitor", str(monitor))
+        self.git("status", "--porcelain")
+        self.assertTrue(marker.exists(), "the configured-program control must actually run")
+        marker.unlink()
+        index = self.repo / ".git/index"
+        before = index.read_bytes()
+        result = Inventory(str(self.repo)).collect("main")
+        self.assertTrue(result["complete"], result["errors"])
+        self.assertFalse(marker.exists())
+        self.assertEqual(index.read_bytes(), before)
+
 
 if __name__ == "__main__":
     unittest.main()

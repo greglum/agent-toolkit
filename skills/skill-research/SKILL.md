@@ -7,7 +7,7 @@ description: >-
   Invoke /skill-research or $skill-research with URLs, a focus, skills, or a date window.
   To audit and evidence-test one skill, use harden-skill instead.
 disable-model-invocation: true
-compatibility: URL assessments require web search and source retrieval for corroboration. If unavailable, record unverified claims and limit work to a provisional assessment. Catalog sweeps can use GitHub CLI or blobless clones; optional workers can be replaced by sequential reads.
+compatibility: URL assessments need web search and source retrieval. The public X helper needs Python 3.10+; without it, use the documented HTTP routes. If retrieval or search is unavailable, keep claims provisional. Catalog sweeps can use GitHub CLI or blobless clones; optional workers can be replaced by sequential reads.
 ---
 
 # Skill research round
@@ -27,6 +27,8 @@ skill) as soon as you find it, not at the end.
 - **URLs** (optional): one or more seed sources. With URLs, use the focused workflow in
   [`references/url-assessment.md`](references/url-assessment.md) instead of steps 1-7 below.
   This does not start the four catalog lanes unless the user also requests a full sweep.
+  For X URLs, read [X source recovery](references/x-recovery.md) before retrieval; use the
+  bundled public-source helper and account for applicable routes before declaring a blocker.
 - **Scope** (optional): assessment-only or local harvest. Default: assess and apply justified
   local skill, documentation and bounded tooling changes. Preserve a user's narrower scope.
 - **Focus** (optional): `authors`, `new`, `platform`, `history`, or named skills. Default: all

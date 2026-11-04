@@ -24,6 +24,8 @@ of his work. This repository holds the installable bundles and usage documentati
 | Explain a system and explore its relationships | [diagram-design](skills/diagram-design/SKILL.md) | A diagram or standalone graph viewer |
 | Explore a system's parts and behavior | [system-anatomy](skills/system-anatomy/SKILL.md) | A source-grounded interactive anatomy or cutaway |
 | Check a rendered film | [motion-film](skills/motion-film/SKILL.md) | Source, playback and export checks using its production tools |
+| Export selected short clips | [repurpose-long-video](skills/repurpose-long-video/SKILL.md) | Local MP4s, caption sidecars and an edit list from supplied timings and crops |
+| Reconcile an extracted corpus | [extract-documents](skills/extract-documents/SKILL.md) | Requested-input coverage, file identities and explicit conversion failures |
 | Turn a conversation into buildable work | [to-spec](skills/to-spec/SKILL.md) | A spec with scope, decisions and acceptance conditions |
 
 Browse the [full catalog](docs/catalog.md) or [workflow map](docs/workflows.md).
@@ -94,6 +96,11 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 For physical mechanisms, the [modeling guide and offline example](skills/system-anatomy/references/mechanisms.md)
 cover parameter provenance, model limits, numerical checks and synchronized controls/readouts.
 
+For GLB props, the [offline inventory and mesh checks](skills/motion-film/references/material-3d.md#qualify-an-imported-mesh)
+list declared loader dependencies and animation data before scene review. The
+[draft-finalization checks](skills/motion-film/references/generated-plates.md#preserve-requested-and-effective-inputs)
+keep selected take identity and full-route pricing together.
+
 For noisy improvement work, the [measurement procedure](skills/loop-engineering/SKILL.md#freeze-the-contract)
 records unchanged-run variation and confirms selected or combined changes.
 Its [source notes](skills/loop-engineering/references/sources.md#noisy-measurements-and-confirmation)
@@ -122,6 +129,16 @@ cover coarse inputs, scene scale and exported geometry cost.
 
 For recorded footage, the [speech-editing notes](skills/motion-film/references/sources-editing.md#october-27-video-editor-review)
 explain verbatim transcript checks and matched-frame correction review.
+
+For reference reconstruction, the [source notes](skills/motion-film/references/sources.md#november-4-reference-reconstruction)
+record caption/text matching, timing checks and remaining tooling gaps.
+
+The [local clip-export guide](skills/repurpose-long-video/references/clip-export.md) covers
+supplied transcripts, fixed crops and encoded timestamp checks. The
+[extraction manifest checker](skills/extract-documents/references/manifest-check.md) checks
+file accounting while leaving content fidelity to source review. For skill comparisons,
+the [runtime receipt importer](skills/harden-skill/references/native-receipts.md) preserves
+reported Codex usage and incomplete runs without inventing grades or acceptance.
 
 Source notes stay beside the skill they inform. Adapted text and values retain
 credit in [third-party notices](THIRD_PARTY_NOTICES.md).

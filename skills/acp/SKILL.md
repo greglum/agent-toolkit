@@ -79,8 +79,11 @@ For each group:
    Preserve literal text and actual newlines. Inspect the new commit's full patch and SHA,
    then verify unrelated staged and working-tree content remains intact.
 
-A check that selected zero tests, was skipped or cached, or masked its exit code did not run;
-a forced failure counts only after confirming the forcing edit applied.
+Distinguish fresh execution from reused evidence. Reuse a cached result only when repository
+gates permit it and its source, inputs, dependencies and configuration still match; retain
+the original command, status and observation time. Zero selected tests, skipped checks or
+masked exit codes do not establish passing execution. A forced failure counts only after
+confirming the forcing edit applied.
 
 Execute groups sequentially and confirm each success before the next. If a hook or command
 fails, follow [`references/staging.md`](references/staging.md#failed-hook-or-command) before

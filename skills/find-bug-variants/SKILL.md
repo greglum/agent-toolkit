@@ -1,6 +1,7 @@
 ---
 name: find-bug-variants
 description: Find other instances of an already confirmed defect within a bounded codebase. Use when asked whether the same bug occurs elsewhere or to audit sibling paths after diagnosis. Requires a known seed and cause; not a general security review or initial bug diagnosis.
+compatibility: Needs read and search access to the selected source and a confirmed defect. Use existing repository tools; no scanner installation is required. Without access to the seed or a search capability, report the calibration or coverage gap rather than claiming an absence of variants.
 ---
 
 # Find bug variants
@@ -24,6 +25,12 @@ a checkable description of what would make another location the same defect.
 Start with a precise search that finds the seed in the affected revision. If it is already
 fixed, calibrate against an available historical source or known pre-fix artifact, then label
 the current search separately. Without access to the seed, disclose the calibration gap.
+
+For an already available structural or taint analyzer, retain the query file and tool/version
+beside the search record. Calibrate its sources, sinks, guards and exclusions against the
+actual invariant, including an available safe lookalike. Generic sanitizer names or a template's
+confidence label do not establish that the guard makes this operation safe. Keep lexical
+search usable when no analyzer or supported language is available.
 
 Inspect results before broadening. Change one grounded search dimension at a time, such as
 an alternate API, caller, data source, or equivalent operation that could violate the same

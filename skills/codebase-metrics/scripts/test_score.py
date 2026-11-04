@@ -32,6 +32,31 @@ class ScoreContract(unittest.TestCase):
         self.assertTrue(result['all_applicable_dimensions_met'])
         self.assertEqual([r['score'] for r in result['dimensions']], [10.0]*8)
 
+    def test_task_harness_profile_preserves_full_inventory_and_unknown_weight(self):
+        self.plan['dimension_profile'] = 'task-harness'
+        for dimension, identifier in zip(self.plan['dimensions'], score.DIMENSION_PROFILES['task-harness']):
+            dimension['id'] = identifier
+        self.observations['plan_sha256'] = score.digest(self.plan)
+        self.observations['criteria'][0].update(status='NOT RUN', evidence=[], raw={'missing': 'fresh trial'})
+        row = self.run_score()['dimensions'][0]
+        self.assertEqual(row['id'], 'task-contract')
+        self.assertEqual(row['total_weight'], 100)
+        self.assertEqual(row['unknown_weight'], 99)
+        self.assertFalse(row['target_met'])
+        self.observations['criteria'].pop()
+        with self.assertRaisesRegex(ValueError, 'missing observed IDs'):
+            self.run_score()
+        self.plan['dimensions'].pop()
+        with self.assertRaisesRegex(ValueError, 'all eight dimensions'):
+            score.validate_plan(self.plan, self.root)
+
+    def test_profiles_reject_unknown_and_mixed_dimension_sets(self):
+        for profile in ['unknown', None, [], 'task-harness']:
+            with self.subTest(profile=profile):
+                self.plan['dimension_profile'] = profile
+                with self.assertRaises(ValueError):
+                    score.validate_plan(self.plan, self.root)
+
     def test_critical_fail_and_unknown_block_high_score(self):
         for status in ['FAIL', 'UNAVAILABLE', 'NOT RUN']:
             with self.subTest(status=status):

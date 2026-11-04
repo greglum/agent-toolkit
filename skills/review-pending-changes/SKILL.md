@@ -27,9 +27,17 @@ literal counts even when it looks fake; in a single final reply, lead with it.
 2. **Read all three states.** Inspect index versus HEAD, working tree versus index, and the
    resulting file or absence. Read untracked files directly. For deletions and renames, read
    original committed/index blobs and surviving callers. Use Git object reads, not checkout.
-   Prefer reads that never write the index: `git --no-optional-locks status`, `git diff --cached`,
-   `git diff-files -p`, and `git diff-index -p HEAD`. Plain `git status` and `git diff` can refresh
-   its stat cache.
+   Disable configured filesystem-monitor hooks with `-c core.fsmonitor=false` for
+   index or working-tree reads. Prefer reads that never write the index:
+   `git -c core.fsmonitor=false --no-optional-locks status`,
+   `git -c core.fsmonitor=false --no-pager diff --no-ext-diff --no-textconv --cached`,
+   `git -c core.fsmonitor=false --no-pager diff-files --no-ext-diff --no-textconv -p`, and
+   `git -c core.fsmonitor=false --no-pager diff-index --no-ext-diff --no-textconv -p HEAD`. Disable pagers,
+   external diff drivers and text converters for patch-producing Git reads because
+   they can execute configured programs. Read committed/index blobs with raw
+   `git --no-pager show <sha>:<path>` or `git --no-pager show :<path>`, without
+   conversion flags.
+   Plain `git status` and `git diff` can refresh the index stat cache.
    Inspect executable and type changes. For lockfiles, generated files, and binaries, record
    the appropriate consistency or artifact check and its result or limitation; do not silently
    exclude them. Conflicts block approval until resolved and reviewed.
@@ -49,7 +57,8 @@ literal counts even when it looks fake; in a single final reply, lead with it.
    introduced.
 5. **Conclude within the evidence.** Report actionable findings, covered paths, unresolved
    coverage, and required gates that remain unrun. A read-only review cannot establish a
-   runtime check it did not perform. Confirm staged entries (`git ls-files -s`) and
+   runtime check it did not perform. Confirm staged entries
+   (`git -c core.fsmonitor=false ls-files -s`) and
    working-tree content were not changed by the review; a refreshed index stat cache is not
    a change. If concurrent work moved them, disclose the changed snapshot.
 

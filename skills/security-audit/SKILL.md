@@ -26,6 +26,11 @@ cloud writes, email, data deletion, and paid workloads each need applicable auth
 Read-only access does not make executing repository scripts safe: inspect them first.
 Finish this step with a bounded target and an explicit action boundary.
 
+For scanner-report triage only, keep the review bounded to the supplied report and the affected
+source paths. Use the SARIF reader below for supported input, then challenge its candidates;
+a report-intake request does not require a new whole-system threat model. State unexamined
+system coverage explicitly. A prior-model update uses its existing stable IDs and baseline.
+
 ## 2. Map the system before hunting
 
 Trace entry points through validation, identity, permissions, transformations, storage,

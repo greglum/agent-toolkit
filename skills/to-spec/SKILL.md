@@ -2,6 +2,7 @@
 name: to-spec
 description: "Synthesize the current conversation into an implementation spec without another interview. Publish to the identified issue tracker when the user authorizes it, or deliver a complete local draft."
 license: MIT
+compatibility: Uses the current conversation and available repository source. A tracker connector or CLI is optional and used only for an authorized publication. Without one, deliver the complete local draft and identify any missing source or tracker evidence.
 ---
 
 > Invocable by other skills. This skill is deliberately *not* gated with
@@ -66,10 +67,6 @@ Each user story should be in the format of:
 
 1. As an <actor>, I want a <feature>, so that <benefit>
 
-<user-story-example>
-1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
-</user-story-example>
-
 Cover the feature's acceptance conditions without adding inferred features or repeating stories.
 
 ## Implementation Decisions
@@ -90,8 +87,10 @@ Exception: if a prototype produced a snippet that encodes a decision more precis
 
 ## Decision Budget
 
-The freedoms this spec leaves to the implementer (for example naming, internal structure,
-copy). A choice outside this list means the spec is incomplete: raise it rather than settle it.
+Name material choices left to the implementer and any constraints on them. Routine naming,
+internal structure and other implementation details follow repository rules without another
+decision. Raise an unresolved product, contract, authority or material risk choice rather
+than silently settling it.
 
 ## Testing Decisions
 

@@ -3,7 +3,6 @@ name: create-pr
 description: Create a pull request from committed branch changes after verifying the head repository, push destination, and intended base. Use for PR creation; preserve uncommitted work and report an existing matching PR instead of creating a duplicate.
 compatibility: Requires Git, push access to the head repository, and the GitHub CLI (gh) or an equivalent GitHub API client with access to the base repository. Without a client, report the PR as unrun with the blocker; nothing is installed or configured automatically.
 disable-model-invocation: true
-allowed-tools: Bash(git *), Bash(gh *)
 arguments:
   - name: base
     description: "Target branch to merge into (overrides repository convention)"
@@ -54,9 +53,12 @@ otherwise lead with the concrete user problem and resulting behavior, followed b
 validation. Keep titles grounded in the change; quantify benefits only when measured. Explain
 the final implementation, with details that help readers understand the resulting behavior. Separate
 passed, failed, unrun, and planned checks. Do not mark a planned test as passed or infer CI
-success from local output. A check that selected zero tests, was skipped or cached, or masked
-its exit code did not run; a forced failure counts only after confirming the forcing edit
-applied. Include material risks and excluded work when relevant, and state in a line whether the
+success from local output. Distinguish fresh execution from reused evidence. Reuse a cached
+result only when repository gates permit it and its source, inputs, dependencies and
+configuration still match; retain the original command, status and observation time.
+Zero selected tests, skipped checks or masked exit codes do not establish passing execution.
+A forced failure counts only after confirming the forcing edit applied.
+Include material risks and excluded work when relevant, and state in a line whether the
 change is easily reversible or a one-way door, and its blast radius. Judge reversibility by what a
 revert cannot undo: data written in a new shape, anything sent or deployed, and deletions.
 

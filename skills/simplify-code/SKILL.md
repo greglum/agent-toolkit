@@ -1,6 +1,7 @@
 ---
 name: simplify-code
 description: Simplify code in named files or directories, including unchanged code, while preserving behavior and project conventions. Use for recursive, filtered, shallow, or dry-run simplification. For an explicit comment-only request, audit or clean comments without changing code behavior. For prose use deslop.
+compatibility: Uses source access and the destination repository's existing checks. No specific language, framework or additional analyzer is required. If equivalent old/new behavior cannot be checked with available tools, report preservation unverified rather than substituting a lint pass.
 ---
 
 # Simplify code

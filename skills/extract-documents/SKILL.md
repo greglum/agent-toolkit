@@ -1,7 +1,7 @@
 ---
 name: extract-documents
 description: Extract a mixed document corpus into text or Markdown with a per-source manifest of provenance, verified locators, and content loss. Use for preparing sources for comparison or search, not document authoring, browser automation, or vector ingestion.
-compatibility: Use installed format-specific readers or converters and authorized local files or streams. OCR and external conversion are optional and require suitable tools and approved data scope. Without a reader, record the unsupported input; do not install packages or require MarkItDown.
+compatibility: Use installed readers/converters and authorized local files or streams. The optional manifest checker needs Python 3.10+ and its standard library. OCR/external conversion require suitable tools and approved data scope. Without a reader, record the unsupported input; do not install packages or require MarkItDown.
 ---
 
 # Extract documents
@@ -68,5 +68,9 @@ Reconcile input counts with manifest entries, check that output references resol
 inspect the recorded failures before reporting completion. Summarize which sources are fit
 for the requested use and which need another pass. Stop at extraction; publication, model
 upload, embeddings, and ingestion require their own task scope.
+
+For a prepared local bundle, use the optional [manifest check](references/manifest-check.md)
+to compare independently requested inputs, declared statuses and source/output hashes. A
+reconciled manifest does not establish content fidelity or invent source locators.
 
 For source attribution and recheck triggers, see [provenance](references/provenance.md).

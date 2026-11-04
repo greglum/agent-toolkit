@@ -7,6 +7,7 @@ description: >-
   create a new skill from scratch, or to research outside sources for the catalog (use
   skill-research).
 disable-model-invocation: true
+compatibility: Bundled inspection and candidate-apply tools require Python 3.10+ and its standard library. Behavioral comparison needs independent native agents or fresh harness sessions with authorized data and tools. Without isolation or observable invocation, retain the live target and report the missing evidence.
 ---
 
 # /harden-skill
@@ -69,7 +70,9 @@ Default to **apply and verify**. Honor these modifiers wherever they appear:
 
 5. **Compare behavior in isolation.** Read
    [`references/evaluation.md`](references/evaluation.md) in full and run its
-   baseline-versus-candidate cases. Grade checkable assertions with concrete evidence,
+   baseline-versus-candidate cases. Already captured Codex JSONL can use the
+   [runtime receipt adapter](references/native-receipts.md); it supplies metrics, not grades.
+   Grade checkable assertions with concrete evidence,
    then review qualities that need human judgment.
 
 6. **Test triggering when relevant.** If the description changed or the reported problem

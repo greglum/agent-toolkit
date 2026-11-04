@@ -3,7 +3,6 @@ name: review-pr
 description: Review a pull request for code quality, bugs, over-engineering, and guideline compliance. Analyzes the full PR diff with confidence-scored findings and APPROVE/REVISE/REJECT verdict. Read-only assessment.
 compatibility: Requires Git with the PR's base and head commits available locally, or an authorized read to fetch them. The GitHub CLI or an equivalent read-only API is optional for PR metadata and for posting a comment. Without it, review a named local base and head and report the PR metadata as unavailable.
 disable-model-invocation: true
-allowed-tools: Bash(git diff *), Bash(git log *), Bash(git show *), Bash(git rev-parse *), Bash(git status *), Bash(git merge-base *), Bash(git ls-files *), Bash(git branch --show-current), Bash(git remote -v), Bash(gh pr view *), Bash(gh pr diff *), Read, Glob, Grep
 arguments:
   - name: pr
     description: "PR number to review (default: current branch's open PR)"
@@ -36,7 +35,11 @@ Order governs presentation, never disclosure. Report a security, data-loss, or c
 
 ## Step 1: Resolve immutable review objects
 
-Record the current branch, remotes, and full `HEAD` SHA. `git status --short` is only a preservation check. Never read, diff, format, stage, or otherwise use working-tree or sibling-worktree content for this review.
+Record the current branch, remotes, and full `HEAD` SHA.
+`git -c core.fsmonitor=false --no-optional-locks status --short` is only a preservation
+check. Disable configured filesystem-monitor hooks for any index or working-tree
+inspection. Never read, diff, format, stage, or otherwise use working-tree or
+sibling-worktree content for this review.
 
 If `--pr` is provided, query that exact PR. Otherwise, try to identify the current branch's PR:
 
@@ -61,7 +64,12 @@ worktree as PR changes.
 
 ## Step 2: Gather committed context
 
-Use the resolved base and head SHAs for every read: the patch, renames, and commit log. Diff the two commits directly (`git diff <base-sha> <head-sha>`); that form matters for safety, because it never reads the working tree or touches the index.
+Use the resolved base and head SHAs for every read: the patch, renames, and commit log.
+Read patches with `git --no-pager diff --no-ext-diff --no-textconv <base-sha> <head-sha>`.
+Use the same pager and driver controls for patch-producing `show` or `log` commands;
+configured pagers, external diff drivers and text converters can execute programs.
+The two-commit comparison preserves the working tree and index. Read complete blobs
+with raw `git --no-pager show <sha>:<path>`, without conversion flags.
 
 Read applicable instructions from committed blobs, never from the working tree. Identify repository-level and nested `AGENTS.md`, `CLAUDE.md`, or harness equivalents that govern each changed path, then read the governing blob from the head or base endpoint as relevant. If a required instruction exists only in the working tree, report that it could not be part of this immutable review. When the change edits `AGENTS.md`, `CLAUDE.md`, `REVIEW.md`, or other review instructions, judge it by the base version, and review the edit itself as part of the change.
 
@@ -73,7 +81,7 @@ Before evaluating quality:
 
 1. Record the resolved base, head, comparison method, PR base and merge base when available, and whether each endpoint came from local or remote metadata.
 2. Read the complete committed diff and commit history.
-3. For every added or modified text file, read the complete selected-head blob with `git show <head-sha>:<path>`. For a deleted file, read its base blob; do not request an impossible head blob. Read the base blob when needed to decide whether a concern is newly introduced. A repeat review may reuse inspection only under the evidence conditions below.
+3. For every added or modified text file, read the complete selected-head blob with `git --no-pager show <head-sha>:<path>`. For a deleted file, read its base blob; do not request an impossible head blob. Read the base blob when needed to decide whether a concern is newly introduced. A repeat review may reuse inspection only under the evidence conditions below.
 4. Identify and document the problem the change solves.
 5. When the PR has earlier review threads, read them. Keep the wording of a finding that still
    applies. Reopen a human-resolved or dismissed point only with new evidence or a change

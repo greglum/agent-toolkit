@@ -45,6 +45,9 @@ git diff --stat <base-sha> <head-sha>
 Compare the pinned endpoints directly. Taking a merge base again can hide
 changes when the user named a specific commit. A bad ref or an empty diff stops
 here, with a clear message.
+For patch-producing Git reads, use `--no-pager` and `--no-ext-diff --no-textconv`;
+configured pagers and drivers can run programs. For index/worktree inspection, also use
+`-c core.fsmonitor=false --no-optional-locks`. Read committed blobs without filters.
 
 Capture the commit list too: `git log <base-sha>..<head-sha> --oneline`.
 
@@ -75,12 +78,11 @@ handbook to review a ten line change.
 
 ### 4. Resolve precedence
 
-The repo wins. Where a repo standard contradicts or endorses something the
-user file would flag, follow the repo and suppress the user rule. Note the
-override in one line in the report, so the user can see which rule yielded and
-why.
-
-Where the repo is silent, the user standards apply in full.
+Honor higher-priority instructions and the user's explicit task overrides first.
+Otherwise, a repository-specific convention can refine a general user standard;
+where the repo is silent, apply the user standard. Record which rule applies and
+why. If the evidence cannot settle a material conflict, report it as unresolved
+rather than silently suppressing the user's requirement or issuing approval.
 
 ### 5. Review the diff
 
@@ -139,7 +141,7 @@ Standards: <user file, or "no user file"> + <repo sources, or "no repo standards
 - `path/to/other.py:88` · <smell> · <what it looks like>. Consider: <fix>.
 
 ### Overrides applied
-- <repo rule> overrode <user rule> in <where>.
+- <applied rule and precedence> resolved <conflict> in <where>.
 ```
 
 End with the count per group, the single worst finding, and a verdict: REVISE

@@ -160,6 +160,10 @@ because plain output keeps only the last message.
 
 Record duration and token usage when the harness exposes them. Compare cost alongside
 quality, but do not reject a meaningful quality gain solely because it uses more tokens.
+For an already captured `codex exec --json` stream, the optional
+[native receipt importer](native-receipts.md) derives runtime metrics into the existing
+case arm's `timing.json`. Missing metrics remain unknown; import success is not a passing run
+or grading evidence.
 
 Apply the candidate only when:
 

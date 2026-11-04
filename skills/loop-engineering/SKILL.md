@@ -1,6 +1,7 @@
 ---
 name: loop-engineering
 description: Design or run a bounded engineering feedback loop with a fixed objective, observable acceptance, independent checks, and stop conditions. Use for repeated improve-review-verify work; skill-specific evaluation belongs to harden-skill.
+compatibility: Uses the repository's existing measurement and check tools. Independent reviewers are optional unless the repository requires them. Without execution access, return the loop contract and mark iterations and measured acceptance unrun. Installs no scheduler, framework or service.
 ---
 
 # Loop engineering
@@ -29,6 +30,11 @@ inconclusive. When selecting among several candidates or combining accepted chan
 fresh measurements to confirm the final result against the same contract.
 
 **Ready:** another reader can decide pass, fail or unknown from the contract and artifacts.
+
+Before executing, identify the existing collector and command runner for each check, including
+its input/output artifacts, side effects and failure status. Reuse the task record and native
+runner; this procedure does not supply an executor. Leave an unavailable collector or runner
+explicit rather than add a scheduler or fabricate an observation.
 
 ## Run a whole iteration
 

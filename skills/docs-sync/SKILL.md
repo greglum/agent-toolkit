@@ -1,6 +1,7 @@
 ---
 name: docs-sync
 description: Audit or update project documentation against current code and commands. Use when a change leaves README, AGENTS, or linked docs stale. Audit, review, check, and dry-run requests report findings without edits; sync, fix, and update requests apply scoped corrections.
+compatibility: Needs access to the selected documentation and its owning source. Git is optional for history and change comparisons. Without command execution, assess source claims and mark commands and gates unrun. Installs no tools.
 disable-model-invocation: true
 arguments:
   - name: files
@@ -58,6 +59,11 @@ Do not erase an ADR, historical explanation, planned item, or policy solely beca
 today's code differs. Determine whether the text describes current behavior, history,
 intent, or a binding requirement. Report unresolved contradictions instead of silently
 rewriting requirements to bless the code.
+
+For a corpus with repeated claims, reuse the coverage list as a claim ledger: doc locator,
+claim, owning source/revision, evidence and disposition. Keep unresolved or historical claims
+separate from false current claims. This is a view of the existing audit record, not a new
+index, documentation format or requirement for a small correction.
 
 ## 3. Correct only supported problems
 

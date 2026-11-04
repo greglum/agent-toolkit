@@ -34,6 +34,14 @@ For single-image reconstruction, unseen surfaces may be plausible completions. S
 selected asset and its generator/weight revision and input identity in the existing asset
 ledger. Apply the [production rights checks](production.md#establish-the-production-contract) before use.
 
+For GLB files, run `python3 scripts/inspect_glb.py <asset.glb>` from this bundle's folder and
+keep its JSON inventory with the asset record. It reads only that file and reports declared
+extensions, images, skins, morph primitives and animations. Check required extensions against
+the actual target loader and account for listed external resources; a GLB can still depend
+on separate files. `INSPECTED` confirms inventory extraction, not glTF validity, complete
+resources, usable deformation, appearance or readiness. Use the project's existing glTF
+validator for structural/resource checks and continue the scene checks below.
+
 Import it into the target scene and check scale, orientation, origin, silhouette, normals,
 material and texture bindings, and geometry cost under the shot's actual camera and light.
 For image-conditioned assets, check shot-visible views beyond the input image. Record any
@@ -127,6 +135,15 @@ Recheck when the destination's renderer, sampling, solver, aspect ratio, codec, 
 platform changes. No film render, listening pass, or paired skill evaluation was run here.
 
 ## Imported-asset evidence
+
+The offline inventory was added November 2, 2026, after inspecting Scenario Inc.'s MIT
+[export toolkit](https://github.com/scenario-labs/skills/blob/7f4b801c7248d51b093ec365aceb114bd06139e6/skills/dcc/blender/scenario-blender-export/scripts/bx_export.py),
+`glb_summary`. The local implementation is original, dependency-free and read-only. Its
+container parsing follows [glTF 2.0, section 4](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#glb-file-format-specification);
+the [Khronos validator](https://github.com/KhronosGroup/glTF-Validator) documents the broader
+validation it does not replace. Living references observed that date, reuse rights not
+assessed; no copied code or media. Synthetic CLI checks ran; Blender/engine import and
+blind/control evaluation did not. Recheck on format, loader or inventory changes.
 
 The imported-mesh checks are original synthesis, observed October 27, 2026. No upstream
 code, prompt, mesh or media is copied. Hunyuan3D-2's
