@@ -23,7 +23,9 @@ one the stack supports, and build it only when the user asks for one.
 
 1. **Choose the mode and the home.** Search the repository's agent instructions, README,
    contributor docs, and skills for a record that already launches the app or lists features
-   to check. If one exists, this is a maintenance run: go to step 6. Otherwise place the
+   to check. Include an existing native launch or verification recipe in that search;
+   [reuse its proven steps](references/record-shape.md#reuse-a-native-recipe) rather than
+   create a second launch record. If one exists, this is a maintenance run: go to step 6. Otherwise place the
    record where the project keeps its skills, else in its developer docs, else beside the
    README, and follow its naming, frontmatter, and index conventions. Never name it plain
    `verify` unless the user asks: some harnesses run a project skill with that name before

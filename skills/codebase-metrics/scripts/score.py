@@ -15,6 +15,14 @@ DIMENSIONS = (
     "functional", "reliability", "security", "maintainability", "tests",
     "accessibility", "performance", "reproducibility",
 )
+DIMENSION_PROFILES = {
+    "codebase": DIMENSIONS,
+    "task-harness": (
+        "task-contract", "task-checks", "task-recovery", "task-closure",
+        "harness-isolation", "harness-evidence", "harness-feedback",
+        "harness-reproducibility",
+    ),
+}
 STATES = {"PASS", "FAIL", "UNAVAILABLE", "NOT RUN"}
 HEX = re.compile(r"[0-9a-f]{64}")
 
@@ -79,13 +87,17 @@ def validate_plan(plan, root):
     require(type(target) in (int, float) and math.isfinite(target)
             and 0 <= target <= 10, "target must be a finite number in [0, 10]")
     dimensions = plan.get("dimensions")
-    require(isinstance(dimensions, list) and len(dimensions) == len(DIMENSIONS),
+    profile = plan.get("dimension_profile", "codebase")
+    require(isinstance(profile, str) and profile in DIMENSION_PROFILES,
+            f"unknown dimension_profile: {profile}")
+    required_dimensions = DIMENSION_PROFILES[profile]
+    require(isinstance(dimensions, list) and len(dimensions) == len(required_dimensions),
             "plan must contain all eight dimensions exactly once")
     ids, dimension_ids = set(), set()
     for dimension in dimensions:
         require(isinstance(dimension, dict), "dimension must be an object")
         dimension_id = dimension.get("id")
-        require(dimension_id in DIMENSIONS and dimension_id not in dimension_ids,
+        require(dimension_id in required_dimensions and dimension_id not in dimension_ids,
                 f"invalid or duplicate dimension: {dimension_id}")
         dimension_ids.add(dimension_id)
         applicable = dimension.get("applicable")

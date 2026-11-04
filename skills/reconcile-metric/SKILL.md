@@ -1,6 +1,7 @@
 ---
 name: reconcile-metric
 description: Trace a disputed dashboard number or aggregate to its definition and source records, then reconcile it independently. Use for conflicting totals, join inflation, rate denominators, weighted averages, or time-window mismatches; not general chart styling or database tuning.
+compatibility: Uses authorized source records, metric definitions and an existing read-only query or calculation tool. Supplied exports can replace live access when their completeness and snapshot are known. Missing definitions or source rows limit the reconciliation; no database or connector setup is included.
 ---
 
 # Reconcile a metric

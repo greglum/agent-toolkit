@@ -19,8 +19,9 @@ ownership with the resumable record; overlapping research does not authorize sha
 Read every seed in full where accessible. Use [source intake](source-intake.md) to inventory
 substantive outbound links, follow evidence dependencies, and record access limits. For
 multiple seeds, deduplicate shared evidence while keeping each seed's coverage visible.
-For X posts or Articles, follow the [X recovery sequence](source-intake.md#x-post-and-article-recovery)
-before declaring the source unavailable after a reader failure.
+For X posts or Articles, read the [X recovery guide](x-recovery.md) and use its public-source
+helper and route ledger. Account for applicable routes before declaring a blocker or asking
+the user to operate a browser. Track post, Article, links and media coverage separately.
 If a seed cannot be recovered through an available browser or official copy, mark it
 UNAVAILABLE; snippets and summaries cannot establish a full review.
 

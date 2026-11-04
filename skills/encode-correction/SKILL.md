@@ -1,6 +1,7 @@
 ---
 name: encode-correction
 description: "Prevent repeated agent mistakes by finding their source in history or user corrections, then changing the owning architecture, types, or checks. Use for recurring review findings, correction sweeps, or requests inspired by pstack /correct. A single incident needs evidence of a recurring rule."
+compatibility: Needs repository read access and incident evidence or an explicit user rule. Prevention proof uses the repository's native checks. Without history or check execution, report the evidence gap and leave recurrence or prevention unverified. Installs no tools or hooks.
 ---
 
 # Encode a correction

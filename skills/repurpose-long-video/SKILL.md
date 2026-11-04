@@ -1,7 +1,7 @@
 ---
 name: repurpose-long-video
-description: "Cut short vertical clips from a long video the user owns or has licensed: word-level transcript, scored candidates snapped to sentences, overlap suppression, context checks, subject-tracked reframing, and a per-clip edit list. Uses existing local tools. Film and export rules: motion-film. Posting copy: distribution-draft. Campaigns: content-marketing."
-compatibility: Requires existing ffmpeg/ffprobe or equivalent, a word-timestamp transcriber, and motion-film for caption/export acceptance. Selection needs Python 3.10+, standard library only. If tools or the companion are missing, continue independent selection work and report final export acceptance blocked. No installs, paid APIs or hosted providers without user authority.
+description: "Cut short vertical clips from licensed long video using sentence-snapped selection, context checks, reviewed reframing, captions and edit lists. Includes an offline selector and fixed-crop exporter; uses existing tools for transcription/tracking. Film/export rules: motion-film."
+compatibility: The offline selector needs Python 3.10+. Local clip export also needs FFmpeg/ffprobe with libx264/AAC and a supplied timed transcript/manual crop. Other paths use existing transcription/tracking tools. Missing motion-film guidance leaves final caption/export acceptance blocked; selection remains usable. No installs, paid APIs or hosted providers without user authority.
 ---
 
 # Repurpose long video
@@ -30,7 +30,8 @@ duration range, and aspect are set, and the destination limits are cited with th
 ## 2. Inventory the tools
 
 Find what the project already has: a media cutter and probe (such as ffmpeg and ffprobe),
-a transcriber with word timestamps, and any subject detector. Use them as found. Installing
+a transcriber with word timestamps when no checked transcript is supplied, and any subject
+detector needed for the chosen crop path. Use them as found. Installing
 a tool, calling a paid or hosted service, or choosing a provider needs the user's authority;
 ask rather than pick. Check that the `motion-film` companion is available before
 caption/export work; if absent, continue independent steps and mark final export acceptance
@@ -111,6 +112,10 @@ Done when every clip has a crop path summary and its frame review passes, with e
 or drop recorded.
 
 ## 8. Caption and export
+
+For a supplied transcript and one reviewed fixed crop per clip, the bundled
+[local export path](references/clip-export.md) writes actual clips, caption sidecars and a
+source-bound edit list using existing FFmpeg. Use the project cutter for changing crop paths.
 
 Cut from the original into new files; re-encode at the cut so in and out land on the exact
 frame, since a stream copy snaps to keyframes. Map caption times from the word timings as

@@ -43,3 +43,13 @@ Original wording and code, October 25, 2026. No upstream code, prompts, or prose
 Recheck when the upstream selection or reframe logic changes, when the project's
 transcriber changes its word-timing output, or when a destination changes its vertical
 format limits.
+
+## Local clip export, November 4, 2026
+
+The [supplied-transcript/manual-crop exporter](clip-export.md) is original local code.
+The pinned MIT Clipify comparison identified reusable crop/caption machinery, while its
+30 fps assumption is deliberately not adopted. Our exporter records actual decoded
+presentation timestamps and checks encoded outputs against the selected source frames.
+It does not supply transcription, subject tracking, semantic review or media acceptance.
+No upstream implementation, prompts or media copied. Recheck on decoder, timing or
+destination-contract changes; synthetic CLI checks are separate from task-level benefit.

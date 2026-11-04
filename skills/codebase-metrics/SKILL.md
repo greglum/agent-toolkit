@@ -1,13 +1,15 @@
 ---
 name: codebase-metrics
-description: Assess codebase quality with source-grounded measures and a frozen local rubric. Use for a quality baseline, scored improvement workshop, or checking a requested quality target across eight dimensions.
+description: Assess codebase quality or task and harness engineering with source-grounded measures and a frozen local rubric. Use for a quality baseline, scored improvement workshop, or checking a requested quality target across eight dimensions.
 compatibility: Works with Codex and Claude Code. The optional scorer requires Python 3.10+ and only the standard library. Use existing project tools; unavailable analyzers remain unknown.
 ---
 
 # Codebase metrics
 
 Produce a reproducible eight-dimension baseline and, when requested, improve the same
-scope against the same criteria. A local 0-10 rubric is an acceptance aid, never an
+scope against the same criteria. Choose the profile for the requested assessment question;
+use the numeric view for a requested scored assessment rather than forcing other reviews
+through a score. A local 0-10 rubric is an acceptance aid, never an
 industry certification or a promise that a timebox can deliver 9.5.
 
 ## Discover and freeze
@@ -18,10 +20,13 @@ industry certification or a promise that a timebox can deliver 9.5.
    revision and dirty diff, tools/versions, available runtime, and permitted actions.
    Finish with a scope inventory of files, features, journeys, trust boundaries,
    environments, and known exclusions, with reasons. Preserve unrelated work.
-2. Read [measurement selection](references/measurements.md). Keep all eight dimensions
-   visible: functional correctness; reliability and recovery; security and data handling;
-   maintainability; test effectiveness; accessibility and interaction; performance and
-   efficiency; build and evidence reproducibility. Choose risk-based obligations from
+2. For product/code quality, read [measurement selection](references/measurements.md).
+   Keep all eight dimensions visible: functional correctness; reliability and recovery;
+   security and data handling; maintainability; test effectiveness; accessibility and
+   interaction; performance and efficiency; build and evidence reproducibility. For an
+   explicit task/harness assessment, use the eight dimensions in the
+   [task-harness profile](references/scoring.md#task-and-harness-profile) instead; its
+   ratings do not establish product quality. Choose risk-based obligations from
    the inventory and current project requirements. Freeze each obligation's ID, weight,
    critical flag, objective pass condition, required evidence level, raw measure and
    denominator, exclusions, and execution profile before improvements. Record justified

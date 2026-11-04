@@ -17,7 +17,7 @@ class Inventory:
     def git(self, *args, repo=None, require_no_diagnostics=False):
         target = str(repo or self.repo)
         result = subprocess.run(
-            ["git", "-C", target, *args], capture_output=True,
+            ["git", "-c", "core.fsmonitor=false", "--no-pager", "-C", target, *args], capture_output=True,
             env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
         if result.returncode or (require_no_diagnostics and result.stderr):

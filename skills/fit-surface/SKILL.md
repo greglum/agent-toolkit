@@ -66,8 +66,10 @@ them. Preserve the repository's design system, primitives, and library choices.
    - Keep the horizontal scroll a dense comparison grid needs. Keep each row's identity and
      key total in view while it scrolls. Propose scroll for any other table only where the
      design owner allows it.
-   - Reserve the scrollbar gutter and give result-sized panels a fixed height, so typing and
-     refetching do not move the page.
+   - Reserve scrollbar space where it affects layout and keep result geometry stable during
+     typing and refetching within the recorded height budget. Use fixed-height scrolling only
+     when the design owner calls for it; otherwise choose suitable minimum or maximum sizing.
+     Recheck reflow and control reachability in short viewports and at supported zoom levels.
    Done when every confirmed overflow in the requested surface has a fix in its owning layer,
    each one outside it is reported with its floor and a proposed fix, and the give-way order
    is written down.

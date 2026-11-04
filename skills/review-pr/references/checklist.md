@@ -38,7 +38,10 @@ rather than merely changing the warning.
 | Score | Meaning |
 |-------|---------|
 | 0-25 | Probably a false positive |
-| 26-50 | Might be real, likely a nit |
-| 51-75 | Likely real, worth noting |
+| 26-50 | Plausible, but important evidence is missing |
+| 51-75 | Likely real, with some unresolved assumptions |
 | 76-90 | Confident this is a real issue |
 | 91-100 | Certain this is a real issue |
+
+These bands describe confidence in the evidence. Assign impact and severity separately;
+a low-confidence candidate can describe a serious failure.

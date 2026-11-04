@@ -4,6 +4,7 @@
 Checks, per skills/<name>/SKILL.md:
 - frontmatter opens the file and has `name` and `description`;
 - Claude boolean fields such as `disable-model-invocation` are a bare `true` or `false`;
+- frontmatter uses recognized fields and preserves the user's model and effort;
 - `name` matches the folder and is lowercase hyphen-case, at most 64 characters;
 - `description` is at most 1024 characters, the Agent Skills limit, and within the
   catalog budget: 360 for a model-invoked skill, 600 for an explicit-only one;
@@ -34,7 +35,9 @@ from urllib.parse import unquote
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "skills/harden-skill/scripts"))
 from inspect_skill import (  # Reuse the catalog's existing dependency-free YAML reader.
+    CLAUDE_FIELDS,
     LINK_RE,
+    STANDARD_FIELDS,
     Field,
     check_booleans,
     check_bundle_entries,
@@ -130,6 +133,10 @@ def check_skill(skill: Path) -> list[str]:
     check_booleans(fields, md, findings)
     errors += [f"{f.path}: {f.message}" for f in findings]
     fm = {key: field.value for key, field in fields.items()}
+    for key in sorted(fm.keys() - (STANDARD_FIELDS | CLAUDE_FIELDS)):
+        errors.append(f"{md}: unknown frontmatter field '{key}'")
+    for key in sorted(fm.keys() & {"model", "effort"}):
+        errors.append(f"{md}: '{key}' overrides the user's setting; omit it in catalog skills")
     name, desc = fm.get("name", ""), fm.get("description", "")
     if name != skill.name:
         errors.append(f"{md}: name '{name}' does not match folder '{skill.name}'")

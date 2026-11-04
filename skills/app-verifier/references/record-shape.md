@@ -70,3 +70,24 @@ This refinement was checked against Anthropic's
 [v1.63.0 readiness guidance](https://github.com/microsoft/playwright/blob/v1.63.0/docs/src/api/params.md),
 observed October 25, 2026. We retain observable readiness rather than the upstream skill's
 mandatory `networkidle` wait. Recheck against the destination's installed runner version.
+
+## Reuse a native recipe
+
+When the project already records a host-native run or verification recipe, keep that as the
+launch owner. Review its commands, side effects and installed-host requirements before reuse.
+For a new record, exercise documented setup and one feature under this task's authority.
+For a refresh, rerun only unverified or invalidated steps. Fill missing safe fixture entries,
+visible readiness, feature outcomes, source identities and cleanup ownership
+in the existing record; create no parallel schema merely to wrap it. Keep commands and stable
+handles readable by both Claude Code and Codex, and label host-only steps with a fallback or
+an explicit unavailable check. A generated recipe is a lead until its actual steps run.
+
+Do not invoke a generator that commits, installs dependencies or reaches external targets
+without the authority those actions require. Reusing a native command does not grant those
+actions or authorize renaming a project skill to `verify`.
+
+This refinement uses Anthropic's [native run and verification documentation](https://code.claude.com/docs/en/skills#run-and-verify-your-app),
+observed November 4, 2026, sections Run and verify your app and Run your checks before each
+commit. Living-page reuse rights were not established; original guidance only. Native feature
+availability is host/version-specific and was not trialed here. Recheck the installed host and
+project recipe before reuse; this branch adds no launcher or automatic recipe conversion.

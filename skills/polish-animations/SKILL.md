@@ -38,9 +38,12 @@ Report those checks as not run. Do not enter the implementation preflight below.
 
 ## State file
 
-Keep run state in `polish-animations/state.md` under the directory that
-`git rev-parse --git-dir` prints, so it is never committed. Without Git, use the harness
-scratchpad and say so. It holds the base revision, scope, preflight facts, source identity,
+Keep run state in `polish-animations/<run-id>/state.md` under the directory that
+`git rev-parse --git-dir` prints, so it is never committed. Give each task a distinct simple
+run ID and create its directory exclusively; a collision requires another ID, never replacing
+existing state. To resume, select the original run ID explicitly rather than the newest file.
+Without Git, use a task-specific harness scratchpad and say so. It holds the base revision,
+scope, preflight facts, source identity,
 the ledger with a status per row (`accepted`, `building`, `reviewing`, `approved`, `blocked`,
 `unresolved`, `dropped`), finding dispositions, round log, and check results. Update it at
 the end of each phase and each row transition.
@@ -57,7 +60,8 @@ and after integrating a change that can affect other rows.
   ledger row or finding text verbatim, file paths, preflight facts), the files it owns, and
   what to return. Never pass another worker's summary as evidence.
 - Ask each worker to mark anything it could not confirm and say where it looked.
-- A reviewer never reviews its own build. Keep at most four workers running at once.
+- A reviewer never reviews its own build. Use the available worker slots within the harness
+  cap, counting the parent toward that cap.
 - In Claude Code use subagents, with worktree isolation for parallel builders when offered.
   In Codex use its subagent support. With no subagent capability, run each phase yourself in
   order, re-reading the diff cold before each review, and report the review as same-agent,
@@ -77,7 +81,7 @@ and after integrating a change that can affect other rows.
    independent diagnosis and planning may continue. Done when the state file holds these facts
    and the source manifest.
 2. **Discover.** For one view or a small app, invoke `find-animation-opportunities` yourself.
-   Otherwise split the scope by app area across up to four read-only workers, each invoking
+   Otherwise split the scope by app area across the available read-only worker slots, each invoking
    that skill on its area with the preflight facts and returning ledger rows only. Recheck
    every returned row at its `file:line`, merge duplicates and rows that share an owner, and
    cap at `max`. Keep every rejected candidate. In `plan-only`, first read the applicable

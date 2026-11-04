@@ -45,6 +45,12 @@ For an existing reference collection, select only relevant angles and expression
 photos do not guarantee identity accuracy. A crop or composite can preserve the actual face
 without asking a model to recreate it. For generative edits, verify likeness against the input.
 
+When combining references, record what each contributes and what must stay fixed. Distinguish
+subject identity from pose, layout, style and palette. Resolve conflicts using the approved
+brief before generating. Inspect whether each intended contribution arrived and whether
+unwanted faces, objects, logos or words came with it. If a reference seems ignored, check the
+actual submitted inputs and available run metadata before rewriting the prompt.
+
 Use the supplied or project-authorized images, following the consuming project's asset-source
 instructions. Preserve originals and edit copies. Keep private source collections outside
 shipped assets and version control. Permission to use a photo is separate from permission to
@@ -64,8 +70,10 @@ lettering fails. Save the actual prompts, selected inputs and composition privat
 install the source author's studio or pick their model by default. If no suitable tool is
 available, deliver the brief and name the blocked image output explicitly.
 
-Produce separate platform exports from the selected composition. Verify current requirements
-and the actual upload surface before export:
+Produce separate platform exports from the selected composition. Verify current platform
+requirements before export. Private review exports may proceed without account or composer
+access; label those checks unverified. Check the actual upload surface and its account-specific
+controls before describing the exports as ready to publish:
 
 - **YouTube long-form:** use a 16:9 composition; at least 1280 by 720 keeps a comparison set
   above the documented experiment downscaling threshold. Check current file limits. Where
@@ -98,3 +106,10 @@ October 26, 2026; public article/store descriptions only, reuse rights unknown, 
 Checked October 26, 2026 against [YouTube testing](https://support.google.com/youtube/answer/16391400),
 [LinkedIn native video](https://www.linkedin.com/help/linkedin/answer/a7486279).
 Recheck platform limits and controls before delivery. No comparative generation or growth trial.
+
+Reference-role checks informed by Scenario Inc.'s MIT
+[multi-reference workflow](https://github.com/scenario-labs/skills/blob/7f4b801c7248d51b093ec365aceb114bd06139e6/skills/scenario-multi-reference/SKILL.md)
+and Google's [composition and style examples](https://blog.google/products-and-platforms/products/gemini/image-generation-prompting-tips/),
+observed November 2, 2026. Original synthesis; no prompts, code or images copied. Google's
+page rights were not assessed. No universal reference count, ordering rule or measured benefit
+is established. Recheck on tool/input-contract changes; blind/control evaluation unrun.

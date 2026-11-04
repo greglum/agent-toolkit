@@ -36,7 +36,11 @@ Continue through [capture and export review](render-review.md). A full decode wi
 installed encoder can expose damaged packets; watching and listening still establish the
 picture, pacing and sound. Keep the JSON beside the final file's other evidence.
 
-Before sending a master, also check that its audio is stereo and not silent, then play it in
-the preview where it will be reviewed. In one case a mono AAC master played silently in a chat preview.
+Before sending a master, verify its audio against the agreed brief and destination:
+channel layout, intended silence or audible content, and playback in the actual preview.
+For an audible master, confirm that the preview plays its sound. If a destination requires
+stereo, verify that layout explicitly; preserve intentionally mono or silent deliverables
+when the contract allows them. A past mono AAC master played silently in a chat preview,
+so metadata alone cannot establish audible playback.
 Check that a tool's options still exist after an upgrade; ffmpeg 9 removed
 `-filter_complex_script` (use `-/filter_complex <file>`).

@@ -2,6 +2,7 @@
 name: review-integration
 description: Review client-API integration for wire-contract mismatches, transformation costs, validation, and error handling. Audit a requested feature or integration scope; keep findings read-only unless fixes are authorized.
 disable-model-invocation: true
+compatibility: Requires source access. Discover the actual client, server and schema mechanisms; no particular language or framework is required. Supplied wire captures can support a contract check without a live API. Missing runtime or schema evidence remains unverified.
 arguments:
   - name: entity
     description: "Entity or feature to review (default: every integration point in the requested scope)"
@@ -20,6 +21,10 @@ instructions and bind the requested feature, paths, and revision before examinin
 `entity` narrows the scope to one entity or feature. `layer` narrows the assessment to the
 named rows of [`references/focus-areas.md`](references/focus-areas.md).
 
+Source review does not authorize running project code, generated clients, tests or hooks,
+or making live API requests. Inspect supplied wire captures when available. Reuse separately
+authorized checks within their stated target and scope, and report their results separately.
+
 ## 1. Discover the stack
 
 Read package, build, route, and schema metadata to identify the actual stack, then inventory
@@ -34,6 +39,18 @@ batches for a large request and keep remaining paths visible. A partial sample
 cannot support a clean full-scope verdict.
 
 ## 2. Assess
+
+Reuse existing contract tests or supplied captures to keep one boundary ledger for each scoped
+entity; do not create a second schema inventory when the project already owns it:
+
+| Boundary | Governing source/version | Actual shape or validation | Evidence and remaining gap |
+| --- | --- | --- | --- |
+| Schema and serializer | Declaration plus serialization policy | Required, omitted and null fields; wire types | Source locator or supplied payload |
+| Client boundary | Decoder or API client | Envelope and variant checks; transforms | Source locator or authorized observation |
+| Consumer | Actual caller/component | Assumptions and error handling | Reachable input and observed or unverified result |
+
+Label each row as source-inspected, capture-observed or runtime-tested. The ledger organizes
+existing proof; filling it does not validate the live API or authorize a migration.
 
 1. Map data flow for key entities: Schema → Backend → API Response → Frontend Type → Component.
 2. For each entity, verify actual route, serializer/naming policy, request validation, and

@@ -24,8 +24,9 @@ Done when the chosen concept can be stated plainly and each scene visibly advanc
 
 ## Study a reference
 
-Give each reference one job: a card entrance, a transition, a cursor action, a title reveal.
-A reference asked to supply a whole film yields a mood and no usable timing.
+For style inspiration, give each reference one job: a card entrance, a transition, a cursor
+action, a title reveal. For a requested reconstruction, use the
+[reconstruction checks](#reconstruct-a-cleared-reference) below and measure the full sequence.
 
 1. Sample the clip at 2 frames a second for an overview sheet. Then extract every frame
    around the key event, from a few frames before it starts until it settles. The overview
@@ -39,8 +40,9 @@ A reference asked to supply a whole film yields a mood and no usable timing.
 3. Label every value **measured** (read from frames), **estimated** (inferred, such as a
    curve), or **proposed** (our choice for this film). A proposed value never passes as
    measured. Where the spec has no measured value, use [timing defaults](timing.md) and say so.
-4. Take the grammar, never the subjects or copy. The film keeps its own story, brand, assets,
-   and words; the reference lends composition, rhythm, and motion relationships. See
+4. For style inspiration, keep the film's own story, brand, assets and words; borrow
+   composition, rhythm and motion relationships. A requested reconstruction keeps only the
+   source content the user has rights to reuse. See
    [references as visual grammar](genres.md#use-references-as-a-visual-grammar).
 
 Read the creator's prompt and actual source when available; missing assets, context, and
@@ -55,6 +57,29 @@ render presets are optional source choices. Inspect licenses before reusing code
 
 Done when each reference has one named job and a spec with labeled values, and the film's
 own scene contract says which of those values it adopts.
+
+## Reconstruct a cleared reference
+
+Confirm whether the task asks for a faithful rebuild or a remix. For a rebuild, keep the
+source canvas, video timing and cleared content; record substitutions and intentional
+changes. Keep layers the user needs to edit as separate elements. Replaying the source
+frame as a background does not establish that its visible layers were reconstructed.
+
+Record the exact frame rate and decoded presentation times. Constant-rate frame numbers
+can map through the rational frame rate; variable-rate media needs its actual timestamps.
+Check cut boundaries in decoded frames after converting times to the renderer's units.
+Automatic cut scores are candidates: verify punch-ins, flashes and camera moves in
+consecutive frames before treating them as new shots.
+
+For existing burned-in captions, measure visible switch frames in the caption region;
+speech alignment supplies words but may lead or trail the picture. Match text using its
+visible glyph bounds at native size, including numerals and weight, rather than the font
+size or layout box alone. Record a substitute font as an approximation.
+
+Compare fixed source/draft times with the [paired-frame helper](pair-event-frames.md),
+then review motion and sound separately. Finish with the editable rebuild, the comparison
+scope, and an explicit list of remaining approximations. This procedure does not supply an
+automatic reconstruction engine or an all-frame video comparator.
 
 ## Choreograph the handoff
 

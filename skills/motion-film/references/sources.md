@@ -1,5 +1,22 @@
 # Sources and adaptation
 
+## November 4 reference reconstruction
+
+The [reconstruction checks](direction.md#reconstruct-a-cleared-reference) are original guidance
+informed by HeyGen contributors' Apache-2.0
+[reverse skill](https://github.com/heygen-com/hyperframes/blob/73e65e2c7826ba1e33382f1f09d66f4e115e3aaa/skills/reverse-any-video/SKILL.md)
+and [matching notes](https://github.com/heygen-com/hyperframes/blob/73e65e2c7826ba1e33382f1f09d66f4e115e3aaa/skills/reverse-any-video/references/match.md),
+observed November 4, 2026; source commit dated the same day. Independent FFmpeg
+[stream/frame inspection](https://ffmpeg.org/ffprobe.html) and
+[scene scoring implementation](https://github.com/FFmpeg/FFmpeg/blob/eeca9d9280a92ef1536c154346c126cfb9d0ed6a/libavfilter/vf_scdet.c)
+support timing inspection and the distinction between a score and a verified cut. They do
+not establish HyperFrames quality or comparative performance. Living documentation rights
+were not established. No upstream text, code or media copied. Billing automation, hidden
+costs, mandatory providers and automatic regeneration of people were not adopted. Recheck
+when source timing, caption origin, renderer mapping or reconstruction scope changes.
+Our static helpers remain distinct from upstream measurement and reconstruction machinery;
+upstream runtime and blind/control skill evaluation were not run.
+
 ## October 29 OpenFilm review
 
 The saved-edit binding check in [studio handoff](production.md#verify-an-editable-studio-handoff)

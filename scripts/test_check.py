@@ -54,6 +54,16 @@ class BundleChecks(unittest.TestCase):
         self.write_skill(extra="disable-model-invocation: false\n")
         self.assertEqual(check_skill(self.skill), [])
 
+    def test_metadata_preserves_user_settings_and_rejects_unknown_fields(self):
+        for field in ("model: alternate-model", "effort: low", "descripton: Typo"):
+            with self.subTest(field=field):
+                self.write_skill(extra=field + "\n")
+                errors = check_skill(self.skill)
+                self.assertEqual(len(errors), 1)
+                self.assertIn(field.split(":")[0], errors[0])
+        self.write_skill(extra="compatibility: Needs local read access.\nargument-hint: '[path]'\n")
+        self.assertEqual(check_skill(self.skill), [])
+
     def test_em_dash_rejected_outside_fenced_code(self):
         self.write_skill(body="```\na \u2014 b\n```\n")
         self.assertEqual(check_skill(self.skill), [])

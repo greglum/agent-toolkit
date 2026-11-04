@@ -11,6 +11,11 @@ destinations, a measurement plan and a dated review decision. Build the package 
 posting, scheduling, spending and account changes require their own task authority.
 The script makes no network requests and cannot establish that a claim or URL is true.
 
+Choose the requested stage before collecting inputs. For planning, build the briefs and
+measurement rule without requiring results. For a results-only review, reuse the existing
+claim sheet, briefs and campaign identity, check the exports in step 4, and finish with the
+review decision. Rebuild only affected package files rather than inventing a new campaign.
+
 ## 1. Choose a specific promise
 
 Read the project's public-copy/privacy rules and existing campaign or used-source records.

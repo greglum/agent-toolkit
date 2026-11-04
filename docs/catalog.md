@@ -16,7 +16,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`analyze-agent-history`](../skills/analyze-agent-history/SKILL.md) | Analyze supplied agent-history exports into text-free correction candidates and coverage counts. | Automatic |
 | [`animate`](../skills/animate/SKILL.md) | Build interface motion with purposeful timing, interruption, and reduced-motion behavior. | Automatic |
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
-| [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Measure codebase quality against a fixed rubric with source evidence. | Automatic |
+| [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Measure codebase or task/harness quality against a fixed profile with source evidence. | Automatic |
 | [`compare-experiments`](../skills/compare-experiments/SKILL.md) | Compare paired observations with visible missing/failure evidence and selected-candidate confirmation. | Automatic |
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan source-backed website, YouTube and LinkedIn content, then compare matched measurement windows. | Automatic |
 | [`continue-pr`](../skills/continue-pr/SKILL.md) | Recover inherited work or reassess an old PR before continuing it. | Automatic |
@@ -27,7 +27,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`distribution-draft`](../skills/distribution-draft/SKILL.md) | Prepare source-backed LinkedIn and X drafts for human review; never posts them. | By name |
 | [`docs-sync`](../skills/docs-sync/SKILL.md) | Check or update project documentation against current source and commands. | By name |
 | [`encode-correction`](../skills/encode-correction/SKILL.md) | Turn repeated mistakes into constraints at the source of the problem. | Automatic |
-| [`extract-documents`](../skills/extract-documents/SKILL.md) | Extract document collections with source locators, provenance, and content-loss records. | Automatic |
+| [`extract-documents`](../skills/extract-documents/SKILL.md) | Extract document collections and reconcile input coverage, provenance and content-loss records. | Automatic |
 | [`find-animation-opportunities`](../skills/find-animation-opportunities/SKILL.md) | Identify useful interface motion and explain where motion would not help. | Automatic |
 | [`find-bug-variants`](../skills/find-bug-variants/SKILL.md) | Find and verify other instances of an already confirmed defect. | Automatic |
 | [`find-docs`](../skills/find-docs/SKILL.md) | Resolve uncertain technical behavior against exact-version primary documentation. | Automatic |
@@ -45,7 +45,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`reconcile-metric`](../skills/reconcile-metric/SKILL.md) | Trace a disputed aggregate to source records and recalculate it independently. | Automatic |
 | [`refresh-worktrees`](../skills/refresh-worktrees/SKILL.md) | Assess and refresh Git worktrees while preserving local and uncertain work. | Automatic |
 | [`repository-cleanup`](../skills/repository-cleanup/SKILL.md) | Recover useful unfinished work and clean verified completed branches and worktrees. | Automatic |
-| [`repurpose-long-video`](../skills/repurpose-long-video/SKILL.md) | Select context-preserving short clips from cleared footage and produce an edit list. | Automatic |
+| [`repurpose-long-video`](../skills/repurpose-long-video/SKILL.md) | Select and export short clips from cleared local footage, supplied timings and fixed crops. | Automatic |
 | [`review-animations`](../skills/review-animations/SKILL.md) | Audit existing motion for purpose, timing, interruption, cost, and reduced motion. | Automatic |
 | [`review-integration`](../skills/review-integration/SKILL.md) | Review client/API contracts, transformations, validation, and error handling. | By name |
 | [`review-pending-changes`](../skills/review-pending-changes/SKILL.md) | Review staged, unstaged, untracked, renamed, and deleted work before committing. | By name, Codex only |

@@ -6,7 +6,7 @@ description: >-
   committed work. Use review-pending-changes for uncommitted work and review-pr
   for a PR or branch diff.
 disable-model-invocation: true
-allowed-tools: Bash(git diff *), Bash(git log *), Bash(git show *), Bash(git rev-parse *), Bash(git rev-list *), Bash(git diff-tree *), Bash(git status *), Bash(git branch --show-current), Bash(git branch -r *), Read, Glob, Grep
+compatibility: Requires native Git and source access. Reviews local committed objects without fetching or executing target code. Missing objects, unreadable artifacts or unavailable upstream evidence remain explicit coverage gaps; runtime checks retain their own authority.
 arguments:
   - name: count
     description: "Number of newest commits to review (default: 2)"
@@ -83,7 +83,7 @@ out-of-scope current issues separately; they do not drive the verdict.
 ## 4. Reconcile a moving worktree
 
 Immediately before the verdict, rerun `git rev-parse HEAD` and
-`git status --short --branch`.
+`git -c core.fsmonitor=false --no-optional-locks status --short --branch`.
 
 If HEAD changed and the user requested the newest commits by count, recompute that
 window, review commits that entered it, and refresh current-file evidence until the

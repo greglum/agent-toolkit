@@ -48,8 +48,9 @@ The top-level object contains:
 | `assessment_id` | Nonempty stable name |
 | `frozen_at` | Nonempty UTC observation timestamp |
 | `target` | Finite number from 0 through 10, typically `9.5` |
+| `dimension_profile` | Optional `codebase` (default) or `task-harness`; unknown profiles are rejected |
 | `scope` | Nonempty object recording files/features/journeys, exclusions with reasons, execution profiles, baseline revision/diff, and mandatory gate owners/commands |
-| `dimensions` | Exactly eight objects, one per ID in measurement selection |
+| `dimensions` | Exactly eight objects, one per ID in the selected profile |
 
 Each dimension has `id`, `applicable` (boolean), and `criteria` (list). An applicable
 dimension has at least one criterion. Every criterion has the following fields:
@@ -76,6 +77,32 @@ For an inapplicable dimension, use `applicable: false`, `criteria: []`, a nonemp
 not 10. At least one dimension must be applicable. Do not use N/A for missing tools,
 time, access, or operational data required by the frozen scope. Individual exclusions
 belong in the frozen scope/criterion rationale, not in deleted observations.
+
+## Task and harness profile
+
+Use `dimension_profile: "task-harness"` only for a requested assessment of how tasks
+are specified and executed or how the surrounding agent workflow behaves. The default
+`codebase` profile remains the eight dimensions in measurement selection. Keep all
+eight selected IDs, with the same weights, unknown handling and critical-blocker
+formula above. Changing profile requires a new freeze and recomputed baseline.
+
+| ID | Evidence to turn into scoped, observable obligations |
+| --- | --- |
+| `task-contract` | Objective, acceptance, authority, dependencies and exclusions are recoverable from the task record |
+| `task-checks` | Checks detect the intended regression and preserve surrounding contracts; retain logs and exit statuses |
+| `task-recovery` | Failure, interruption and resume preserve work and expose the next safe action |
+| `task-closure` | Final evidence matches the actual diff, review and required gates; remaining unknowns remain visible |
+| `harness-isolation` | File ownership, worktrees, runtime resources, credentials and evaluator inputs stay within their declared boundaries |
+| `harness-evidence` | Observations bind source, configuration, raw artifacts and provenance; evidence supports each claimed status |
+| `harness-feedback` | Candidate changes are tested against a retained baseline; supported lessons reach their responsible owner |
+| `harness-reproducibility` | A fresh run can recover the execution profile, tools, inputs, budgets and results without hidden state |
+
+These headings do not supply pass criteria. Freeze risk-based obligations and their
+required evidence level first. Inspect structure where structure is the claim; run
+fresh tasks where agent behavior is the claim. A document or checker pass cannot
+establish behavioral reliability, and a successful project run cannot establish a
+skill's added value without an appropriate control. Product gates remain mandatory
+when product code changes, independent of this profile's ratings.
 
 ## Observation schema, version 1
 

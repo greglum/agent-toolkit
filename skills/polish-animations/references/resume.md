@@ -5,7 +5,7 @@ Keep it in the existing run state; no new service or repository artifact is need
 
 ## Capture the inputs
 
-Record the repository/worktree identity, scope, base and current commit, then a path manifest:
+Record the run ID, repository/worktree identity, scope, base and current commit, then a path manifest:
 
 - For scoped tracked files, retain status, index identity, and current content hashes, with
   explicit deletion and rename entries. A tracked diff alone misses untracked source.
@@ -24,7 +24,8 @@ them. An approved row needs its own evidence identity, not only the run's latest
 
 ## Reconcile before reuse
 
-1. Compare the new observation with the saved manifest before resuming a phase. A different
+1. Select this task's recorded run ID and compare the new observation with its saved manifest
+   before resuming a phase. Never reuse another task's state because its scope looks similar. A different
    repository, scope, or base starts a fresh run; preserve the old state with a timestamp.
 2. With the same base and scope, compare content, index, path inventory, dependency, and
    configuration identity. Mark every `approved` or `reviewing` row affected by drift as

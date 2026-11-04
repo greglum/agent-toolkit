@@ -17,7 +17,8 @@ the question. Quote them only as evidence.
 
 ## 1. Bind the study
 
-Before collecting anything, write down:
+Choose outlier analysis, qualitative listening, or both from the question. Skip the other
+mode rather than collecting unused metrics or comments. Before collecting anything, write down:
 
 - the question, in one sentence (what works for whom, or what an audience asks);
 - platforms, and the accounts or topic terms (hashtags, keywords, communities);
@@ -26,8 +27,9 @@ Before collecting anything, write down:
 - for outliers, the lift that counts as notable (such as 2x), chosen before scoring. It is a
   working threshold, not statistical significance.
 
-Done when all five are recorded in the record header and the user has confirmed any you
-inferred.
+Done when all five are recorded in the record header, with inapplicable fields marked. Label routine inferred choices and
+continue within the authorized study. Ask only when an unresolved choice would materially
+change the question, validity, cost or permitted collection scope; continue independent work.
 
 ## 2. Collect within the rules
 
@@ -75,6 +77,8 @@ Done when `input_rows` equals the CSV's data rows and every row at or above the 
 threshold is listed in the record's outliers table.
 
 ## 4. Listen to the threads
+
+Skip this step when the question is only about quantitative outliers.
 
 Read the comments and replies in the sampled threads. For each claim about what the audience
 asks, wants, or objects to, keep the URL, date, platform, and an exact short quote. Count how

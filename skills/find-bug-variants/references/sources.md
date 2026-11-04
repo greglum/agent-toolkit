@@ -10,3 +10,13 @@ judge findings outside benchmark ground truth. No upstream text, code, scoring h
 templates copied. Local departures: a distinct confirmed-seed trigger, repository-owned
 retrieval tools, explicit scope and incomplete coverage, and fixes requiring task authority.
 Recheck when the cited sources change or repeated use exposes a gap in search adjudication.
+
+## Structural-query calibration
+
+Rechecked November 4, 2026 against the Python query template in Trail of Bits'
+[variant resources](https://github.com/trailofbits/skills/blob/470419e16f97e112d01fc32f4898aea1755015d9/plugins/variant-analysis/skills/variant-analysis/resources/semgrep/python.yaml),
+CC BY-SA 4.0 at the root, revision dated November 4. The template contains broad sources,
+sinks, sanitizers and exclusions that need seed-specific calibration. Original refinement:
+retain the actual query artifact and check both the known defect and a safe lookalike rather
+than adopt a stock pattern or its confidence label. No template, code or prose copied. No
+analyzer installed or run. Recheck when the seed, language, rule or analyzer version changes.

@@ -2,6 +2,7 @@
 name: tune-tests
 description: "Audit, prune, or speed up an existing test suite without losing failure detection. Audit mode scores every in-scope test and returns a ledger without edits. Speed mode makes behavior-preserving speedups with measured before and after timings. Prune mode proposes removals and deletes only ledger items the user approves. Use when a suite is slow, flaky, bloated, or due for a value review."
 disable-model-invocation: true
+compatibility: Uses the destination repository's existing test runner and measurement tools. Read runner setup and side effects before execution; no dependency or service installation is implied. Missing timing, coverage or mutation evidence remains unavailable or unrun, rather than an inferred pass.
 arguments:
   - name: mode
     description: "audit, speed, or prune (default: audit when unclear)"
@@ -18,7 +19,10 @@ tests. Load [references/ledger.md](references/ledger.md) before step 3.
 
 Pick the mode:
 
-- **Audit:** audit, review, check, or an unclear request. Write the ledger. Edit nothing.
+- **Audit:** audit, review, check, or an unclear request. Write the ledger; preserve source,
+  test definitions and runner configuration. Measurement may create ordinary local runner
+  artifacts after its effects are inspected. Setup, service or external effects still need
+  applicable authority; isolate the measurement or report it unrun when that is missing.
 - **Speed:** "make it faster", "too slow". Edit tests without changing what they assert.
   Delete nothing.
 - **Prune:** remove, trim, or consolidate tests. Propose removals, then stop for approval.

@@ -14,6 +14,9 @@ The diagram generator uses Node; media helpers use FFmpeg/ffprobe when exercised
 against real media. Optional browser, graphics, document and provider tools are
 listed in the selected skill. No provider call or dependency install is part of
 this command. Tests use local fixtures and mocked boundaries where appropriate.
+The development checkout also runs its maintainer tests, including public snapshot
+preservation checks. Public archives omit that private directory and run the same
+entrypoint with the portable suites.
 
 The optional repository pre-commit hook adds a staged secret scan and requires
 Gitleaks. Keep any existing global hook policy; run these checks
@@ -43,3 +46,12 @@ when that check is skipped. Keep that list outside the clone.
 Use the destination project's source, runtime and human checks for the result you intend
 to deliver. These catalog checks do not measure general productivity, model quality or
 production readiness.
+
+## New local evidence tools
+
+The clip exporter has synthetic NTSC and variable-frame-rate media checks. Encoding and
+timestamp proof remain separate from context, crop safety, listening and normal playback.
+The extraction checker reconciles declared inputs/outputs and hashes; it does not certify
+content fidelity or locator accuracy. The Codex receipt importer preserves reported runtime
+state and usage; it does not run a model or produce grading, control or invocation evidence.
+See each bundle's guide for its actual input contract and unverified dimensions.

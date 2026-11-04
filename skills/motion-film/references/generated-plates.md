@@ -48,6 +48,13 @@ Preserve the accepted file and its digest even when a seed is available. A seed 
 promise of identical pixels across implementations, releases, devices or attention backends.
 Rebuilding the film should read the accepted asset rather than silently regenerate it.
 
+If the chosen service supports draft finalization, retain the original draft job/asset ID,
+creation time and verified completion deadline. Review copies, trims and music composites
+are separate derivatives. Finalize from the selected draft's supported ID; rerunning its
+prompt is a new take. Compare the complete route's current quote (all drafts plus selected
+completions) with direct final renders within the existing budget. Drafting is not always
+cheaper. Verify the completed output against the selected take and delivery contract.
+
 ## Qualify one shot before scaling out
 
 Generate the shortest section that exposes the uncertain action. Compare methods with the
@@ -74,6 +81,15 @@ Finish when the take fits its recorded role and delivery contract, or retain the
 next decision. A model run does not by itself complete the film or its publication.
 
 ## Sources and limits
+
+Draft identity and full-route pricing checks were added November 2, 2026, informed by
+Scenario Inc.'s MIT [draft workflow](https://github.com/scenario-labs/skills/blob/7f4b801c7248d51b093ec365aceb114bd06139e6/skills/scenario-seedance-drafts/SKILL.md)
+and independently checked against BytePlus's
+[creation API](https://console.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api),
+Draft input, draft and response sections, observed that date. The current BytePlus page
+distinguishes seven- and fourteen-day validity by creation time; this does not verify Scenario's
+wrapper deadline. Discover the chosen service's current contract. Living-page rights not
+assessed; original synthesis, no copied payloads. No generation or blind/control trial ran.
 
 The source-edit checks were added October 29, 2026, in original words, informed by Alibaba's
 [VACE input contract](https://github.com/ali-vilab/VACE/blob/48eb44f1c4be87cc65a98bff985a26976841e9f3/UserGuide.md#31-vace-recognizable-inputs)
