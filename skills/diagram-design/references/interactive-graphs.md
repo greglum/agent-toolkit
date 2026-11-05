@@ -88,7 +88,8 @@ python3 -m unittest discover -s <skill>/scripts -p 'test_*.py'
 ```
 
 Browser checks additionally use an installed Playwright package and its Chrome Headless Shell at the version of the Playwright package you pass
-(install it with that package's CLI: `playwright install chromium-headless-shell`), or a
+(its CLI can download it with `playwright install chromium-headless-shell` when installation
+is authorized), or a
 `CHROME_PATH` naming another headless shell or Chrome for Testing. Never Google Chrome: on macOS
 each launch of it adds keychain keys that are never removed (Chromium issue 577651758).
 Explicit paths must name executable files. The checker resolves symlinks and rejects known

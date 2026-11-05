@@ -40,3 +40,9 @@ the handler's control explicit. Use synthetic failures in the closest existing h
 When a fix normalizes error responses, preserve the intended detection path. Verify the
 emitted event and configured metric/alarm separately from actual delivered notification.
 A uniform success response must not turn an outage into an unobserved failure.
+
+For deletion, revocation and other completion promises, trace an empty lookup through the
+response. An eventually consistent index can miss valid state. Identify the authoritative
+read, conditional mutation or durable reconciliation that completes the operation. Bounded
+retries alone do not resolve a final miss. Preserve response privacy while stating what the
+caller can rely on; check compatibility, availability and cost before choosing a remedy.

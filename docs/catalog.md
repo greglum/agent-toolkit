@@ -62,5 +62,6 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`tune-tests`](../skills/tune-tests/SKILL.md) | Audit, prune, or speed up tests while preserving failure detection and required gates. | By name |
 | [`ui-motion`](../skills/ui-motion/SKILL.md) | Diagnose and fix loading continuity, transitions, overlays, and gestures in a running app. | Automatic |
 | [`web-app-design`](../skills/web-app-design/SKILL.md) | Build or redesign a web app from researched references, or document its design language. | Automatic |
+| [`write-swift`](../skills/write-swift/SKILL.md) | Implement Swift changes with explicit toolchain, isolation, cancellation and error contracts. | Automatic |
 
 See [name migrations](migrations.md) before updating an older install.

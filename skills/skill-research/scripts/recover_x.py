@@ -114,7 +114,9 @@ def read_embed(data, source):
         warnings.append("TRUNCATED: recover the remaining text before assessing the whole post.")
     if not re.sub(r"https?://\S+", "", text).strip():
         warnings.append("LINK_ONLY: follow the actual destination; it may be an Article.")
-    if source["author"] and str(returned["author"] or "").lower() != source["author"].lower():
+    if source["author"] and not returned["author"]:
+        warnings.append("AUTHOR_UNVERIFIED: returned URL has no handle; verify attribution.")
+    elif source["author"] and returned["author"].lower() != source["author"].lower():
         warnings.append("AUTHOR_CHANGED: verify the returned handle before attribution.")
     return {"provenance": "official_embed", "url": returned["url"],
             "author_name": data.get("author_name"), "author_url": data.get("author_url"),
@@ -131,9 +133,8 @@ def read_extraction(data, source):
     if not isinstance(text, str):
         raise ValueError("Secondary extraction has no post text.")
     article = post.get("article")
-    if not text.strip() and article is None:
-        raise ValueError("Secondary extraction contained no post or Article body.")
     article_text = []
+    has_markdown_body = False
     if article is not None:
         if not isinstance(article, dict) or not isinstance(article.get("content"), dict):
             raise ValueError("Article content shape changed; inspect the raw response.")
@@ -144,8 +145,22 @@ def read_extraction(data, source):
             if not isinstance(block, dict) or not isinstance(block.get("text"), str):
                 raise ValueError("Invalid Article block; preserve the response for inspection.")
             article_text.append(block["text"])
+        entities = article["content"].get("entityMap")
+        if any(block.get("type") == "atomic" for block in blocks) and isinstance(entities, list):
+            for entity in entities:
+                value = entity.get("value") if isinstance(entity, dict) else None
+                if not isinstance(value, dict) or value.get("type") != "MARKDOWN":
+                    continue
+                entity_data = value.get("data")
+                markdown = entity_data.get("markdown") if isinstance(entity_data, dict) else None
+                if isinstance(markdown, str) and markdown.strip():
+                    has_markdown_body = True
+    if not text.strip() and not any(block.strip() for block in article_text) and not has_markdown_body:
+        raise ValueError("Secondary extraction contained no post or Article body.")
     warnings = ["SECONDARY: corroborate claims against first-party sources; no full-primary review proven.",
                 "Inspect raw Article entities, media and links; plain block text can omit embedded content."]
+    if has_markdown_body:
+        warnings.append("MARKDOWN_ENTITY: inspect raw Markdown and its block association; association is not verified.")
     author = post.get("author") or {}
     if not isinstance(author, dict):
         raise ValueError("Secondary author shape changed.")

@@ -7,10 +7,13 @@ source is a lead until it renders.
 
 - Define one measurement helper in the page once per load and call it after each navigation.
   A client-side route change keeps the page, so one helper can sweep a whole section.
-- Reset every scroll position before measuring. A scroller left scrolled by an earlier probe
-  reports its rows hundreds of pixels off, and the wrong number survives into the report.
-- Quote the viewport (width by height), chrome state, and theme with every number. Take before
-  and after figures at the same scroll state.
+- For static geometry comparisons, set and record document and nested scroll positions before
+  each independent case. Use the same scroll state for before and after.
+- For interaction continuity, preserve the scroll produced by activation, overlays, dismissal,
+  and focus return. After settling, measure the focused target against visible space and
+  chrome. Keep any normalized geometry capture separate from this interaction proof.
+- Quote the viewport (width by height), chrome state, theme, and observed scroll with every
+  number.
 - Horizontal fit: `document.documentElement.scrollWidth` against `clientWidth`, then each
   scroll container's `scrollWidth` against its `clientWidth`, then each element's right edge
   against its container's right edge less padding.
@@ -44,8 +47,10 @@ source is a lead until it renders.
 - **False empty or error.** A first load can return auth errors and render empty states, and
   an HTTP 200 can carry an error body. Confirm real content rendered. Reload once before
   believing a blank page.
-- **Synthetic input.** A scripted `.click()` may not open a menu or combobox that listens for
-  pointer events. Use real pointer input.
+- **Input without activation.** A scripted `.click()` may miss pointer-event listeners; even
+  real input can hit sticky chrome instead of the control. Preserve the original scroll-state
+  observation, then use normal scrolling to expose the control. Confirm the intended pointer
+  target or visible keyboard focus, activate it, and assert the expected state before measuring.
 - **Wrong node.** A component ref can point at a wrapper rather than the node on screen.
   Measure from the scroll container that owns the element.
 - **Console noise.** Errors from browser extensions are not application errors. Check the

@@ -67,8 +67,12 @@ alternative.
 
 ## List insert and remove
 
-Enter from a small offset with opacity. On removal, collapse the row's space after it fades,
-or the list jumps. Skip the motion entirely on frequent-tier lists.
+Enter from a small offset with opacity. When siblings should close the gap during an exit,
+retain the outgoing row's displayed bounds outside normal flow and animate the siblings
+toward their settled positions at the same time. Use the existing layout owner; preserve
+focus and prevent interaction with the removed row. Wait for the fade only when the handoff
+needs that order. Check intermediate geometry, not just endpoints. Skip the motion entirely
+on frequent-tier lists.
 
 ## Group stagger
 
@@ -78,7 +82,8 @@ or the list jumps. Skip the motion entirely on frequent-tier lists.
 ```
 
 Set `--i` per item and cap it so late items share the last delay. Content is interactive
-while it arrives.
+while it arrives. Apply [group choreography](choreography.md) for timing relationships and
+the reduced-motion path.
 
 ## Selection indicator
 

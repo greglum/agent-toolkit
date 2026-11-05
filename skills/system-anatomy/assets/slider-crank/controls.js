@@ -16,6 +16,7 @@ function render() {
   const pinX = 120 + 2 * pose.pinX;
   const pinY = 190 - 2 * pose.pinY;
   const sliderX = 120 + 2 * pose.sliderX;
+  const rodAngle = Math.abs(pose.rodAngleDeg) < 0.005 ? 0 : pose.rodAngleDeg;
   attr('crank', { x2: pinX, y2: pinY });
   attr('rod', { x1: pinX, y1: pinY, x2: sliderX });
   attr('pin', { cx: pinX, cy: pinY });
@@ -24,7 +25,7 @@ function render() {
   document.getElementById('angle-value').value = `${pose.angleDeg}°`;
   document.getElementById('position').value = format.format(pose.sliderX);
   document.getElementById('displacement').value = format.format(pose.displacementMm);
-  document.getElementById('rod-angle').value = format.format(pose.rodAngleDeg);
+  document.getElementById('rod-angle').value = format.format(rodAngle);
   document.getElementById('drawing-title').textContent = `Slider-crank at ${pose.angleDeg} degrees`;
   document.getElementById('drawing-description').textContent =
     `Illustrative model. The crank angle is ${pose.angleDeg} degrees and the slider is ${format.format(pose.sliderX)} millimetres from the fixed joint.`;

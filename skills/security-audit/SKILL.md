@@ -64,6 +64,9 @@ invariant, confirm only the observed local fact and keep the end-to-end vulnerab
 **needs validation** until that guard is checked or bypassed. Record preconditions, source locations,
 existing controls, and what evidence would disprove the issue. Distinguish confirmed
 vulnerabilities, defensible hardening proposals, and missing evidence.
+Keep a source-proven contract failure distinct from an unverified production occurrence.
+When the checked path proves the failure, plan a local remedy within task authority; reserve
+live reproduction for claims that depend on deployed state or frequency.
 
 Prefer an existing check or a minimal local reproduction with synthetic inputs and bounded
 resources. Keep credentials and production data out of the harness. Inspect unfamiliar
@@ -113,7 +116,9 @@ not prove deployment or live enforcement. Use distinct remediation states: **ope
 ## 5. Close with exact evidence
 
 Deliver the revision and scope, system map, coverage ledger, candidate dispositions,
-prioritized actions, fixes and checks, residual risks, and gaps. Record commands and exit
+prioritized actions, fixes and checks, residual risks, and gaps. Check that every cited source
+range exists at its stated revision and contains the claimed evidence; a nearby guard is not
+a substitute. Record commands and exit
 outcomes as PASS, FAIL, UNAVAILABLE, or NOT RUN. No findings means no confirmed issues in
 the examined scope, not a security certification. Scanner outages and reviewer disagreement
 remain gaps, never passing evidence.

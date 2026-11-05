@@ -29,6 +29,10 @@ failed attempts and missing observations. A difference within the observed uncer
 inconclusive. When selecting among several candidates or combining accepted changes, reserve
 fresh measurements to confirm the final result against the same contract.
 
+When improving prompts, skills, tools or coordination around an agent, use
+[contrastive harness trials](references/harness-trials.md) to separate candidate effects,
+confirm their composition and bound transfer claims.
+
 **Ready:** another reader can decide pass, fail or unknown from the contract and artifacts.
 
 Before executing, identify the existing collector and command runner for each check, including

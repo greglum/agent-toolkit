@@ -41,7 +41,8 @@ prose is included.
 The workflow and standards are original text informed by the `find-animation-opportunities`,
 `animate`, and `review-animations` skills in
 [emilkowalski/skills](https://github.com/emilkowalski/skills), revision
-`2d228630ba1446365f614a108cb8252f1feda202`. The fallback easing curves, duration bands, and
+`2d228630ba1446365f614a108cb8252f1feda202`, with later reference notes citing revision
+`c8a79627b59d72d764d6ab6f2c87c09a48169833`, which carries the same license file. The fallback easing curves, duration bands, and
 spring forms in `skills/animate/references/defaults.md` reuse that project's published values.
 MIT License, Copyright (c) 2026 Emil Kowalski; the license text follows under
 "License: emilkowalski/skills".

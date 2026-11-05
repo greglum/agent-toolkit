@@ -13,6 +13,9 @@ Checks, per skills/<name>/SKILL.md:
   Markdown target matches a heading anchor there (GitHub slugs, fenced code ignored);
 - no machine-specific home path (/Users/<name>/), email address, or /private/tmp path;
   write `~` instead. The same scan covers README.md, THIRD_PARTY_NOTICES.md, and docs/.
+- the first table headed `Skill` in docs/catalog.md has exactly one row per catalog skill, each
+  linking its name to that skill's SKILL.md. A row starts with a pipe, indented at most three
+  spaces. Later tables, fences and HTML comments are not read.
 Explicit-only skills must carry both Claude and Codex invocation controls.
 Reader guides in the repository root, docs/, and docs/examples/ must also have
 working local links and heading anchors. Dated internal research is not a reader guide.
@@ -31,6 +34,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 from urllib.parse import unquote
+
+if sys.version_info < (3, 10):  # Fail before importing code that requires the supported Python version.
+    sys.exit(f"Python 3.10 or later is required; this python3 is {sys.version.split()[0]}.")
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "skills/harden-skill/scripts"))
@@ -56,6 +62,7 @@ TEMP_RE = re.compile(r"/private/tmp\b")
 LEAK_ROOTS = ("README.md", "THIRD_PARTY_NOTICES.md", "docs")
 TEXT_SUFFIXES = {".md", ".mjs", ".js", ".py", ".sh", ".yaml", ".yml", ".json", ".txt", ".toml", ".ini", ""}
 PRIVATE_NAMES = Path.home() / ".config/skills/private-names.txt"
+CATALOG_CELL_RE = re.compile(r"^\[`?([^`\]]+)`?\]\(\.\./skills/([^/)]+)/SKILL\.md\)$")
 HOME_RE = re.compile(r"(?<![A-Za-z0-9._~:/-])(?:/(?:Users|home)/[A-Za-z0-9._-]+/|[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s]+[\\/])")
 
 
@@ -207,9 +214,57 @@ def check_reader_links(root: Path = REPO) -> list[str]:
     return errors
 
 
+def skill_table_cells(text: str) -> list[str] | None:
+    """First cells of the first table headed `Skill`; None when there is no such table."""
+    cells, fenced, commented, inside = [], False, False, False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if commented:
+            commented = "-->" not in stripped
+        elif stripped.startswith("<!--"):
+            commented = "-->" not in stripped
+        elif stripped.startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced and stripped.startswith("|") and len(line) - len(line.lstrip(" ")) <= 3:
+            cell = stripped.strip("|").split("|")[0].strip()
+            if not inside:
+                inside = cell.lower() == "skill"
+            elif not (cell and set(cell) <= set("-: ")):
+                cells.append(cell)
+        elif inside:
+            break
+    return cells if inside else None
+
+
+def check_catalog(root: Path, names: set[str]) -> list[str]:
+    """The catalog is how readers find a skill, so its table and the skills folder must agree."""
+    path = root / "docs/catalog.md"
+    cells = skill_table_cells(path.read_text()) if path.is_file() else None
+    if cells is None:
+        return [f"{path}: no skill table"]
+    errors, rows = [], Counter()
+    for cell in cells:
+        match = CATALOG_CELL_RE.match(cell)
+        if not match:
+            errors.append(f"{path}: row '{cell}' does not link a skill name to its SKILL.md")
+        elif match[1] != match[2]:
+            errors.append(f"{path}: row '{match[1]}' links to the '{match[2]}' folder")
+        else:
+            rows[match[1]] += 1
+    errors += [f"{path}: more than one row for skill '{n}'" for n, count in sorted(rows.items()) if count > 1]
+    errors += [f"{path}: no row for skill '{n}'" for n in sorted(names - rows.keys())]
+    return errors + [f"{path}: row for '{n}', which is not a catalog skill" for n in sorted(rows.keys() - names)]
+
+
+def only_leftovers(path: Path) -> bool:
+    """A folder a pull emptied of tracked files: nothing left but caches, Finder files or empty folders."""
+    return all("__pycache__" in f.relative_to(path).parts or f.name == ".DS_Store"
+               for f in path.rglob("*") if f.is_file())
+
+
 def main() -> int:
-    skills = sorted(p for p in (REPO / "skills").iterdir() if p.is_dir())
-    errors = check_reader_links()
+    skills = sorted(p for p in (REPO / "skills").iterdir() if p.is_dir() and not only_leftovers(p))
+    errors = check_reader_links() + check_catalog(REPO, {p.name for p in skills})
     for skill in skills:
         if not (skill / "SKILL.md").is_file():
             errors.append(f"{skill}: no SKILL.md")

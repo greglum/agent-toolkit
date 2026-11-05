@@ -100,8 +100,9 @@ If a skill/helper is unavailable, perform direct review and name that missing ch
 
 Use `diagram-design` for any separate static architecture diagrams or presentation exports;
 its source-fidelity and export rules apply to those artifacts, not as a ban on this figure's
-local interactive controls. Use `frontend-design` and `web-design-guidelines` when building or
-auditing a surrounding web surface. Do not copy their procedures into this skill.
+local interactive controls. Use available `frontend-design` and `web-design-guidelines` when
+building or auditing a surrounding web surface. This catalog does not include them; their
+absence does not block direct work. Do not copy their procedures into this skill.
 
 Render the assembled view and every meaningful selected, expanded, failure and reset state.
 Measure text bounds, overlap, page overflow, focus and contrast at the intended desktop size

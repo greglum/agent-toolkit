@@ -40,6 +40,8 @@ Do not change source in this pass.
 
 In Codex, replace `/fit-surface` with `$fit-surface`. If the app or browser tools
 are unavailable, keep the result as a source assessment and list the missing proof.
+Chromium would not start under Codex's
+`workspace-write` sandbox on macOS when [last tested](../verification.md#tested-in-real-harnesses).
 Use local fixtures or approved test identities.
 
 ## Produce a standalone diagram
