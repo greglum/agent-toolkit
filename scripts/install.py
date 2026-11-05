@@ -17,6 +17,7 @@ is given, which remove only those links; --prune-only also installs nothing.
 import argparse
 import filecmp
 import json
+import os
 import shutil
 import sys
 import time
@@ -122,6 +123,20 @@ def report_unknown(unknown: list[str], stale: list[tuple[Path, str]]) -> int:
     return 2
 
 
+def blocked_path(home: Path, harness: str, names: list[str], codex_only: set[str]):
+    """Something other than a folder where these names need one, which a dry run would otherwise miss."""
+    roots = []
+    if harness != "claude":
+        roots.append(".agents/skills")
+    if harness != "codex" and set(names) - codex_only:
+        roots.append(".claude/skills")
+    for root in roots:
+        for path in (home / root, (home / root).parent):
+            if os.path.lexists(path) and not path.is_dir():
+                return path
+    return None
+
+
 def run(a: argparse.Namespace) -> int:
     home = Path(a.home)
     names = sorted(p.name for p in SKILLS.iterdir() if (p / "SKILL.md").is_file())
@@ -138,6 +153,11 @@ def run(a: argparse.Namespace) -> int:
         if unknown:
             return report_unknown(unknown, stale_links(home, codex_only))
         names = [n for n in names if n in wanted]
+    blocked = blocked_path(home, a.harness, names, codex_only) if names else None
+    if blocked:
+        print(f"Stopped: {blocked} is not a folder, and a skills folder belongs there. Move it and rerun; nothing changed.",
+              file=sys.stderr)
+        return 2
     archive = home / ".agents/skills-archive" / f"pre-catalog-{time.strftime('%Y%m%dT%H%M%S')}-{time.time_ns()}"
     conflicts = 0
     for name in names:
@@ -188,7 +208,8 @@ def main() -> int:
     try:
         return run(a)
     except OSError as error:  # For example, a file where a skills folder belongs.
-        print(f"Stopped: {error}. Fix that path and rerun; earlier lines show what already changed.", file=sys.stderr)
+        print(f"Stopped: {error.strerror or error}: {error.filename2 or error.filename}. Fix that path and rerun; "
+              "any links already made stay in place.", file=sys.stderr)
         return 2
 
 
