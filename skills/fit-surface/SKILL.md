@@ -33,13 +33,16 @@ them. Preserve the repository's design system, primitives, and library choices.
    setup state, not a finding. Load dense, realistic data. List every view the surface owns:
    in-page tabs, expanded rows, menus, dialogs, and drawers, not just routes. Reach states
    through fixtures or seed data. Never submit forms, mutate real data, or change permissions.
-   Done when every listed view renders real content, or the blocker is recorded and rendered
+   A sandbox can stop a browser from starting: Chromium failed this way under Codex's
+   `workspace-write` sandbox on macOS (Codex 0.165.0, November 2026). Record the error; do not
+   weaken the sandbox on your own. Done when every listed view renders real content, or the blocker is recorded and rendered
    fit is marked unverified.
 
 3. **Measure the matrix.** Read [measuring](references/measuring.md) for the method, traps,
    and state matrix. For phone, tablet, or installed-web-app surfaces, also use [mobile
    fit](references/mobile-fit.md). Use the bundled [browser collector](references/browser-collector.md)
-   for repeatable geometry evidence when the existing rig supports it. For each box, chrome state, and theme, reset scroll positions, then
+   for repeatable geometry evidence when the existing rig supports it. For each box, chrome
+   state, and theme, start static geometry checks at a recorded scroll position, then
    compare document `scrollWidth` with `clientWidth`, each scroller's scroll size with its
    client size, and element edges with their container's edges. Check height against the
    budget. Quote the viewport with every number. Then drive the data states that apply. A
@@ -75,8 +78,9 @@ them. Preserve the repository's design system, primitives, and library choices.
    is written down.
 
 6. **Recheck affected cells.** Re-measure every box, chrome state, theme, and data state the
-   change can reach, including other callers of a changed primitive. Use the same scroll
-   state for before and after figures. Run the repository's required gates. Restore the
+   change can reach, including other callers of a changed primitive. Match initial conditions
+   for before and after checks; preserve action-produced scroll for interaction continuity
+   as described in the measurement method. Run the repository's required gates. Restore the
    original theme and viewport. Done when each affected cell passes with numbers, or each
    failure is listed with its measurement.
 

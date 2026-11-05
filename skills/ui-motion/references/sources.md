@@ -84,3 +84,14 @@ original prose; no runtime or source copied. Local departure: visual suspension 
 the application's durable operation, and rendering failure retains usable content. Recheck
 on changes to the rendering owner or observed lifecycle defects; source reading is not a
 performance benchmark.
+
+## November 4 motion-removal review
+
+[Emil Kowalski's removal hazards](https://github.com/emilkowalski/skills/blob/c8a79627b59d72d764d6ab6f2c87c09a48169833/skills/remove-animations/SKILL.md#removal-hazards)
+(MIT, copyright 2026 Emil Kowalski) informed the no-motion lifecycle check in original words.
+[MDN transitionend](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event)
+and [animationend](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event),
+observed November 4, 2026, explain missing completion events after removal or cancellation.
+Departure: preserve necessary callback work in its semantic owner, rather than moving every
+exit callback blindly to close time. No upstream code copied. Living-page publication dates
+and reuse rights were not established. Recheck when lifecycle ownership or driver changes.

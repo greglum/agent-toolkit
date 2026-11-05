@@ -1,10 +1,10 @@
 ---
 name: animate
 description: >-
-  Build web UI motion that earns its place: gate purpose and frequency, pick the cheapest
-  tool, then set properties, timing, interruption, exit, and reduced motion from project
-  tokens. Edits code. Use to animate an element, add a transition, or build a
-  find-animation-opportunities row. Review the implemented motion against the project contract.
+  Build UI motion for web or React Native/Expo. Gate purpose and frequency, reuse project
+  tokens and primitives, and implement timing, gestures, interruption, exits and reduced
+  motion. Use to animate an element, add a transition, or build a find-animation-opportunities
+  row. Verify the implemented motion in its target runtime.
 ---
 
 # Animate
@@ -13,6 +13,10 @@ Turn one motion request, or one ledger row from `find-animation-opportunities`, 
 implementation with checked motion behavior. State each decision in one line and write
 the code. Do not offer a menu of options.
 
+For React Native or Expo, read [native motion](references/native-motion.md) now and use its
+procedure instead of the web sequence below. The shared rules and output still apply; browser
+APIs, CSS recipes and web timing defaults do not carry over to native views.
+
 Two failures matter, and the first is worse: animating something that should not move, and
 animating the right thing with the wrong ingredients.
 
@@ -20,7 +24,7 @@ animating the right thing with the wrong ingredients.
 
 - **The project owns the system.** Use its tokens, primitives, motion runtime, and
   reduced-motion policy. Extend a token set; never add a parallel one. The values in
-  [defaults](references/defaults.md) apply only where the project has none, and each default
+  [web defaults](references/defaults.md) apply only to web projects with none, and each default
   you use is reported as a choice.
 - **Cheapest tool, no new dependency.** Installing a runtime needs the user's approval. A
   component need (toast, drawer, menu, dialog) goes to the project's existing primitive, not
@@ -61,7 +65,9 @@ animating the right thing with the wrong ingredients.
      an interpolated height) and measure it. Scale cannot stand in for layout.
    - Opacity does not hide. Keep the primitive's hidden, inert, and focus lifecycle.
    - Do not drive many children per frame through an inherited custom property.
-5. **Set timing.** Project tokens first, then [defaults](references/defaults.md). Entrances
+5. **Set timing.** When several elements move on one event, first read
+   [group choreography](references/choreography.md) to choose their relationship and total time.
+   Project tokens first, then [defaults](references/defaults.md). Entrances
    and responses to input decelerate; never start slow on a response. On-screen movement uses
    a symmetric curve; constant motion is linear. Use a spring for gestures and values the
    user can reverse mid-flight. Make deliberate phases slow and system responses fast (hold to

@@ -1,5 +1,6 @@
 """Exercise installation without writing the user's harness configuration."""
 
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -7,7 +8,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from install import REPO, link_agents
+from install import REPO, link_agents, same_tree
 
 
 class InstallChecks(unittest.TestCase):
@@ -58,6 +59,77 @@ class InstallChecks(unittest.TestCase):
         result = self.run_install("--only", "find-docs,does-not-exist")
         self.assertEqual(result.returncode, 2)
         self.assertEqual(list(self.home.iterdir()), [])
+
+    def test_unknown_selection_still_reports_stale_links_and_prunes_nothing(self):
+        agents = self.home / ".agents/skills"
+        agents.mkdir(parents=True)
+        removed = agents / "removed-skill"
+        removed.symlink_to(REPO / "skills/removed-skill")
+        result = self.run_install("--only", "find-docs,removed-skill", "--prune-stale")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("stale: ", result.stdout)
+        self.assertIn("left the catalog", result.stderr)
+        self.assertTrue(removed.is_symlink())
+        self.assertFalse((agents / "find-docs").exists())
+
+    def test_only_refuses_empty_names_and_trims_spaces(self):
+        for value in ("", "find-docs,", ",", "find-docs,,to-spec"):
+            with self.subTest(value=value):
+                result = self.run_install("--only", value)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("none empty", result.stderr)
+                self.assertEqual(list(self.home.iterdir()), [])
+        result = self.run_install("--dry-run", "--only", "find-docs, to-spec")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("to-spec", result.stdout)
+
+    def test_prune_only_installs_nothing(self):
+        agents = self.home / ".agents/skills"
+        agents.mkdir(parents=True)
+        removed = agents / "removed-skill"
+        removed.symlink_to(REPO / "skills/removed-skill")
+        dry = self.run_install("--prune-only", "--dry-run")
+        self.assertIn("would remove", dry.stdout)
+        self.assertTrue(removed.is_symlink())
+        self.assertEqual(self.run_install("--prune-only").returncode, 0)
+        self.assertEqual(list(agents.iterdir()), [])
+        self.assertEqual(self.run_install("--prune-only", "--only", "find-docs").returncode, 2)
+
+    def test_same_tree_needs_matching_kinds_but_ignores_caches(self):
+        source = REPO / "skills/fit-surface"
+        copy = self.home / "copy"
+        shutil.copytree(source, copy, ignore=shutil.ignore_patterns("__pycache__"))
+        (copy / "__pycache__").mkdir()
+        self.assertTrue(same_tree(source, copy))
+        directory = next(p for p in source.iterdir() if p.is_dir() and p.name != "__pycache__")
+        shutil.rmtree(copy / directory.name)
+        (copy / directory.name).write_text("a file where the catalog has a folder\n")
+        self.assertFalse(same_tree(source, copy))
+
+    def test_awkward_paths_give_plain_errors(self):
+        self.home.joinpath(".agents").mkdir()
+        self.home.joinpath(".agents/skills").write_text("a file\n")
+        result = self.run_install("--only", "find-docs")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Stopped:", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+        self.home.joinpath(".agents/skills").unlink()
+        self.home.joinpath(".agents/skills").mkdir()
+        loop = self.home / ".agents/skills/find-docs"
+        loop.symlink_to(loop)
+        result = self.run_install("--only", "find-docs")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("conflict:", result.stdout)
+
+    def test_shared_folder_stale_links_prune_once(self):
+        agents = self.home / ".agents/skills"
+        agents.mkdir(parents=True)
+        (self.home / ".claude").mkdir()
+        (self.home / ".claude/skills").symlink_to(agents)
+        (agents / "removed-skill").symlink_to(REPO / "skills/removed-skill")
+        result = self.run_install("--only", "find-docs", "--prune-stale")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.count("stale: "), 1)
 
     def test_stale_catalog_links_are_reported_and_pruned_only_on_request(self):
         agents, claude = self.home / ".agents/skills", self.home / ".claude/skills"

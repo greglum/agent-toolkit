@@ -40,6 +40,10 @@ and library decisions.
    a decorative timer cannot declare success or turn an unknown task into numeric progress.
    Preserve focus, selection, errors, retry, and interaction during a visual handoff. Done when
    the states are correct and readable without motion.
+   When removing motion, retire hidden initial styles with it and trace completion events,
+   exit callbacks, and duration-based timers. Move necessary state, focus, and unmount work
+   to the owning non-animated lifecycle; do not merely delete the callback or assume it fires.
+   Verify the operation still finishes when no animation event occurs.
 4. **Add only the useful transition.** Name animated properties. Prefer transform and opacity
    where they fit; measure an intentional layout or paint exception. Reuse the product's
    duration and easing tokens. Match the path and origin to the state change. An animated

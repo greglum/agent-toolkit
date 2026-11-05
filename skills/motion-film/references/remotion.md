@@ -36,6 +36,15 @@ Read this only when the project already uses Remotion or the task explicitly cho
 - Use the supported readiness and asset-loading mechanisms. Measure with actual fonts and
   delivery bounds. Verify scene overlap and total runtime after adding transitions or a
   playback-rate change; nominal clip durations alone may not describe the resulting timeline.
+- Before an isolated render, resolve output, temporary, public-asset and bundler-cache writes.
+  A task-owned output folder does not isolate caches reached through linked dependencies. Use
+  the installed version's supported cache controls and check override order; a bundler override
+  can be replaced by later configuration. Preserve source and dependencies and verify actual
+  write locations.
+- Check browser startup using the project's actual renderer options, including GL selection
+  and runtime feature flags. A blank default launch may differ from that render. Preserve
+  session browser restrictions. Startup and close alone do not prove asset loading, rendering
+  or cleanup of servers and native helpers.
 - Keep preview and export distinct. An explicit export request continues through rendering
   and encoded-output inspection. Use a local preview for interactive review when that is the
   requested deliverable.

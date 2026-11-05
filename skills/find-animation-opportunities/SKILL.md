@@ -102,4 +102,5 @@ the searched surfaces; do not invent candidates to fill the ledger.
 
 **Verdict:** one paragraph on how much motion this interface needs, the highest-leverage row,
 and what cannot be judged from source (feel, device gestures). Close with the hand-off: build
-rows with `animate`, or run `/polish-animations` for the full find, build, and review loop.
+rows with `animate`, or invoke `polish-animations` by name (`/polish-animations` in Claude
+Code, `$polish-animations` in Codex) for the full find, build, and review loop.

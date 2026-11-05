@@ -23,9 +23,10 @@ element. A missing or ambiguous root, invalid selector or invalid options throws
 failed probe, never substitute an empty report. Omit `root` to inspect the body.
 
 Call after the scenario's observable readiness assertion. It captures the current scroll
-state, so record/reset scroll as the measurement method requires before calling it. Collect
-before and after with the same root, state, viewport and scroll positions. Saving the returned
-JSON is a caller operation; use an explicit evidence path and preserve existing artifacts.
+state without changing it. Follow the [measurement method](measuring.md): match root, state,
+viewport and scroll for static geometry comparisons; preserve resulting scroll through
+interaction checks. Record those conditions with each capture. Saving JSON is a caller
+operation; use an explicit evidence path and preserve existing artifacts.
 
 ## Read the result
 
@@ -58,7 +59,8 @@ Use the existing axe-core rig for accessibility and preserve its incomplete resu
 ## Exercise the bundled browser fixture
 
 With an existing Node.js and Playwright installation, and Playwright's Chrome Headless Shell at the version of the Playwright package you pass
-(install it with that package's CLI: `playwright install chromium-headless-shell`), or a
+(its CLI can download it with `playwright install chromium-headless-shell` when installation
+is authorized), or a
 `CHROME_PATH` naming another headless shell or Chrome for Testing. Never Google Chrome: on macOS
 each launch of it adds keychain keys that are never removed (Chromium issue 577651758).
 Explicit paths must name executable files. The checker resolves symlinks and rejects known

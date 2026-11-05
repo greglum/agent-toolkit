@@ -37,6 +37,7 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Watch CI and review on a PR | [monitor-pr](../skills/monitor-pr/SKILL.md) | Authorized fixes and repository delivery gates | Events you can resume from, readiness checked independently and the watcher stopped at the end |
 | Clean stale branches and worktrees | [repository-cleanup](../skills/repository-cleanup/SKILL.md) | Delegated recovery, repository delivery and safe cleanup | Every branch, worktree and stash accounted for, useful work landed or kept, only the named targets removed and proof they can be recovered |
 | Assess and refresh worktrees | [refresh-worktrees](../skills/refresh-worktrees/SKILL.md) | Repository setup and checks | Local work kept, and each worktree confirmed on the right base and revision |
+| Write or revise Swift code | [write-swift](../skills/write-swift/SKILL.md) | Target build/tests and platform UI guidance when needed | Supported toolchain and isolation owners checked, cancellation/errors preserved and build evidence separated from device behavior |
 
 Explicit workflows require a named invocation. Use `/name` in Claude Code or `$name` in
 Codex; respect the catalog's harness restrictions.

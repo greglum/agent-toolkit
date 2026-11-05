@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from check import check_private_names, check_reader_links, check_skill
+from check import check_catalog, check_private_names, check_reader_links, check_skill, only_leftovers
 
 
 class BundleChecks(unittest.TestCase):
@@ -140,6 +140,46 @@ class BundleChecks(unittest.TestCase):
         errors = check_skill(self.skill)
         self.assertTrue(any("email address" in e for e in errors))
         self.assertTrue(any("temporary path" in e for e in errors))
+
+    def test_catalog_table_and_skills_folder_agree(self):
+        (self.root / "docs").mkdir()
+        head = "| Skill | Runs |\n| --- | --- |\n"
+        row = "| [`{0}`](../skills/{0}/SKILL.md) | Automatic |\n"
+        cases = {
+            "good, indented and unbackticked rows": (head + row.format("kept") + "  | [real](../skills/real/SKILL.md) | x |\n", set()),
+            "plain name": (head + row.format("kept") + "| ghost | x |\n", {"does not link"}),
+            "backticked name with no link": (head + row.format("kept") + "| `ghost` | x |\n", {"does not link"}),
+            "name and folder disagree": (head + "| [`kept`](../skills/real/SKILL.md) | x |\n", {"links to the 'real' folder", "no row for skill"}),
+            "duplicate": (head + row.format("kept") * 2 + row.format("real"), {"more than one row"}),
+            "blank first cell": (head + row.format("kept") + row.format("real") + "|  | x |\n", {"does not link"}),
+            "commented and over-indented rows": (
+                head + row.format("kept") + row.format("real") + "<!-- | ghost | -->\n    | ghost |\n", set(),
+            ),
+            "unknown": (head + row.format("kept") + row.format("real") + row.format("ghost"), {"not a catalog skill"}),
+            "only row is fenced": ("```\n" + head + row.format("real") + "```\n" + head + row.format("kept"), {"no row for skill 'real'"}),
+            "other tables and fences ignored": (
+                head + row.format("kept") + row.format("real") + "\nText\n\n| Tool | Use |\n| --- | --- |\n| `ffmpeg` | x |\n```\n| `ghost` |\n```\n",
+                set(),
+            ),
+        }
+        for label, (text, expected) in cases.items():
+            with self.subTest(label):
+                (self.root / "docs/catalog.md").write_text(text)
+                errors = check_catalog(self.root, {"kept", "real"})
+                self.assertEqual(not errors, not expected, errors)
+                for words in expected:
+                    self.assertTrue(any(words in error for error in errors), errors)
+        (self.root / "docs/catalog.md").write_text("No table\n")
+        self.assertIn("no skill table", check_catalog(self.root, {"kept"})[0])
+
+    def test_folder_with_only_python_caches_is_not_a_skill(self):
+        (self.skill / "scripts/__pycache__").mkdir(parents=True)
+        (self.skill / "scripts/__pycache__/tool.pyc").write_bytes(b"x")
+        self.assertTrue(only_leftovers(self.skill))
+        (self.skill / ".DS_Store").write_text("x")
+        self.assertTrue(only_leftovers(self.skill))
+        (self.skill / "scripts/tool.py").write_text("x")
+        self.assertFalse(only_leftovers(self.skill))
 
     def test_reader_links_survive_a_release_without_internal_research(self):
         (self.root / "README.md").write_text("[Guide](docs/guide.md#start)\n")

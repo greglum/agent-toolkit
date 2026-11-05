@@ -7,8 +7,8 @@ question, not an endorsement.
 
 ## 1. Bind scope and read the sources
 
-Read the destination repository's instructions, authoring/curation guidance, workflow map,
-and relevant existing skills. Record the base revision and unrelated dirty files. Discover
+Read the destination repository's instructions and relevant existing skills. Consult its
+authoring/curation guidance and workflow map when present. Record the base revision and unrelated dirty files. Discover
 current owners before proposing new ones. If the target is ambiguous, investigate the current
 catalog first and ask only when the remaining choice affects where edits belong.
 

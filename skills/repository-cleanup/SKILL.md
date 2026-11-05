@@ -122,7 +122,7 @@ successful cleanup.
 Build an exact-target action list from the ledger. Preserve default, protected, shared,
 active, locked and uncertain resources. Prefer the harness's archive/restore lifecycle for
 managed worktrees; absence from the current chat's attachment list does not prove unmanaged
-ownership. Follow the existing refresh-worktree procedure when only updating a checkout.
+ownership. Use `refresh-worktrees` when only updating a checkout.
 
 Preserve lender repositories while any known borrower still depends on their object
 stores. Before authorized lender removal, dissociate each known borrower through native Git,

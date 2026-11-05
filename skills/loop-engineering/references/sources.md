@@ -47,3 +47,27 @@ Departures: sample size and summary statistics depend on the instrument and inte
 No fixed repeat count, automatic KEEP verdict, provider roster, CI-writing driver, saved
 permission dial or scheduler is adopted. Deterministic decisive checks keep the one-pass path.
 Recheck when the measurement design changes or a matched trial contradicts the procedure.
+
+## Recursive harness trials
+
+Observed November 3, 2026, America/Los_Angeles. Original synthesis; no upstream prompt or
+implementation copied.
+
+- [Harness2](https://github.com/google-research/harness2/tree/6868817518876de8fd170c6a8354daca273b6191),
+  Google Research, Apache-2.0 core code, revision dated November 1, 2026.
+  `core/recursion.py`, `core/prompts.py`, `core/ledger.py`, `core/library.py`,
+  `core/selection.py` and `docs/EXPERIMENTS.md` inform scoped candidates, executed
+  contrasts, composition, experiment identity and evidence-supported lessons.
+- [Harness2 paper](https://arxiv.org/html/2610.14224v1), Xu and colleagues, October 2026,
+  sections 2-4. Its benchmark and ablation findings support trials, not a promise of
+  gains for another repository. Paper reuse rights unassessed; original paraphrase only.
+- [Harness-Delta Attribution](https://arxiv.org/html/2610.22466v1), Ding and colleagues,
+  October 15, 2026, sections 3-5, CC BY 4.0. Compute matching, shortcut inspection and
+  held-out transfer inform limits on benefit claims. The study tests other frameworks;
+  its findings do not establish that Harness2 itself overfits.
+
+Departures: baseline remains eligible; no automatic adoption, model launcher, persistent
+harness library or benchmark datasets are added. Execution remains inside the permissions
+already selected for the task. Trials and lessons stay in the responsible project's records.
+Recheck when a controlled trial contradicts this procedure or experiment isolation changes.
+The linked research was checked once, in a dated earlier round, and has not been rechecked since.

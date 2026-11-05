@@ -9,6 +9,7 @@ their hooks, services, shared primitives, consumers, and relevant tests.
 | Component identity | A reachable remount or key change that resets state, focus, or effects. Nested component definitions and unstable keys are leads. |
 | State ownership | Inputs or event order that cause competing truth, stale derived state, or an effect race. Intentional editable drafts and captured snapshots can be correct. |
 | Async work | A reachable stale response, cancellation gap, or pending/error transition and its user-visible result. |
+| Failure feedback | Where a notice is promised, trace the failed action through its resulting state and render branch. Removing the final item can reach an empty-state return that hides the notice. Preserved working state and reachable feedback are separate checks. |
 | Native subscriptions | Trace actual element or resource identity and readiness through mounting, hydration, deferred rendering, replacement, and cleanup. Stable IDs or keys do not prove a native observer subscribed to the current target. |
 | Accessibility | Names, semantics, keyboard operation, focus, contrast, and reduced motion; label source evidence separately from observed browser behavior. |
 | Performance | Measured cost where available, or a concrete unmeasured mechanism involving work, subscriptions, renders, or requests. |
