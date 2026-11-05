@@ -109,12 +109,28 @@ class InstallChecks(unittest.TestCase):
     def test_awkward_paths_give_plain_errors(self):
         self.home.joinpath(".agents").mkdir()
         self.home.joinpath(".agents/skills").write_text("a file\n")
-        result = self.run_install("--only", "find-docs")
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("Stopped:", result.stderr)
-        self.assertNotIn("Traceback", result.stderr)
+        for args in (("--only", "find-docs"), ("--only", "find-docs", "--dry-run")):
+            result = self.run_install(*args)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("Stopped:", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+        self.home.joinpath(".agents/skills").unlink()
+        self.home.joinpath(".agents/skills").symlink_to(self.home / "gone")
+        for args in (("--only", "find-docs"), ("--only", "find-docs", "--dry-run")):
+            self.assertEqual(self.run_install(*args).returncode, 2)
         self.home.joinpath(".agents/skills").unlink()
         self.home.joinpath(".agents/skills").mkdir()
+        self.home.joinpath(".claude").mkdir()
+        self.home.joinpath(".claude/skills").write_text("a file\n")
+        self.assertEqual(self.run_install("--only", "review-pr").returncode, 0)  # Codex-only: needs no Claude folder.
+        self.home.joinpath(".claude/skills").unlink()
+        self.home.joinpath(".agents/skills/review-pr").unlink()
+        self.home.joinpath(".agents/skills").chmod(0o555)
+        self.addCleanup(self.home.joinpath(".agents/skills").chmod, 0o755)
+        result = self.run_install("--only", "find-docs")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn(str(self.home / ".agents/skills/find-docs"), result.stderr)  # The link, not its target.
+        self.home.joinpath(".agents/skills").chmod(0o755)
         loop = self.home / ".agents/skills/find-docs"
         loop.symlink_to(loop)
         result = self.run_install("--only", "find-docs")
