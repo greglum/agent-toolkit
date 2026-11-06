@@ -25,6 +25,10 @@ edit with that edit; otherwise preserve them.
    nearest useful tests. Identify inputs, outputs, errors, side effects, and ordering or
    concurrency guarantees before choosing a simplification. Process shared types and helpers
    before consumers. Distinguish intended duplication from two copies of the same responsibility.
+   If a cross-file ownership decision is still unclear and Git history is available, inspect
+   recent patches for the candidate files. Set aside bulk edits such as formatting and renames.
+   Confirm that separate changes had to update the same rule in multiple places, then check
+   that the rule still applies in the current code before consolidating it.
 3. **Simplify at the owner.** Reuse an existing helper or standard API where it fits. Prefer clear
    control flow, useful names, and one owner for an invariant. A cross-file change within the
    scope is appropriate when it fixes ownership. Keep abstractions that protect a real boundary,
@@ -43,3 +47,13 @@ edit with that edit; otherwise preserve them.
 Report what changed and why, which files needed no changes (coverage totals for a directory),
 and the passed, failed, and unrun checks. Finish when every included file is accounted for and
 the required checks pass, or name the specific evidence or decision still needed.
+
+## Source note
+
+The Git history check draws on the Tips section of Maze's
+[untangle-codebase](https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/skills/untangle-codebase/SKILL.md)
+([MIT](https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/LICENSE),
+observed November 5, 2026) and the
+[ROSE study](https://thomas-zimmermann.com/publications/files/zimmermann-icse-2004.pdf).
+The check uses existing Git history and current source, with no bundled analyzer. Recheck if
+a tool replaces manual patch inspection or a trial finds the step leads to false ownership moves.

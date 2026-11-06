@@ -7,20 +7,43 @@ Exit 0: reconciled, including declared failed/unsupported inputs; 1: mismatch;
 
 import argparse
 from collections import Counter
+from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path
+import stat
 
 
 STATUSES = {"verified", "partial", "failed", "unsupported"}
 
 
+@contextmanager
+def open_regular(path):
+    if not path.is_file():
+        raise OSError("input is not a regular file")
+    # A path can be replaced with a FIFO after the type check.
+    with os.fdopen(os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0)), "rb") as stream:
+        if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+            raise OSError("input is not a regular file")
+        yield stream
+
+
 def digest(path):
     checksum = hashlib.sha256()
-    with path.open("rb") as stream:
+    with open_regular(path) as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             checksum.update(chunk)
     return checksum.hexdigest()
+
+
+def unique_fields(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("manifest: duplicate JSON object key")
+        result[key] = value
+    return result
 
 
 def local_path(value, root, label):
@@ -154,7 +177,8 @@ def main():
                         help="one explicitly requested local source; repeat for each input")
     args = parser.parse_args()
     try:
-        manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+        with open_regular(args.manifest) as stream:
+            manifest = json.loads(stream.read().decode("utf-8"), object_pairs_hook=unique_fields)
         report = reconcile(manifest, args.input, (args.root or args.manifest.parent).resolve())
     except (OSError, ValueError, TypeError) as error:
         print(json.dumps({"status": "UNAVAILABLE", "error": str(error)}))

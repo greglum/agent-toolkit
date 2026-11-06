@@ -39,6 +39,13 @@ detached heads, locks, prunable entries, registered nested worktrees, harness-ow
 recovery refs, stashes and ignored assets. Check repository-owned hidden worktree directories
 for unregistered checkouts; inspect those directories, not unrelated projects or sessions.
 Inventory submodules and nested repositories separately before deleting any parent directory.
+The helper reports gitlinks and checkout identities without checking child dirtiness. An
+initialized submodule makes the parent inventory incomplete until checked separately. It also
+withholds status where a tracked path uses a configured Git filter. Preserve the affected
+worktree unless separate trusted inspection resolves that gap.
+See [Git filter behavior](https://git-scm.com/docs/gitattributes#_filter) and
+[submodule status options](https://git-scm.com/docs/git-status#Documentation/git-status.txt---ignore-submodulesltwhengt),
+checked November 5, 2026.
 Inspect Git object dependencies: common and effective `objects/info/alternates`, resolved
 alternate object stores and environment-provided alternates. The helper uses native
 `git count-objects -v` and retains unavailable-path diagnostics, including exit-zero errors.

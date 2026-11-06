@@ -28,6 +28,8 @@ Write one dated file, `YYYY-MM-DD-<topic>.md`, beside the other round reports. S
 - Add or update one registry row per author reviewed, adopted or not, with the new "last
   reviewed" link and what was drawn on.
 - Add a dated section to the source index that links the report.
-- Add the report to the README's research list, and a "Choose a workflow" row for any new skill.
+- Update the README with the useful outcome or its bundled source note. If a public snapshot
+  excludes the research directory, keep the report link in the private source index and point
+  the README to a shipped resource. Add a workflow row for any new skill.
 - Update vendored-skill pins separately from the review record, and only after the installer
   action they describe has run.

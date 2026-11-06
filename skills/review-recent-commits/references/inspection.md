@@ -2,7 +2,14 @@
 
 ## Scope commands
 
-Capture repository and worktree state before reviewing:
+For every local-only Git read in a partial clone, including preflight and final checks,
+set `GIT_NO_LAZY_FETCH=1` and `GIT_ALLOW_PROTOCOL=''`. Missing attribute objects leave
+filter coverage unresolved. Mark missing objects unavailable.
+
+Capture repository and worktree state before reviewing. Use the status command only
+after ruling out configured clean/process filters on tracked paths and in initialized
+submodules it would inspect. Otherwise mark worktree status unavailable and continue
+with the committed objects. Apply the same rule at the final state check.
 
 ~~~bash
 git rev-parse --show-toplevel

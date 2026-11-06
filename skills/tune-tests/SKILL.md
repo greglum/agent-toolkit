@@ -37,8 +37,9 @@ Done when mode, scope, command, and policy (or "none found") are recorded.
 
 Run the narrowest command that owns the scope. Record exit code, test count, wall time, and CPU
 time (the runner's report, or a time wrapper). Collect per-file or per-test durations to rank
-where time goes. When the runner runs files in parallel, wall time follows the slowest file, not
-the sum. Collect coverage, or mutation results where the repository has them.
+where time goes. For parallel runs, inspect the longest worker or shard's assigned work,
+including setup, serial files and retries. Compare that with measured wall time. Collect
+coverage or mutation results where the repository has them.
 
 Record baseline failures apart. A flaky or failing test is a defect to root-cause at its
 owner. It is not evidence for removal, skip, or quarantine.

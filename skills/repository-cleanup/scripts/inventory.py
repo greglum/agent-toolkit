@@ -14,11 +14,13 @@ class Inventory:
         self.repo = repo
         self.errors = []
 
-    def git(self, *args, repo=None, require_no_diagnostics=False):
+    def git(self, *args, repo=None, require_no_diagnostics=False, stdin=None):
         target = str(repo or self.repo)
         result = subprocess.run(
-            ["git", "-c", "core.fsmonitor=false", "--no-pager", "-C", target, *args], capture_output=True,
-            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+            ["git", "-c", "core.fsmonitor=false", "--no-pager", "-C", target, *args],
+            capture_output=True, input=stdin,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0", "GIT_NO_LAZY_FETCH": "1",
+                 "GIT_ALLOW_PROTOCOL": ""},
         )
         if result.returncode or (require_no_diagnostics and result.stderr):
             self.errors.append({"repo": target, "args": list(args),
@@ -57,6 +59,33 @@ class Inventory:
         behind, ahead = map(int, value.split())
         return {"behind": behind, "ahead": ahead, "tip_reachable_from_base": ahead == 0}
 
+    def worktree_status(self, path):
+        # A working-tree comparison may execute an attribute's configured clean filter.
+        config = self.git("config", "--includes", "--name-only", "--null", "--list", repo=path)
+        if config is None:
+            return None
+        keys = config.split("\0")
+        drivers = {key[len("filter.") : key.rindex(".")] for key in keys
+                   if key.startswith("filter.") and key.endswith((".clean", ".process", ".required"))}
+        if drivers:
+            if "extensions.partialclone" in keys or any(
+                    key.startswith("remote.") and key.endswith(".promisor") for key in keys):
+                self.errors.append({"repo": path, "error": "partial clone filter attributes are unverified"})
+                return None
+            tracked = self.git("ls-files", "-z", repo=path)
+            if tracked is None:
+                return None
+            attributes = self.git("check-attr", "-z", "--stdin", "filter",
+                                  repo=path, stdin=os.fsencode(tracked), require_no_diagnostics=True)
+            if attributes is None:
+                return None
+            if drivers.intersection(attributes.split("\0")[2::3]):
+                self.errors.append({"repo": path, "error": "worktree status needs a configured Git filter"})
+                return None
+        # Retain gitlink changes without descending into child Git configurations.
+        return self.git("status", "--ignore-submodules=dirty", "--porcelain=v1", "-z",
+                        "--untracked-files=all", repo=path)
+
     def worktrees(self, base):
         raw = self.git("worktree", "list", "--porcelain", "-z")
         trees, current = [], {}
@@ -79,7 +108,7 @@ class Inventory:
                 tree["inspection"] = "unavailable: missing path"
                 self.errors.append({"repo": path, "error": "missing worktree path"})
                 continue
-            status = self.git("status", "--porcelain=v1", "-z", "--untracked-files=all", repo=path)
+            status = self.worktree_status(path)
             fields = iter((status or "").split("\0"))
             changes = []
             for field in fields:
@@ -95,6 +124,8 @@ class Inventory:
             tree["ignored_paths"] = ignored.rstrip("\0").split("\0") if ignored else ([] if ignored is not None else None)
             modules = self.git("submodule", "status", repo=path)
             tree["submodules"] = modules.splitlines() if modules is not None else None
+            if any(line and not line.startswith("-") for line in tree["submodules"] or []):
+                self.errors.append({"repo": path, "error": "initialized submodule dirtiness requires separate inventory"})
             if tree.get("HEAD"):
                 tree["ancestry"] = self.ancestry(tree["HEAD"], base)
         return trees

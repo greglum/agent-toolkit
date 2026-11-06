@@ -80,6 +80,9 @@ animating the right thing with the wrong ingredients.
 7. **Ship access with it.** Follow the project's reduced-motion contract. Absent one, remove
    travel and scale and keep a short opacity or color change where it carries meaning. Gate
    hover motion to `(hover: hover) and (pointer: fine)`. Keep focus visible throughout.
+   When WCAG 2.2.2 applies, provide and exercise a pause, stop or hide control for
+   nonessential motion that starts automatically, lasts over five seconds and runs
+   alongside other content. [Criterion and examples](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html).
 8. **Verify, then get it graded.** Run the project's required gates. Run the app through its
    own verification workflow and exercise the change at normal speed, on rapid repeat and
    reversal, with reduced motion, and by keyboard; follow `ui-motion`'s rendered review when

@@ -19,9 +19,11 @@ UTF-8 CSV with exactly these columns, in any order. One row per post per metric.
 
 A cohort is one account, platform, format, metric and age window. Only rows in the same
 cohort are compared. A row's lift is its value over the median of the cohort's other
-complete rows; there is no lift under 3 such peers or on a zero median. If a source only
-shows a current total, record the post's real age window, or mark the row `partial`; do not
-convert totals with a growth curve.
+complete rows. There is no lift under 3 such peers or on a zero median. Use different
+metric names for different counting rules, including a platform's old and new definitions.
+A later export can supply a complete row if it reports the total at the selected cutoff.
+A cumulative total observed after that cutoff does not establish the earlier count. Keep
+it partial for that window or record the actual age in its own cohort.
 
 The script rejects missing or extra columns, empty required cells, uppercase `platform` or
 `format`, non-HTTPS URLs, unparsed dates, an `observed_at` before `published_at`, a `complete`

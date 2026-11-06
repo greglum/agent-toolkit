@@ -39,7 +39,9 @@ python3 <skill-dir>/scripts/check_manifest.py bundle/manifest.json \
 Pass every requested input, including failures; deriving the input list from the manifest
 would hide omissions. Exit 0 reports `RECONCILED`, which can include failed or unsupported
 sources. Exit 1 reports `MISMATCH`; exit 2 means the manifest or invocation was invalid or
-unreadable. Inspect status counts and reasons before using the bundle. The tool writes only
+unreadable. Duplicate JSON object keys make the manifest invalid. The checker hashes
+only regular files, so an unsupported pipe or device can be accounted for without reading
+it. Inspect status counts and reasons before using the bundle. The tool writes only
 JSON to stdout and never repairs a manifest or overwrites source/output files.
 
 Original implementation, November 4, 2026. The [provenance](provenance.md) boundary remains:

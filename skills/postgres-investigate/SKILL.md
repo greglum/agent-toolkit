@@ -29,7 +29,10 @@ Choose the relevant branch and account for its missing evidence:
 - **Connections or locks:** correlate the incident time with active versus idle sessions,
   waiting queries, blocking relationships, transaction age, and pool limits. Identify the
   pooler, version, mode, and application concurrency. Distinguish waiting for a connection
-  from waiting inside a query before proposing a setting change.
+  from waiting inside a query before proposing a setting change. When using cumulative
+  statistics, record snapshot times, transaction boundaries and any available reset times.
+  Refresh cached reads when needed. Compute deltas only across the same target and reset
+  epoch, and account for reporting lag before assigning a change to the incident window.
 - **Row security:** inspect grants, policies, function execution rights, table ownership,
   bypass privileges, and session identity as the actual caller. Check version-matched
   PostgreSQL documentation for policy combination and UPDATE new-row checks. When

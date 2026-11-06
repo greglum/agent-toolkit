@@ -22,6 +22,13 @@ Do not use the current branch as the base merely because it is checked out somew
 Record the full base SHA and whether its remote state was checked or is locally cached.
 Ask only if the evidence cannot settle the destination or required authority.
 
+In a partial clone, use `GIT_NO_LAZY_FETCH=1` and `GIT_ALLOW_PROTOCOL=''` for
+local-only Git reads, including attribute checks. Missing attribute objects leave
+filter coverage unresolved.
+Before any Git status or worktree diff, check effective clean/process filters and tracked
+filter attributes, including in initialized submodules the command would inspect. Preserve
+the checkout when an applicable filter or missing evidence leaves its dirty state unresolved.
+
 Assessment is read-only. Fetch or update the base only when the refresh request
 authorizes that operation. If updating a base checkout, require it to be clean and
 use a fast-forward-only update. Preserve a dirty or divergent base and continue the

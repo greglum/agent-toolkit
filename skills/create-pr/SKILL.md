@@ -103,6 +103,8 @@ gh pr create \
 ```
 
 If creation times out or returns an uncertain outcome, query the exact tuple before retrying.
+A failed attachment upload can leave a created PR even when the CLI exits nonzero. Verify
+the returned PR URL and tuple, and account for missing attachments separately.
 Verify the returned PR URL/number, base and head repositories/branches, selected head SHA,
 draft/state, and any attachments by reading the created body back. Reconcile changed evidence before claiming success. A created PR whose
 verification failed must be reported as created with verification unavailable, not retried
