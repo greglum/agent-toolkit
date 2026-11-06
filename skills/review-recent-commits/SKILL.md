@@ -64,7 +64,6 @@ docs, and local history. Do not invent an unstated requirement.
 Do not silently sample large commits: batch the paths and finish all material source,
 config, migration, test, and documentation coverage before issuing APPROVE. If coverage
 cannot be completed, report the exact gap and issue REVISE with that gap as the reason.
-Never APPROVE.
 
 For a linear commit window, also inspect the net diff from the oldest commit's first
 parent through the newest commit. For unrelated named commits, assess them separately
@@ -82,8 +81,8 @@ out-of-scope current issues separately; they do not drive the verdict.
 
 ## 4. Reconcile a moving worktree
 
-Immediately before the verdict, rerun `git rev-parse HEAD` and
-`git -c core.fsmonitor=false --no-optional-locks status --short --branch`.
+Immediately before the verdict, rerun `git rev-parse HEAD` and repeat the
+[worktree status check](references/inspection.md#scope-commands) when available.
 
 If HEAD changed and the user requested the newest commits by count, recompute that
 window, review commits that entered it, and refresh current-file evidence until the

@@ -142,6 +142,56 @@ class InventoryTests(unittest.TestCase):
         self.assertFalse(invalid["complete"])
         self.assertTrue(invalid["errors"])
 
+    def test_inventory_skips_filter_backed_status_without_running_filter(self):
+        marker = self.root / "filter-ran"
+        self.git("config", "filter.marker.clean", f"touch '{marker}' && cat")
+        # Configured but unused filters leave ordinary status available.
+        self.assertTrue(Inventory(str(self.repo)).collect("main")["complete"])
+        (self.repo / ".gitattributes").write_text("tracked filter=marker\n")
+        (self.repo / "tracked").write_text("edit\n")
+        os.utime(self.repo / "tracked", (1, 1))
+        self.git("-c", "core.fsmonitor=false", "--no-optional-locks", "status", "--porcelain")
+        self.assertTrue(marker.exists(), "the configured-program control must actually run")
+        marker.unlink()
+        result = Inventory(str(self.repo)).collect("main")
+        self.assertFalse(result["complete"])
+        self.assertIsNone(result["worktrees"][0]["changes"])
+        self.assertFalse(marker.exists())
+
+    def test_partial_clone_filter_preflight_never_fetches_missing_attributes(self):
+        (self.repo / ".gitattributes").write_text("tracked filter=marker\n")
+        self.git("add", ".gitattributes")
+        self.git("commit", "-m", "filtered path")
+        self.git("config", "uploadpack.allowFilter", "true")
+        partial = self.root / "partial"
+        self.git("clone", "--filter=blob:none", "--no-checkout", self.repo.as_uri(), str(partial))
+        self.git("read-tree", "HEAD", repo=partial)
+        self.git("config", "filter.marker.clean", "cat", repo=partial)
+        packs = partial / ".git/objects/pack"
+        before = sorted(packs.iterdir())
+        result = Inventory(str(partial)).collect("main")
+        self.assertFalse(result["complete"])
+        self.assertIsNone(result["worktrees"][0]["changes"])
+        self.assertEqual(before, sorted(packs.iterdir()))
+
+    def test_inventory_leaves_initialized_submodule_dirtiness_unavailable(self):
+        child = self.root / "child"
+        self.git("clone", str(self.repo), str(child))
+        self.git("-c", "protocol.file.allow=always", "submodule", "add", str(child), "nested")
+        nested = self.repo / "nested"
+        marker = self.root / "child-filter-ran"
+        self.git("config", "filter.marker.clean", f"touch '{marker}' && cat", repo=nested)
+        (nested / ".gitattributes").write_text("tracked filter=marker\n")
+        (nested / "tracked").write_text("edit\n")
+        os.utime(nested / "tracked", (1, 1))
+        self.git("status", "--ignore-submodules=none", "--porcelain")
+        self.assertTrue(marker.exists(), "the parent-status control must reach the child")
+        marker.unlink()
+        result = Inventory(str(self.repo)).collect("main")
+        self.assertFalse(result["complete"])
+        self.assertTrue(result["worktrees"][0]["submodules"])
+        self.assertFalse(marker.exists())
+
     def test_inventory_does_not_execute_configured_monitor_or_write_index(self):
         marker = self.root / "monitor-ran"
         monitor = self.root / "monitor"

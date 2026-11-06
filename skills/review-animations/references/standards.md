@@ -35,6 +35,10 @@ reference.
    to fine pointers. Focus stays visible and correct through the motion. Opacity alone does
    not hide: transparent controls still receive clicks and focus. A miss: a sheet that still
    slides with reduced motion on; a faded-out menu whose items remain tabbable.
+   For WCAG 2.2.2, check that movement which starts automatically, lasts over five
+   seconds and runs alongside other content has a pause, stop or hide control, unless
+   it is essential. Test the control independently of reduced motion.
+   [W3C criterion and examples](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html).
 9. **Asymmetric where someone decides.** A deliberate phase (press and hold, a destructive
    confirm) is slow; the system's answer is fast. A miss: a hold-to-confirm whose release
    takes as long as the hold.

@@ -1,4 +1,5 @@
 import copy
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -77,6 +78,35 @@ class ExtractionAccounting(unittest.TestCase):
         alias["output"]["path"] = linked.name
         self.assertIn("source 1: output aliases a requested original",
                       reconcile([alias], ["source.txt"], self.root)["errors"])
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "requires POSIX FIFOs")
+    def test_cli_accounts_for_an_unsupported_fifo_without_opening_it(self):
+        os.mkfifo(self.root / "source.pipe")
+        entry = {"source_id": "pipe", "source": "source.pipe", "source_sha256": None,
+                 "status": "unsupported", "known_loss": [], "errors": ["Not a regular file"],
+                 "output": None, "tool": None, "verification": {"coverage": "none", "locators": []}}
+        manifest = self.root / "manifest.json"
+        manifest.write_text(json.dumps([entry]))
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name("check_manifest.py")),
+                                 str(manifest), "--input", "source.pipe"],
+                                capture_output=True, text=True, check=False, timeout=5)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["source_statuses"], {"unsupported": 1})
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name("check_manifest.py")),
+                                 str(self.root / "source.pipe"), "--input", "source.txt"],
+                                capture_output=True, text=True, check=False, timeout=5)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["status"], "UNAVAILABLE")
+
+    def test_cli_refuses_conflicting_duplicate_status(self):
+        manifest = self.root / "manifest.json"
+        entry = json.dumps(self.entry).replace('"status": "verified"', '"status": "failed", "status": "verified"')
+        manifest.write_text(f"[{entry}]")
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name("check_manifest.py")),
+                                 str(manifest), "--input", "source.txt"],
+                                capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("duplicate JSON object key", result.stdout)
 
     def test_cli_reads_a_prepared_utf8_bundle_without_mutating_originals(self):
         manifest = self.root / "manifest.json"

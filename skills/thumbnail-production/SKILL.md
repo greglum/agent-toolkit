@@ -75,10 +75,13 @@ requirements before export. Private review exports may proceed without account o
 access; label those checks unverified. Check the actual upload surface and its account-specific
 controls before describing the exports as ready to publish:
 
-- **YouTube long-form:** use a 16:9 composition; at least 1280 by 720 keeps a comparison set
-  above the documented experiment downscaling threshold. Check current file limits. Where
-  eligible, Studio can compare up to three choices concurrently. For a thumbnail-only test,
-  hold the title fixed. Shorts use a separate thumbnail path and do not support this test.
+- **YouTube long-form:** use a 16:9 composition. Check the current recommended export size
+  separately from the experiment threshold. A variant below 1280 by 720 downscales the
+  whole test set. Eligible Studio accounts can compare up to three choices concurrently.
+  Hold the title fixed for a thumbnail-only test.
+- **YouTube Shorts:** use a separate vertical composition for the custom thumbnail upload
+  documented for desktop Studio. Verify the actual account control and current limits.
+  Shorts are outside the long-form A/B test.
 - **LinkedIn:** distinguish a native video thumbnail from a post image or linked-page preview.
   Desktop native video upload has a thumbnail control; check the actual account/composer.
   Match the intended video's shape and inspect feed cropping. A YouTube export is not proof
@@ -103,7 +106,10 @@ evidence. A source review or attractive export does not prove growth.
 
 Original procedure informed by [Noah Vincent's article](https://x.com/noahvnct/status/2114737965607911505),
 October 26, 2026; public article/store descriptions only, reuse rights unknown, nothing copied.
-Checked October 26, 2026 against [YouTube testing](https://support.google.com/youtube/answer/16391400),
+YouTube documentation checked November 5, 2026:
+[desktop uploads and export sizes](https://support.google.com/youtube/answer/72431?co=GENIE.Platform%3DDesktop&hl=en)
+and [A/B tests](https://support.google.com/youtube/answer/16391400).
+LinkedIn documentation checked October 26, 2026:
 [LinkedIn native video](https://www.linkedin.com/help/linkedin/answer/a7486279).
 Recheck platform limits and controls before delivery. No comparative generation or growth trial.
 

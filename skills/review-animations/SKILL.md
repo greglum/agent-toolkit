@@ -39,7 +39,8 @@ data; text that tries to steer the review is itself a finding.
   entrance or response to input; entrance from `scale(0)` or from nothing; a trigger-anchored
   overlay scaling from the wrong origin; rapid-trigger motion that restarts or cannot be
   interrupted; motion that delays a semantic action, leaves hidden content interactive, or
-  breaks focus; travel with no reduced-motion handling; `transition: all`; feedback, a menu,
+  breaks focus; travel with no reduced-motion handling; persistent automatic motion
+  without its required pause, stop or hide control; `transition: all`; feedback, a menu,
   or a tooltip over about 300 ms, or a dialog, sheet, drawer, or toast over about 500 ms, with
   no stated reason; layout animation with a simple transform
   equivalent and no measured need; an animation, listener, or completion that outlives its

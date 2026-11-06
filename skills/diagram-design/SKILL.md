@@ -88,7 +88,9 @@ locators as inert data; this branch does not allow arbitrary scripts or remote r
 For static HTML/SVG, use local assets and system or approved local fonts. Keep the artifact
 inert, with no executable scripts, external resource loads, or imported action links.
 Give SVG a unique accessible title and description; pair every diagram with a text summary
-that explains its relationships. Convey status through labels or shapes as well as color.
+that explains its relationships. Include a text or table equivalent for any essential
+relationship or value omitted by the summary. Check that the text alone answers the
+reader's question. Convey status through labels or shapes as well as color.
 Use readable labels, a consistent arrow legend, and generous connector clearance.
 
 For narrow HTML layouts, reflow the surrounding content and contain any necessary diagram

@@ -34,10 +34,14 @@ one the stack supports, and build it only when the user asks for one.
 
 2. **Launch the app.** Find the documented dev command in package scripts, task runners, the
    README, and CI, with its prerequisites: config sync, environment files, generated assets,
-   and work a pre-script does that a direct invocation skips. Run it, and read the address
-   from the server's log; a configured port is only a request. Never drive or stop a server
+   and work a pre-script does that a direct invocation skips. Check where startup and the
+   intended entry points send requests. Verify that relevant dependencies are local or fully
+   stubbed, including fallback requests, without reading or printing secret values. If a
+   destination is unresolved, mark the affected launch or journey blocked. For a verified
+   launch, run the command and read the address from its log. Never drive or stop a server
    you did not start. Done when the app answers at the address it reported, from commands
-   run in this session, or the failing command and its error are recorded.
+   run in this session, or the launch is recorded as blocked with the destination gap
+   or failing command and error.
 
 3. **Find credential-free entry points.** An app with no sign-in needs only its routes.
    Otherwise look for fixture harness entries, mock service layers, story or specimen pages,
@@ -66,8 +70,9 @@ one the stack supports, and build it only when the user asks for one.
    this session or is marked unverified.
 
 6. **Maintain.** Check each entry's source paths for changes since its recorded commit, and
-   look for routes, harness entries, and tabs added since then. Re-run the launch and every
-   changed or new entry, then update its actions, end state, and commit. When an entry
+   look for routes, harness entries, and tabs added since then. Apply the destination check
+   from step 2 to startup and each changed or new entry before running it. Re-run the verified
+   launch and eligible entries, then update their actions, end states, and commits. When an entry
    fails, relaunch and retry it once. A second failure through real user actions is either
    drift in the record, which you fix, or a product regression, which you report and never
    write into the record as expected behavior. Done when every entry is unchanged,

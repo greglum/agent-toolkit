@@ -22,6 +22,14 @@ use the repository's spec-conformance review.
 
 ### 1. Pin the fixed point
 
+In a partial clone, use `GIT_NO_LAZY_FETCH=1` and `GIT_ALLOW_PROTOCOL=''` for
+local-only Git reads, including attribute checks. Missing attribute objects leave
+filter coverage unresolved.
+Before running Git status or a worktree diff, check effective clean/process filters and
+tracked filter attributes, including in initialized submodules the command would inspect.
+If a filter applies or the check is unresolved, use raw files and index/commit blobs.
+Report any worktree or normalization coverage that remains unavailable.
+
 Choose the requested comparison first. For uncommitted work, pin `HEAD` and use
 `git diff HEAD` for all tracked changes, or `git diff --staged` for a staged-only
 request. Account for untracked files when the requested scope includes them.

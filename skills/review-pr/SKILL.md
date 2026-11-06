@@ -35,11 +35,17 @@ Order governs presentation, never disclosure. Report a security, data-loss, or c
 
 ## Step 1: Resolve immutable review objects
 
+For every local-only Git read in a partial clone, including preflight and final checks,
+set `GIT_NO_LAZY_FETCH=1` and `GIT_ALLOW_PROTOCOL=''`. Missing attribute objects leave
+filter coverage unresolved. Handle missing objects through
+the separate authorized retrieval route below.
+
 Record the current branch, remotes, and full `HEAD` SHA.
-`git -c core.fsmonitor=false --no-optional-locks status --short` is only a preservation
-check. Disable configured filesystem-monitor hooks for any index or working-tree
-inspection. Never read, diff, format, stage, or otherwise use working-tree or
-sibling-worktree content for this review.
+For optional preservation evidence, use
+`git -c core.fsmonitor=false --no-optional-locks status --short` only after ruling out
+configured clean/process filters on tracked paths and in initialized submodules the
+command would inspect. Otherwise mark status unavailable and continue the committed
+review. Keep working-tree and sibling-worktree content out of the review.
 
 If `--pr` is provided, query that exact PR. Otherwise, try to identify the current branch's PR:
 

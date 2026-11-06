@@ -8,10 +8,10 @@ bundled.
   human, and a ledger of used sources. Departures: the ledger is written after the decision,
   not before it, and keeps drops; the agent's scheduling, posting, reflection-to-rules, and
   persona prompts are not adopted.
-- [X counting characters](https://docs.x.com/fundamentals/counting-characters) (weighted
-  length, fixed-length links) and [X automation rules](https://help.x.com/en/rules-and-policies/x-automation)
-  (no duplicate or substantially similar posts), read from search excerpts on October 23,
-  2026, not fetched directly. Facts only, no text copied. LinkedIn's post limit came from
-  third-party sources only and is unconfirmed, so the skill names no limits.
+- [X counting characters](https://docs.x.com/fundamentals/counting-characters) was read
+  directly November 5, 2026. It covers weighted characters, Unicode normalization and
+  fixed-length URLs. The [X automation rules](https://help.x.com/en/rules-and-policies/x-automation)
+  were seen in search excerpts October 23, 2026. LinkedIn's post limit remains
+  unconfirmed. Reuse rights for these living pages were unassessed. No text copied.
 
 Recheck when either platform changes its counting or automation rules.

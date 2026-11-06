@@ -20,7 +20,17 @@ Order governs presentation, never disclosure. Report a security, data-loss, or c
 finding as soon as it is found, even though later steps are unfinished. A credential-shaped
 literal counts even when it looks fake; in a single final reply, lead with it.
 
-1. **Bind the scope.** Record HEAD and Git status, including staged, unstaged, untracked,
+In a partial clone, use `GIT_NO_LAZY_FETCH=1` and `GIT_ALLOW_PROTOCOL=''` for
+local-only Git reads, including attribute checks. Missing attribute objects leave
+filter coverage unresolved.
+Before inspecting the worktree with Git, check the effective `filter.*.clean` and
+`filter.*.process` configuration and tracked `filter` attributes. Status and worktree
+diffs can run those drivers even with fsmonitor and diff converters disabled. Apply the
+same check to initialized submodules before any command that inspects their dirty state.
+If the check is unresolved or a driver applies, use committed/index blobs and raw file
+reads. Report any normalization or status you could not verify.
+
+1. **Bind the scope.** Record HEAD and available Git status, including staged, unstaged, untracked,
    deleted, renamed, type-changed, executable-mode, and conflicted paths. Default to all
    pending changes; honor an explicit path limit. If there are none, report that and finish.
    Track complete requested coverage in bounded batches. A large diff does not shrink scope.

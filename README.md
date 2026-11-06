@@ -133,6 +133,14 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+The [cleanup inventory](skills/repository-cleanup/SKILL.md#establish-scope-and-a-complete-inventory)
+keeps worktree status unavailable when inspection would need a configured Git filter.
+The [extraction checker](skills/extract-documents/references/manifest-check.md) accounts for
+unsupported inputs and refuses ambiguous manifest keys.
+
+The [simplify-code source note](skills/simplify-code/SKILL.md#source-note) credits the
+research behind using Git history to clarify ownership during a refactor.
+
 For physical mechanisms, the [modeling guide and offline example](skills/system-anatomy/references/mechanisms.md)
 cover parameter provenance, model limits, numerical checks and synchronized controls/readouts.
 
