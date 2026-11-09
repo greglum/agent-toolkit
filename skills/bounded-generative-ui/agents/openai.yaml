@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bounded Generative UI"
+  short_description: "Build and verify model-selected UI layouts"
+  default_prompt: "Use $bounded-generative-ui to design and verify a model-selected layout for this app."

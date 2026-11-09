@@ -1,5 +1,20 @@
 # Sources and adaptation
 
+## November 7 reference format adaptation
+
+The [story structure mapping](direction.md#adapt-a-references-story-structure) is original
+guidance informed by Scenario Inc.'s [Content Engine](https://www.scenario.com/explorations/content-engine/),
+observed November 7, 2026, and its downloadable scenario-remake ZIP, SHA-256
+`1bd3eb59a361e67edde6be79b72d97ca6196b27443e3df6d1c26bbde0e366d9f`.
+The ZIP's reference-reading and logic guides separate the function of a beat from the
+example's subject. Higgsfield's [Content Factory guide](https://higgsfield.ai/blog/higgsfield-introduces-content-factory)
+describes a separate implementation that uses references for pacing and format.
+[TransNet V2, §1](https://arxiv.org/html/2008.04838#S1) documents missed cuts and false
+positives; a detected cut is also different from a story beat. The ZIP has no license
+notice; living-page reuse rights were not established. No upstream text, code or media
+was copied. Recheck when the input scope, bundle or rights change. Neither the examples
+nor this procedure establish that a new film will perform like the reference.
+
 ## November 4 reference reconstruction
 
 The [reconstruction checks](direction.md#reconstruct-a-cleared-reference) are original guidance
