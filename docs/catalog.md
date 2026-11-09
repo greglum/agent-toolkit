@@ -16,6 +16,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`analyze-agent-history`](../skills/analyze-agent-history/SKILL.md) | Analyze supplied agent-history exports into text-free correction candidates and coverage counts. | Automatic |
 | [`animate`](../skills/animate/SKILL.md) | Build interface motion with purposeful timing, interruption, and reduced-motion behavior. | Automatic |
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
+| [`bounded-generative-ui`](../skills/bounded-generative-ui/SKILL.md) | Build and verify model-selected layouts that preserve app-owned facts and evidence. | Automatic |
 | [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Measure codebase or task/harness quality against a fixed profile with source evidence. | Automatic |
 | [`compare-experiments`](../skills/compare-experiments/SKILL.md) | Compare paired observations with visible missing/failure evidence and selected-candidate confirmation. | Automatic |
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan source-backed website, YouTube and LinkedIn content, then compare matched measurement windows. | Automatic |
@@ -56,6 +57,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`simplify-code`](../skills/simplify-code/SKILL.md) | Simplify code while preserving behavior; supports explicitly requested comment-only work. | Automatic |
 | [`skill-research`](../skills/skill-research/SKILL.md) | Vet linked sources or research the catalog and apply supported improvements. | By name |
 | [`social-research`](../skills/social-research/SKILL.md) | Research public posts and comments for outliers and source-backed audience questions. | Automatic |
+| [`state-machine-audit`](../skills/state-machine-audit/SKILL.md) | Trace implicit state, check risky transitions, and draw a source-backed statechart. | Automatic |
 | [`system-anatomy`](../skills/system-anatomy/SKILL.md) | Create an interactive anatomy, cutaway, or spatial explanation grounded in source. | Automatic |
 | [`thumbnail-production`](../skills/thumbnail-production/SKILL.md) | Create YouTube thumbnails, LinkedIn video covers, and social images from cleared sources. | Automatic |
 | [`to-spec`](../skills/to-spec/SKILL.md) | Turn the current conversation into a spec with scope, decisions, and acceptance conditions. | Automatic |

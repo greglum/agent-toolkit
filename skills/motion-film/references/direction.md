@@ -24,9 +24,10 @@ Done when the chosen concept can be stated plainly and each scene visibly advanc
 
 ## Study a reference
 
-For style inspiration, give each reference one job: a card entrance, a transition, a cursor
-action, a title reveal. For a requested reconstruction, use the
-[reconstruction checks](#reconstruct-a-cleared-reference) below and measure the full sequence.
+For the same format with a new subject, [map the story structure](#adapt-a-references-story-structure).
+For a faithful rebuild, use the [reconstruction checks](#reconstruct-a-cleared-reference)
+and measure the full sequence. For style inspiration, give each reference one job, such as
+a title reveal or a transition.
 
 1. Sample the clip at 2 frames a second for an overview sheet. Then extract every frame
    around the key event, from a few frames before it starts until it settles. The overview
@@ -58,12 +59,33 @@ render presets are optional source choices. Inspect licenses before reusing code
 Done when each reference has one named job and a spec with labeled values, and the film's
 own scene contract says which of those values it adopts.
 
+## Adapt a reference's story structure
+
+Use this when the brief asks for the same format with a new subject. Review the full clip
+and listen to the audio where available. Use the [contact-sheet extractor](contact-sheets.md)
+for time anchors when a permitted local file is available. Check fast changes in consecutive
+frames. If the opening or payoff is unavailable, map only the observed beats and mark the
+full structure unverified. Mark missing audio cues as unknown.
+
+In the existing storyboard, map each story beat from a source time range to its job for
+the viewer and the new action that does that job. If the source payoff is visible, record
+where it answers the opening. A beat can span several shots or change within one shot.
+Keep only the relationships
+that serve the new story; write new words and use cleared assets. If the new subject cannot
+support a beat with a true fact or a visible cause, change the structure before making assets.
+
+Review the mapped storyboard in order. Check that the new payoff answers its own opening,
+the captions and narration match what is shown, and any numbers or changes in state follow
+the new story's facts. Use the project's existing renderer for a short moving draft of the
+hardest beat or handoff before committing to the full edit. Without a renderer, stop at
+the storyboard and report the moving draft as unverified.
+
 ## Reconstruct a cleared reference
 
-Confirm whether the task asks for a faithful rebuild or a remix. For a rebuild, keep the
-source canvas, video timing and cleared content; record substitutions and intentional
-changes. Keep layers the user needs to edit as separate elements. Replaying the source
-frame as a background does not establish that its visible layers were reconstructed.
+For a faithful rebuild, keep the source canvas, video timing and cleared content. Record
+substitutions and intentional changes. Keep layers the user needs to edit as separate
+elements. Replaying the source frame as a background does not establish that its visible
+layers were reconstructed.
 
 Record the exact frame rate and decoded presentation times. Constant-rate frame numbers
 can map through the rational frame rate; variable-rate media needs its actual timestamps.

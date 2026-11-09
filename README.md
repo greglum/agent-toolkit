@@ -21,6 +21,7 @@ of his work. This repository holds the installable bundles and usage documentati
 | Check a web page across widths and states | [fit-surface](skills/fit-surface/SKILL.md) | A measured layout and accessibility check |
 | Understand a large change before reviewing it | [guided-review](skills/guided-review/SKILL.md) | A reading guide tied to the actual diff |
 | Investigate a disputed dashboard number | [reconcile-metric](skills/reconcile-metric/SKILL.md) | An independent calculation with the difference explained |
+| Find and check an implicit state machine | [state-machine-audit](skills/state-machine-audit/SKILL.md) | Source-backed transitions, a bounded check, and a statechart |
 | Explain a system and explore its relationships | [diagram-design](skills/diagram-design/SKILL.md) | A diagram or standalone graph viewer |
 | Explore a system's parts and behavior | [system-anatomy](skills/system-anatomy/SKILL.md) | A source-grounded interactive anatomy or cutaway |
 | Check a rendered film | [motion-film](skills/motion-film/SKILL.md) | Source, playback and export checks using its production tools |
@@ -133,6 +134,9 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+The [state machine audit source notes](skills/state-machine-audit/SKILL.md#sources) credit
+the verification workflow and distinguish a model check from an implementation test.
+
 The [cleanup inventory](skills/repository-cleanup/SKILL.md#establish-scope-and-a-complete-inventory)
 keeps worktree status unavailable when inspection would need a configured Git filter.
 The [extraction checker](skills/extract-documents/references/manifest-check.md) accounts for
@@ -177,6 +181,10 @@ cover coarse inputs, scene scale and exported geometry cost.
 
 For recorded footage, the [speech-editing notes](skills/motion-film/references/sources-editing.md#october-27-video-editor-review)
 explain verbatim transcript checks and matched-frame correction review.
+
+For a film based on an existing format, [map the reference's story beats to the new subject](skills/motion-film/references/direction.md#adapt-a-references-story-structure)
+before making assets. The [source notes](skills/motion-film/references/sources.md#november-7-reference-format-adaptation)
+explain the scope of the Scenario comparison.
 
 For reference reconstruction, the [source notes](skills/motion-film/references/sources.md#november-4-reference-reconstruction)
 record caption/text matching, timing checks and remaining tooling gaps.
