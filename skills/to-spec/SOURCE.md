@@ -38,3 +38,17 @@ provider failover, persistent memory and exactly-once wording are not adopted. T
 a spec procedure, not a shipped agent runtime or a measured performance improvement. Recheck
 when execution semantics or the target system's contracts change. Paired behavioral evaluation
 is not yet run. The dated catalog report records the full assessment and source boundaries.
+
+## Spec handoff review
+
+Observed November 8, 2026. Google's
+[comprehension reviewer](https://github.com/google/elephant-goldfish-model/blob/e9e1f06aa4e26e95cd4ed37210a0632202c429e9/agents/comprehension.md)
+at `e9e1f06aa4e26e95cd4ed37210a0632202c429e9` (Apache-2.0) informed the idea of asking
+an independent reader to explain the design before pointing out gaps. The local procedure
+uses original wording and asks about verification as well as current and proposed behavior.
+It uses one pass when a spec needs a handoff and records author review as such when an
+independent reader is unavailable. The handoff requires the same data and review authority
+as the rest of the task. No upstream prompts, code, or assets are bundled.
+
+Recheck on a material handoff miss or a paired trial. The local procedure has no measured
+effectiveness result yet.

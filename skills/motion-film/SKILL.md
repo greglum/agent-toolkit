@@ -1,6 +1,6 @@
 ---
 name: motion-film
-description: "Create, edit, audit, or render films: live action, animated shorts, mixed footage and animation, product demos, explainers, motion graphics, and character animation. Plan shots and continuity, reuse the project's renderer, and verify the output. For application interaction motion, use ui-motion instead."
+description: "Create, edit, audit, or render films: live action, animated shorts, mixed footage and animation, product demos, explainers, motion graphics, character animation, and films that play live in a web page. Plan shots and continuity, reuse the project's renderer, and verify the output. For application interaction motion, use ui-motion instead."
 compatibility: Needs the project's existing renderer and capture surface, plus a way to inspect encoded output, such as ffprobe. Without them, do a source-only review and report rendered, encoded, and playback acceptance as unverified.
 ---
 
@@ -33,11 +33,13 @@ formats to that skill. Thumbnail production owns the images; this skill owns the
    For generated video, including a replacement take, read
    [generated plates](references/generated-plates.md). For application films, read [application film setup](references/app-films.md)
    for a new film, a source refresh, or scenes using environment data. For a film that teaches
-   a concept or mechanism, read [explainer films](references/explainers.md). Finish with the
+   a concept or mechanism, read [explainer films](references/explainers.md). For a film that
+   plays live in a browser instead of from a media file, read
+   [live browser films](references/live-browser.md) before choosing how to build it. Finish with the
    deliverable and its validation path identified. For a new or commissioned film, recurring
    series, multiple locales/formats, or editable handoff, read [production](references/production.md)
    for the brief and gates. When several films share one release, shared tooling or a serialized
-   repository gate, also read [coordinating several films](references/production.md#coordinate-several-films-toward-one-release).
+   repository gate, also read [coordinating several films](references/several-films.md).
    For a visual-editor workflow or editable handoff, also verify the
    [saved-source round trip](references/production.md#verify-an-editable-studio-handoff).
 2. **Ground the story.** For a product film, trace each shown journey to current routes,
@@ -84,13 +86,16 @@ formats to that skill. Thumbnail production owns the images; this skill owns the
    [imported animations](references/imported-animations.md) for time mapping and seek callbacks.
    Keep wall clocks, event history, and incomplete
    asset loads out of frame state. Await fonts, media, and timeline readiness before measuring
-   or capturing. Measure geometry before transforms distort it. For an existing Remotion
+   or capturing. A live browser film also runs on the viewer's device: follow its
+   [one clock](references/live-browser.md#drive-everything-from-one-clock) and
+   [compositor](references/live-browser.md#keep-playback-on-the-compositor) rules. Measure geometry before transforms distort it. For an existing Remotion
    project, read [Remotion guidance](references/remotion.md). For cached frames or a resumed
    render, read [revision and cache checks](references/production.md#preserve-reproducible-revisions).
 5. **Review the rendered film.** Follow
    [capture and export review](references/render-review.md). Inspect every changed scene's opening, action, payoff,
    and both sides of its handoffs. Compare out-of-order seeks under the same conditions and
-   watch ordinary playback. Preserve readable captions, unclipped subjects, and a deliberate
+   watch ordinary playback. For a live browser film, frozen frames are half the evidence:
+   also run the [real-time checks](references/live-browser.md#verify-in-real-time). Preserve readable captions, unclipped subjects, and a deliberate
    background during overlap. For a new film or rebuild, also run the independent
    [critique loop](references/production.md#run-the-critique-loop) on the rendered frames.
    In build/update mode, fix observed defects, then recapture the affected times and
@@ -115,6 +120,9 @@ formats to that skill. Thumbnail production owns the images; this skill owns the
   transcript/caption, audio-start, and hidden-tab policies. Preserve semantic meaning when
   reduced motion cuts to a settled state. Verify the actual player with DOM measurements,
   focus/contrast review, and the repository's UI test setup (axe-core).
+- A film that plays live in a page is its own contract. The viewer's device renders it, so
+  frame pacing, start-up, orientation, hidden-tab pause, reduced motion and the path without
+  JavaScript are part of the deliverable. A capture of it is evidence, not the film.
 - Exported videos have no runtime media preference. Render the agreed motion treatment;
   provide a reduced-motion version when requested or required by the delivery contract.
   It keeps the same sequence of ideas. A browser preference must not silently change the

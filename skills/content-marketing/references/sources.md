@@ -35,3 +35,15 @@ readiness, release order and the owner's frequency constraints. Spacing is an ed
 choice, with no claimed growth effect. These are procedural checks, not live account
 verification or a scheduler. Living-page reuse rights are unspecified; facts are restated
 in original words, with no source text, code or media copied.
+
+## Opening questions, November 8, 2026
+
+[George Writes’s X Article](https://x.com/i/article/2119025103694446592), section 2,
+suggests asking readers what they think follows an opening. The local check asks
+what question they expect the piece to answer, then checks that the piece answers
+it. [Kang et al.](https://www.cmu.edu/dietrich/sds/docs/loewenstein/WickCandleLearning.pdf)
+studied curiosity about trivia answers. A [later study](https://link.springer.com/content/pdf/10.1007/s00426-023-01841-9.pdf)
+found that how much people cared about the answer also mattered. These studies do
+not establish a feed-performance effect. The article was read via public secondary
+extraction. Reuse rights are unestablished. Recheck when applying the advice to a
+new audience or format.

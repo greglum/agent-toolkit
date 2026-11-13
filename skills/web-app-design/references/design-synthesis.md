@@ -84,15 +84,32 @@ effect runtime. Inspect the exact candidate and its dependencies, not just the s
 - **Cost:** inspect listeners, frame loops, cleanup, reduced motion, and fallback behavior.
   Keep important content and actions available if an optional effect cannot render.
 
-For an effect that depends on an experimental browser feature or GPU context, test the
-supported path and the path with that capability unavailable. A flag-enabled demo does not
-prove ordinary browser support. Check that visible controls still receive pointer and
-keyboard input after scrolling and zooming; drawn pixels can diverge from DOM hit regions.
-Verify readable content and usable actions in the fallback, not just the absence of errors.
-
+For a component that depends on browser or GPU support, apply the browser support check below.
 Finish with an explicit disposition: reuse the compatible component, adapt only the idea,
 or reject it with a reason. An installer, screenshot, or accessibility claim is not proof
 of those contracts. Keep source pins and detailed attribution in the research record.
+
+## Browser support check
+
+Find the project's supported browsers, versions, and embedded webviews in its policy.
+Use the test matrix and build targets to see what the project exercises and compiles for.
+Verify the exact browser feature or subfeature against the support policy using MDN
+compatibility data. Baseline gives a starting point for its browser set. If the support
+floor is unclear, preserve existing fallbacks and state the uncertainty.
+
+Before removing a fallback, trace the behavior it preserves and where callers still use it.
+When a target lacks the new capability, keep the existing path or use a simpler fallback.
+Use feature detection where needed. For fallbacks, experimental features, and GPU effects,
+exercise the affected journey with the capability available and unavailable. Check readable
+content and usable controls in both cases. For experimental or GPU effects, also check
+pointer and keyboard input after scrolling and zooming. Use ordinary browser settings for
+support checks. Report any target or path you could not exercise.
+
+Source notes observed November 11, 2026. The compatibility workflow draws on Philip
+Walton's November 10 release article, licensed CC BY 4.0, and MDN's Baseline definition and
+browser coverage limits. Recheck feature support when targets or the feature change.
+[Chrome release article](https://developer.chrome.com/blog/modern-web-guidance-v1),
+[MDN Baseline definition](https://developer.mozilla.org/en-US/docs/Glossary/Baseline/Compatibility).
 
 ## Craft that survives real content
 

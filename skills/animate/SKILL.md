@@ -36,8 +36,9 @@ animating the right thing with the wrong ingredients.
 1. **Gate.** From a ledger row, purpose and tier are settled; confirm the cited code still
    matches, and stop with a report on drift. From a direct request, name the purpose and the
    frequency tier first. Keyboard-shortcut or constant-tier actions, and motion with no
-   purpose, get no animation: say so, offer the non-motion alternative, and finish. Done when
-   purpose and tier are stated, or the rejection is written.
+   purpose, get no animation: say so, offer the non-motion alternative, and finish. A title
+   sequence, opening or product film that plays in the page on its own clock is a film: build
+   it with `motion-film`. Done when purpose and tier are stated, or the rejection is written.
 2. **Make it correct without motion.** Reserve the space settled content needs, anchor
    overlays to their trigger, and drive pending and done states from the real operation.
    Preserve focus, selection, errors, and retry. Done when every state reads correctly with
@@ -72,6 +73,8 @@ animating the right thing with the wrong ingredients.
    a symmetric curve; constant motion is linear. Use a spring for gestures and values the
    user can reverse mid-flight. Make deliberate phases slow and system responses fast (hold to
    confirm fills slowly; release snaps back).
+   For a draggable surface, use the [drag recipe](references/recipes.md#drag-release)
+   to keep linked effects aligned from tracking through release and reversal.
 6. **Handle interruption, exit, and lifecycle.** Rapid triggers retarget from the displayed
    value: transitions or springs, not keyframes that restart. Exit along the entry path. The
    semantic action commits immediately and never waits for an animation. Cancel animations,

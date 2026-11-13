@@ -134,6 +134,21 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+[Learn Taste](skills/learn-taste/SOURCE.md) credits the correction-to-guidance workflow and
+explains the scope of the adaptation.
+
+The [browser support check](skills/web-app-design/references/design-synthesis.md#browser-support-check)
+credits the Modern Web Guidance research on browser targets and fallback behavior.
+
+The [opening questions source note](skills/content-marketing/references/sources.md#opening-questions-november-8-2026)
+credits a reader check for question-led openings and records the limits of the studies.
+
+The [spec handoff source note](skills/to-spec/SOURCE.md#spec-handoff-review) credits the
+independent comprehension check and describes its evidence limits.
+
+The [drag recipe](skills/animate/references/recipes.md#drag-release) credits the AI for UI
+gesture review and covers linked effects through release and reversal.
+
 The [state machine audit source notes](skills/state-machine-audit/SKILL.md#sources) credit
 the verification workflow and distinguish a model check from an implementation test.
 

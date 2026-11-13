@@ -39,11 +39,21 @@ finishes with the draft. Do not require a particular setup skill or invent track
 
 2. Plan tests. The default is no new tests: existing gates, types, and suites usually cover the change. Name a new or extended test only when it catches a likely, harmful failure that nothing else catches, deterministically and cheaply, and follow the repository's own test policy when it has one. Prefer extending the closest existing suite, table, or fixture. "No new tests" with the reason is a complete decision. For pruning or speeding up existing suites, use `tune-tests`.
 
-3. Write the spec using the template below. Publish only with user authority for the identified
-   tracker action. Apply the repository's configured ready label when every decision is settled;
-   use its configured triage label for open owner decisions and list them in Further Notes. Verify labels
+3. Write the spec using the template below. Before handoff or publication of a substantial
+   spec, check whether someone who missed the discussion can use it. When an authorized
+   reader can review independently, give them the draft and its cited sources without the
+   authoring conversation. Ask them to explain the current behavior, the proposed change,
+   and how they would verify it before listing unclear points. Compare their explanation
+   with the agreed requirements. Clarify any mismatch that affects implementation or
+   acceptance, or record the open owner decision in Further Notes. If no independent
+   reader is available, check the same points yourself and report it as author review.
+   [Source and limits](SOURCE.md#spec-handoff-review).
+
+4. Publish only with user authority for the identified tracker action. Apply the repository's
+   configured ready label when every decision is settled. Use its configured triage label
+   for open owner decisions and list them in Further Notes. Verify labels
    exist before applying them; missing labels do not authorize creating configuration.
-4. Verify the created or updated issue's identity, content, and labels before reporting its
+5. Verify the created or updated issue's identity, content, and labels before reporting its
    URL. An uncertain publication result requires checking the identified target before retrying;
    do not create a duplicate or claim success from a transport response alone. Report a local
    draft, verified publication, or remaining blocker with failed and unrun checks separately.
