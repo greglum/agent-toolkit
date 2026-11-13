@@ -1,5 +1,20 @@
 # Craft source review
 
+## November 11, 2026 rubric review
+
+The frozen-rubric section in [production](production.md#score-against-a-frozen-rubric) is
+original guidance from one production's scored rounds. Two sources informed the order and
+noise checks: Wei Lin, ["Reels-RSI"](https://arxiv.org/abs/2610.14495v1), arXiv 2610.14495v1,
+submitted October 10, 2026 (judges picked the second-shown reel 62 to 81 percent of the time;
+a first 11 to 1 verdict was position bias), and Abhay Zala and others, HeyGen Research,
+["Benchmarking Code-to-Video"](https://www.heygen.com/research/introducing-code2video-benchmark),
+September 18, 2026 (general vision models agreed with human raters about 75 percent of the
+time and showed position and own-family bias; vendor source). Observed November 11, 2026,
+rechecked November 12. The arXiv paper is licensed CC BY 4.0; no reuse license was
+established for the HeyGen page. Neither establishes
+that rubric scoring improves a film. No text, code or data copied. Recheck when a scored
+round shows scorers disagreeing by more than their recorded noise.
+
 ## October 23, 2026 craft sweep
 
 [Timing defaults](timing.md), the script checks in [narration](narration.md#write-the-script),

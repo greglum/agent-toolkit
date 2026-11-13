@@ -1,16 +1,18 @@
 ---
 name: codebase-metrics
-description: Assess codebase quality or task and harness engineering with source-grounded measures and a frozen local rubric. Use for a quality baseline, scored improvement workshop, or checking a requested quality target across eight dimensions.
+description: Assess codebase quality or task and harness engineering with source-grounded measures and a frozen local rubric. Use for a quality baseline, scored improvement workshop, checking a requested quality target, or recurring repository health audit.
 compatibility: Works with Codex and Claude Code. The optional scorer requires Python 3.10+ and only the standard library. Use existing project tools; unavailable analyzers remain unknown.
 ---
 
 # Codebase metrics
 
-Produce a reproducible eight-dimension baseline and, when requested, improve the same
-scope against the same criteria. Choose the profile for the requested assessment question;
-use the numeric view for a requested scored assessment rather than forcing other reviews
-through a score. A local 0-10 rubric is an acceptance aid, never an
-industry certification or a promise that a timebox can deliver 9.5.
+For a recurring maintainability and agent-readiness audit, follow the
+[recurring repository audit](references/recurring-audit.md) workflow.
+
+For a product or task/harness assessment, produce a reproducible eight-dimension
+baseline and, when requested, improve the same scope against the same criteria.
+Use numeric scores when the user requests them. A local 0-10 rubric supports local
+acceptance decisions within the assessed scope.
 
 ## Discover and freeze
 

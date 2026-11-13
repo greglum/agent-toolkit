@@ -53,6 +53,11 @@ the project's existing private campaign area or session scratch. Ask before comm
 analytics or private campaign material. Each item needs a title/hook, a complete outline,
 one CTA, claim references and a way to measure its intended action.
 
+For a question-led opening, ask an authorized independent reader what question the opening
+promises to answer. Give them the opening alone. If a reader is unavailable, review the
+opening in isolation and label it an author check. Clarify vague or misleading promises.
+Check that the piece answers the opening question with the evidence it shows.
+
 For thumbnails or social covers, use `thumbnail-production` with the approved promise
 and channel brief.
 

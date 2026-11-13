@@ -37,6 +37,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`graph-engineering`](../skills/graph-engineering/SKILL.md) | Trace source-backed dependencies and change impact, then verify affected consumers. | Automatic |
 | [`guided-review`](../skills/guided-review/SKILL.md) | Build a human reading guide for a PR or significant diff. | Automatic |
 | [`harden-skill`](../skills/harden-skill/SKILL.md) | Audit, revise, and behavior-test an existing skill across supported agent clients. | By name |
+| [`learn-taste`](../skills/learn-taste/SKILL.md) | Carry verified lessons into project standards or skill guidance. | Automatic |
 | [`loop-engineering`](../skills/loop-engineering/SKILL.md) | Run bounded improve, review, and verify iterations against fixed acceptance conditions. | Automatic |
 | [`monitor-pr`](../skills/monitor-pr/SKILL.md) | Watch PR events and independently assess CI, reviews, and readiness. | Automatic |
 | [`motion-film`](../skills/motion-film/SKILL.md) | Create and check films, with rendered, audio, export, and editable-handoff proof. | Automatic |

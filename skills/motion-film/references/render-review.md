@@ -62,7 +62,8 @@ browser/renderer, dimensions, fonts, palette, motion mode, fixed data, assets, s
    without depending on unnamed visuals. Keep the complete explanation available through
    captions or an accessible transcript. When changed effects cause stutter or introduce costly
    filters or 3D layers, profile the affected scene under the same conditions. Offline render
-   speed does not prove a smooth player.
+   speed does not prove a smooth player. For a film that plays live in a browser, run the
+   [real-time checks](live-browser.md#verify-in-real-time).
 
 ## Compare an adopted reference
 
@@ -131,7 +132,8 @@ Report only files actually produced. A render command that exits successfully, a
 or a renamed extension does not establish that the promised output is correct. Separate failed,
 unavailable, and unrun checks. Report each scene check as pass, fail, unverified, or not
 applicable, naming its evidence. Recheck confirmed fixes under the same capture conditions;
-subjective scores and a fixed number of review rounds are not acceptance evidence.
+subjective scores and a fixed number of review rounds are not acceptance evidence, including
+scores from a [frozen rubric](production.md#score-against-a-frozen-rubric).
 For an independent pass over the rendered frames, run the
 [critique loop](production.md#run-the-critique-loop). Restore
 every inspection aid (debug outlines, hidden layers, contrast backgrounds) before export. Never

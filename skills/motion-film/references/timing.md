@@ -7,10 +7,16 @@ you change and why in the storyboard or manifest.
 
 ## Holds and reading windows
 
-- Start a reading window when the words are fully legible, not when their entrance begins.
-- Hold a line about 0.5 s plus 0.3 s per word. Never go below 0.6 s per three words. Hold the
-  last line at least 2 s and an end card at least 2.5 s. A one or two word chapter line can
-  hold for less when the next shot keeps it on screen.
+- A reading window runs from the frame the last word reaches full opacity to the frame the
+  exit begins. Fades, wipes and word-by-word reveals sit outside it.
+- Hold a line at full opacity for at least 0.5 s plus 0.3 s per word. Never go below 0.6 s
+  per three words. Hold the last line at least 2 s and an end card at least 2.5 s. A one or
+  two word chapter line can hold for less when the next shot keeps it on screen.
+- Compute each window from the timeline's own cue times. List every text with its word
+  count, required seconds and actual seconds in the storyboard, and recompute after any
+  retime. A shortfall is fixed with a longer hold or fewer words, never a slower entrance.
+- When text shares the frame with an action the viewer must watch, its window starts when
+  that action settles.
 - Give each read its own window. Start the next message after the current one is read.
 - Text and UI that have landed stay still. Idle breathing, floating, pulsing, or a slow push
   added late in a scene draws the eye away from the read.

@@ -1,5 +1,11 @@
 # Sources and adaptation
 
+## November 11 live browser films and scored rounds
+
+[Live browser films](live-browser.md#sources-and-limits) records its sources and limits in
+place. The [craft source record](sources-craft.md#november-11-2026-rubric-review) covers the
+frozen rubric in production.
+
 ## November 7 reference format adaptation
 
 The [story structure mapping](direction.md#adapt-a-references-story-structure) is original

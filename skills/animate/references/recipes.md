@@ -111,10 +111,21 @@ position-only snap. Preserve page scrolling on its intended axis, cancel a tap t
 a drag, release capture on completion or cancellation, and keep equivalent actions available
 without dragging. Ignore extra touch points after the drag begins.
 
+When other visuals follow a drag, derive them from the displayed position through tracking,
+settling and re-grabbing. For a drawer, map its travel to the backdrop's opacity and clamp
+the opacity at the endpoints, including during overshoot. Keep these visual values separate
+from dismissal and focus state. In reduced motion, preserve any tracking needed to operate
+the control and remove decorative travel and bounce under the project's policy.
+
 This distinction is informed by [Jakub Krehel's swipe example](https://jakub.kr/work/drag-gesture)
 and [Motion's drag guide](https://motion.dev/docs/react-drag), observed October 23, 2026.
 Publication dates and article reuse rights were not established. No example code or thresholds
 are copied; the destination and inertia policy belong to the product.
+
+The shared progress rule draws on Emil Kowalski's
+[gestures, Linked values](https://github.com/emilkowalski/skills/blob/715c1807e08c497cfd1dc4feb450a2a3300ef2a9/skills/gestures/SKILL.md#linked-values),
+MIT, copyright 2026 Emil Kowalski, reviewed November 9, 2026. Recheck when the gesture
+primitive or reduced-motion policy changes.
 
 ## Crossfade that will not settle
 

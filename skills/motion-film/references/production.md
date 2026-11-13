@@ -136,10 +136,44 @@ The [frame-feedback sources](sources-editing.md) record the render/region refine
 5. Repeat with a fresh reviewer until the point is restated correctly and no correction
    concerns missing information or unreadable text, or until the user's round budget ends.
 
-The reviewer gives no score, and no score passes a gate: subjective ratings are not
-evidence. Corrections are findings; acceptance still comes from the render review checks.
+No score passes a gate: subjective ratings are not evidence, and acceptance still comes from
+the render review checks. Corrections are findings. The critique reviewer gives no score.
+When the owner sets a quality target, measure progress between rounds with a
+[frozen rubric](#score-against-a-frozen-rubric), run by other reviewers.
 When no independent reviewer can run, report the critique as unrun. Builder self-review does
 not stand in for it.
+
+## Score against a frozen rubric
+
+Use this only when the owner sets a numeric quality target or asks for scored rounds. It
+measures progress and picks the next fix. It does not replace the critique loop or pass a gate.
+
+1. Freeze the rubric before the first scored round. Write the viewer and viewing condition,
+   the comparison class (professional work of that kind, never "good for generated"), and
+   five to ten dimensions that can each be observed in the render. Give every dimension
+   anchors in words for at least four levels. Keep pass or fail gates in a separate list.
+   Date it. A changed rubric is a new rubric with a new baseline.
+2. Scorers are fresh contexts, never the builder, and at least two per round. Each gets the
+   rubric and render evidence only: review sheets, boundary strips, real-time recordings.
+   Withhold the builder's notes and earlier scores.
+3. Every score cites a time and what is on screen. A dimension the scorer could not observe
+   is UNAVAILABLE, never a guess, and blocks the target.
+4. Record the render identity, each scorer's score per dimension and the spread. Settle a
+   spread above one point by returning to the evidence, not by averaging.
+5. Fix the lowest dimension first. Each fix still enters as a located correction with what
+   stays fixed.
+6. For a side-by-side comparison, show each pair in both orders. Now and then re-score an
+   unchanged render to learn the scorers' noise; a gain smaller than that noise is not a gain.
+   In one production, a fresh scorer each round moved the mean by up to 0.2 between rounds
+   while fixed defects stayed fixed, because each new scorer found a new layer of detail.
+   Weigh that noise before reading a small gain or loss as real.
+7. Stop and report when every dimension meets the target from independent scorers, when two
+   rounds in a row raise the mean by less than the owner's stated step, or when a dimension
+   is capped by a decision only the owner can make. Report a plateau trigger with the scorer
+   noise from step 6.
+
+Done when each round has a dated record of scores with evidence, and the report separates
+the scores from the gates and from unrun checks.
 
 ## Preserve reproducible revisions
 
@@ -226,28 +260,6 @@ same contracts sequentially; independent critique remains unrun unless it actual
 When comparing agent workflows, retain the actual harness/model, source and input identities,
 task, outputs, failures, repair effort and usage basis. Compare the complete delivered film;
 a model label, isolated scene score or shorter generation time does not establish improvement.
-
-## Coordinate several films toward one release
-
-Keep one private release ledger, one coordinator, one owner per film, and one integrator for the
-shared renderer, captions, closing card and narration tooling. Record each film's branch and
-revision, approved words, take identity, asset status, rendered outputs, blockers and release slot.
-Make each decision once per owner; a reversal costs that writer's work and blurs who may write where.
-
-Authority stays in the session where the user gave it. A quote relayed by another session does not
-authorize a merge, a paid take or an asset commit in a session whose rules require the user's own
-word there. Either the session that holds the authority does the step, or the user answers in the
-acting session. Ask once, early, with the exact action and cap.
-
-A shared-engine change can alter already delivered films on their next render: caption breaks, the
-default thumbnail frame, or the default narration model. In the same change, pin each shipped
-film's take model and settings and its thumbnail time in its own manifest, or re-render and recheck
-it. Recompute the take cache key to confirm a pinned re-cut reuses the paid take.
-
-When a repository gate is serialized across sessions, read the queue before promising a time: who
-holds the lock, who waits, and whether their revisions carry the current gate scripts. Fold related
-film changes into one gated change before its run starts. Once the run is queued, freeze that head
-and put later corrections in a follow-up, since each new head voids the queued run.
 
 ## Deliver a usable package
 

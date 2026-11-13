@@ -103,7 +103,8 @@ For deformable objects, tearing, foil, embossing, or other tactile 3D interactio
 Start with the primary journey and representative real content. Set layout and typography
 before decorative detail. Use the app's existing components and state owners; share repeated
 behavior where its invariant belongs. CSS, native controls, and installed libraries come
-before new runtimes.
+before new runtimes. Before relying on a browser feature whose support may vary or removing
+an existing fallback, use the [browser support check](references/design-synthesis.md#browser-support-check).
 
 Make the slice usable end to end, then extend the same language across the requested scope
 with the [craft guidance](references/design-synthesis.md#craft-that-survives-real-content).
