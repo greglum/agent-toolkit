@@ -134,6 +134,9 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+The [campaign source notes](skills/motion-film/references/sources.md#reusable-campaigns-november-14-2026)
+credit the review of reusable motion campaigns and parameterized rendering.
+
 [Learn Taste](skills/learn-taste/SOURCE.md) credits the correction-to-guidance workflow and
 explains the scope of the adaptation.
 
@@ -147,7 +150,9 @@ The [spec handoff source note](skills/to-spec/SOURCE.md#spec-handoff-review) cre
 independent comprehension check and describes its evidence limits.
 
 The [drag recipe](skills/animate/references/recipes.md#drag-release) credits the AI for UI
-gesture review and covers linked effects through release and reversal.
+gesture reviews and covers linked effects, release ownership and reversal.
+The [Swift skill](skills/write-swift/SKILL.md#sources) explains how struct copies can
+share mutable backing.
 
 The [state machine audit source notes](skills/state-machine-audit/SKILL.md#sources) credit
 the verification workflow and distinguish a model check from an implementation test.

@@ -25,8 +25,12 @@ settings merely to match a tutorial.
 
 Find the existing model, persistence, networking and UI state owners before adding types.
 Prefer value types for independently copied data; use reference identity where the domain
-requires sharing or resource lifetime. Keep public API and stored-data compatibility within
-the requested scope. Do not introduce a protocol or type erasure for one concrete use.
+requires sharing or resource lifetime. If copies must be independent, inspect nested fields:
+copying a struct also copies any references it holds, so the copies can share a mutable object.
+Use value storage or immutable backing by default. If copy-on-write is warranted, keep its
+backing private and detach it before mutation; a computed setter that forwards to the shared
+object still mutates both copies. Keep public API and stored-data compatibility within the
+requested scope. Do not introduce a protocol or type erasure for one concrete use.
 
 Done when the affected target, supported environment and responsible owner are explicit.
 
@@ -64,3 +68,7 @@ claim native selection or general skill benefit from a successful build.
 
 See [source boundaries](references/concurrency.md#sources-and-limits). This bundle is original
 procedure, with no upstream code, prompts or version tables copied.
+
+The copy boundary follows the [November 13 Swift revision](https://github.com/emilkowalski/skills/blob/0f2e23b32bb1265e84cff8d3e75785fec953fb1b/skills/write-swift/SKILL.md)
+(MIT, copyright 2026 Emil Kowalski) and [Swift's value and reference guide](https://www.swift.org/documentation/articles/value-and-reference-types.html),
+checked November 13, 2026. Recheck when backing storage or ownership changes.

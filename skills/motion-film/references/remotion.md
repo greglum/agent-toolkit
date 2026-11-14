@@ -23,6 +23,8 @@ Read this only when the project already uses Remotion or the task explicitly cho
   in 4.0.535 one easing applies to each segment, so motion stops at every key, and an
   easing per segment is accepted.
 - Register the requested compositions with correct dimensions, fps, duration, and props.
+  For programmatic variant renders, use the same input props when selecting a composition
+  and rendering it. Props can change both the picture and metadata such as duration.
   When Studio editing is part of the task, preserve independently editable source nodes and
   the installed version's authoring conventions. Live-UI performance advice about transform
   syntax does not automatically govern Studio editability.

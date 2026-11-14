@@ -4,6 +4,10 @@ Read this for a supplied motion reference, an expressive effect, scroll choreogr
 brief such as "make this feel smoother." Use the reference to explain behavior, then implement
 that behavior in the application's existing system.
 
+If the design-reference-library MCP is available, check confirmed project preferences and search
+interaction-motion for the decision at hand. Open relevant cards and available previews. Cite the
+card IDs used and apply the project's standards.
+
 ## Extract a motion contract
 
 Watch the meaningful sequence at normal speed, then inspect its trigger, travel, handoff,

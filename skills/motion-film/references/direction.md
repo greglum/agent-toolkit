@@ -27,7 +27,9 @@ Done when the chosen concept can be stated plainly and each scene visibly advanc
 For the same format with a new subject, [map the story structure](#adapt-a-references-story-structure).
 For a faithful rebuild, use the [reconstruction checks](#reconstruct-a-cleared-reference)
 and measure the full sequence. For style inspiration, give each reference one job, such as
-a title reveal or a transition.
+a title reveal or a transition. When the design-reference-library MCP is available, check
+confirmed project preferences and search for that visual decision. Open relevant cards and
+cite their IDs in the reference spec. Check timing against the original clip.
 
 1. Sample the clip at 2 frames a second for an overview sheet. Then extract every frame
    around the key event, from a few frames before it starts until it settles. The overview

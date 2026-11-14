@@ -89,6 +89,14 @@ direction, stop for that approval after gate 2; otherwise record each result and
    transcript and the delivery package below. When the brief asks for approval of the primary
    cut, start them only after it; variants of a rejected cut are wasted renders.
 
+For a reusable campaign, keep approved copy, claims, asset IDs and format choices in the
+existing brief or render inputs. Reuse the reviewed scenes. Before batch rendering, validate
+requested combinations against the brief and check required assets and fonts. Check each
+requested copy and layout pair for overflow and wrapping with the delivery font. Inspect
+frames where outgoing and incoming labels share space. Record each output's resolved inputs and composition
+in the existing render manifest so a revised hook, CTA or format can be reproduced.
+See [campaign source notes](sources.md#reusable-campaigns-november-14-2026).
+
 When a brief makes a gate wait for the user, ask its exact question with the frames the moment
 they are ready. A wait no one raised holds the work as surely as a failure. Run the source gates
 (lint, types) before an expensive render, and stop only the processes your own run started, by

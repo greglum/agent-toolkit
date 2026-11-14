@@ -46,7 +46,11 @@ For an offline starting direction or explicit color-pair check, use the bundled
 [design reference tool](references/design-reference-tool.md). Its original task recipes
 produce draft candidates, not accepted product rules or a maintained framework-advice database.
 
-Inspect the user's supplied references first. For discovery, read [the resource
+Inspect the user's supplied references first. If the design-reference-library MCP is available,
+use `get_preferences` for the confirmed project scope and `search_references` for the open
+design question. The project's standards govern. Open relevant cards with `get_reference`
+and request available previews. Cite the card IDs used and inspect the original when a preview cannot
+settle the decision. If the library cannot settle the question, use [the resource
 index](references/resource-index.md), then only the site pages relevant to the question. For an
 open direction, one reference for composition and one for the difficult interaction usually
 suffice; add a third only if it resolves a gap, and search more only when the task calls for

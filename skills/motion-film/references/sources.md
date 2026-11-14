@@ -216,3 +216,15 @@ or a new recording changes meter, pickup or tempo. No prescribed tracker or depe
 Paired behavioral evaluation and a music-led render trial were not run.
 
 [Review-sheet sources](sources-review-sheets.md) covers extraction and stillness metrics.
+
+## Reusable campaigns (November 14, 2026)
+
+eigen's [roundup](https://x.com/e1genqq/status/2121340063254556890) quotes a
+[campaign article](https://x.com/i/article/2109996653650354178) from October 13, 2026.
+Sections 4, 6C and 8 motivated the checks for approved variant inputs, readable copy during
+transitions, and per-format layouts. Remotion v4.0.540
+[Passing props](https://github.com/remotion-dev/remotion/blob/596c2ed0cd3b274065bc1ef76eb82241bd6dbf19/packages/docs/docs/passing-props.mdx)
+documents using identical inputs for composition selection and rendering. Remotion has its own
+[license](https://github.com/remotion-dev/remotion/blob/596c2ed0cd3b274065bc1ef76eb82241bd6dbf19/LICENSE.md).
+Article and demo reuse rights were unknown at review. The checks use original wording.
+Recheck when the campaign inputs, layout, fonts or installed renderer change.
