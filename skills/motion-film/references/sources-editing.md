@@ -39,3 +39,19 @@ Observed October 27, 2026; living-page and paper redistribution rights were not 
 No text, code, prompts or media copied. Recheck on ASR mode, source, edit mapping, color
 pipeline or comparison-tool changes. Paired behavioral evaluation and footage review were
 not run; structural checks do not prove editing quality.
+
+## November 6 video-editing toolkit review
+
+The recorded-footage procedure checks detector-proposed removals on the selected source
+track, including the audio just before and after each interval. The editable handoff
+procedure binds required approval to the actual proposal and its saved base revision.
+
+[FFmpeg Skill's pause detector](https://github.com/kajisho5/ffmpeg-skill/blob/9bdb444fdd569bcf50276337b36164fadf54b363/scripts/silence.py)
+(MIT, November 6, 2026) derives candidates from levels and supports margins and time maps.
+[Herk Edit Kit's cut script](https://github.com/nateherkai/herk-edit-kit/blob/10511e5af86fc47756ea89803b397422e2d89284/.agents/skills/cut-silences/scripts/cut-silences.mjs)
+(MIT, October 14, 2026) starts from gaps between timed words. The
+[FFmpeg filter reference](https://ffmpeg.org/ffmpeg-filters.html#silencedetect) defines the
+level and duration test. [OpenChatCut's external edit sessions](https://github.com/0xsline/OpenChatCut/blob/9242a95aea248ff3a8dab495514384e858320d47/README.md#L314-L319)
+(AGPL-3.0, November 6, 2026) separate tool permissions from manual proposal approval and
+document how auto mode applies a draft. Observed November 6, 2026. These are original
+procedures. Recheck if the detector, selected track, editor mode or save contract changes.

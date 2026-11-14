@@ -219,7 +219,11 @@ property was actually checked rather than claiming universal reproducibility.
 When a visual editor or editable handoff is requested, identify its actual edit target:
 source code, composition props, a project file, or only a session draft. Preserve the current
 source and user edits before applying another editor or agent's changes. Reconcile a stale
-preview against current source; keep one writer for the same scene at a time.
+preview against current source and keep one writer for the same scene at a time.
+When the brief requires approval, show the draft against the saved project revision it
+would change. Use manual review mode if the editor provides it. Tool-call permission does
+not approve the draft. If the saved revision or proposal changes, reconcile it and get
+approval on a fresh preview before applying.
 When saved edits target clip IDs or element selectors, preserve those targets or migrate
 the bindings during a scene rewrite. Verify that each saved edit still reaches its intended
 target; keeping the override data alone does not preserve the visible edit.
