@@ -105,15 +105,16 @@ identity, selected audio track, source in/out, output placement, and any speed c
 For speech-led edits, use a compact time-labelled transcript to compare takes, retaining raw
 word timings, speakers and meaningful sound events for cut decisions. Check whether the
 transcript is verbatim: an ASR system can omit fillers, repetitions and false starts while
-those sounds remain in the recording. Keep a cleaned reading copy separate; verify proposed
-removals against the source audio rather than treating missing transcript words as silence.
+those sounds remain in the recording. Keep a cleaned reading copy separate.
 See the [speech-editing sources](sources-editing.md). A phrase summary loses interior word
 boundaries. First assemble the main speech cut, selecting the better complete
 take and removing only repetitions, fillers and pauses that add no meaning. Check the retained
 sentences in context before building an intro from them; moving a line must preserve its
-meaning. Add B-roll, reframing and other polish after those cut decisions settle. Check
-uncertain edges against the recording and waveform; preserve
-breaths, reactions and complete words rather than trusting a fixed padding value.
+meaning. For each removal proposed from low audio levels or transcript gaps, listen to the
+interval and its surrounding audio on the selected source track. Keep or adjust the interval
+to preserve quiet speech, meaningful pauses, breaths, reactions and complete words. Check
+uncertain cut edges against the recording and waveform. Add B-roll, reframing and other
+polish after the cut decisions settle.
 
 Keep source time and output time distinct. For a unit-speed cut, a retained source cue lands
 at `output_start + cue_source_time - source_in`; speed changes and overlaps need the timeline's

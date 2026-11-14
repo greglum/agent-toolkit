@@ -134,6 +134,10 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+The [editing notes](skills/motion-film/references/sources-editing.md) credit the research on
+proposed speech cuts and saved revisions. The [21st.dev reference](skills/web-app-design/references/sites/19-21st-dev.md)
+records the legacy Magic proxy and hosted request boundary.
+
 The [campaign source notes](skills/motion-film/references/sources.md#reusable-campaigns-november-14-2026)
 credit the review of reusable motion campaigns and parameterized rendering.
 

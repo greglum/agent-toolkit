@@ -8,7 +8,15 @@ Research method: searched `site:21st.dev documentation license MCP components`, 
 
 [21st.dev](https://21st.dev/) combines a community React-component marketplace with themes, templates, component prompts, and agent tooling. Its catalog size and adoption figures are vendor claims, not quality measurements. It spans marketing sections and functional UI, so the relevant unit is a selected component and its owner, license, and dependencies.
 
-The [MCP guide](https://docs.21st.dev/mcp) describes searching, reading actual code, installing with dependencies, generating variants, and publishing. It says login stores a local token, allows an API-key alternative, and distinguishes free search from capped installs and credit-based AI generation. The observed [Plans page](https://21st.dev/plans) lists free browsing and two copies/installs daily, Builder at $6/month billed yearly, and an AI tier. These allowances and prices are changeable; verify them before spending or integrating.
+The [21st MCP guide](https://21st.dev/mcp) covers component search, source retrieval, installation,
+generation, and publishing. Its legacy [Magic MCP package](https://github.com/21st-dev/magic-mcp/blob/6b5299e8a83ceffa73d4fc4e148905bb3eeeeb55/src/index.ts)
+forwards requests from a local client to 21st's hosted service. The proxy is ISC-licensed
+at the linked revision. The hosted guide describes separate access for search, installation
+and AI generation. Check the current guide and [plans](https://21st.dev/plans) before integrating.
+
+For search, use a generic description of the needed component. Send project-specific material
+to hosted generation only when the user has authorized that data and provider. The hosted
+guide and pinned proxy were checked for the November 6, 2026 review.
 
 ## Patterns and application fit
 
