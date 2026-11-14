@@ -105,11 +105,13 @@ from the timer that matches the fill, and give keyboard users an equivalent path
 
 Follow the pointer one-to-one while held, using the owning primitive's pointer capture.
 Define the commit threshold, snap destinations, cancellation and inertia policy first.
-On release, settle from the displayed position to the chosen destination; use velocity when
-the interaction calls for a flick or momentum, and disable competing inertia for a
-position-only snap. Preserve page scrolling on its intended axis, cancel a tap that becomes
-a drag, release capture on completion or cancellation, and keep equivalent actions available
-without dragging. Ignore extra touch points after the drag begins.
+Give release one owner: the primitive's settle behavior or your custom animation. For a
+custom settle, take over from the displayed position and prevent or stop the primitive's
+competing momentum, boundary rebound, or snap. Use release velocity where the interaction
+calls for a flick; cancel or retarget the settle on re-grab. Preserve page scrolling on
+its intended axis, cancel a tap that becomes a drag, release capture on completion or
+cancellation, and keep equivalent actions available without dragging. Ignore extra touch
+points after the drag begins.
 
 When other visuals follow a drag, derive them from the displayed position through tracking,
 settling and re-grabbing. For a drawer, map its travel to the backdrop's opacity and clamp
@@ -126,6 +128,11 @@ The shared progress rule draws on Emil Kowalski's
 [gestures, Linked values](https://github.com/emilkowalski/skills/blob/715c1807e08c497cfd1dc4feb450a2a3300ef2a9/skills/gestures/SKILL.md#linked-values),
 MIT, copyright 2026 Emil Kowalski, reviewed November 9, 2026. Recheck when the gesture
 primitive or reduced-motion policy changes.
+
+The single release owner follows up on the [November 13 gesture revision](https://github.com/emilkowalski/skills/blob/0f2e23b32bb1265e84cff8d3e75785fec953fb1b/skills/gestures/SKILL.md)
+(same license). In [Motion v14.9.1](https://github.com/motiondivision/motion/blob/v14.9.1/packages/motion-dom/src/gestures/drag/VisualElementDragControls.ts),
+turning off `dragMomentum` zeros release velocity but leaves bounds and snap behavior.
+Check the installed primitive before assuming its momentum flag disables the whole settle.
 
 ## Crossfade that will not settle
 

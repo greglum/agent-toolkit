@@ -47,7 +47,7 @@ inventing control points.
   rest together. A stagger never blocks input.
 - Where flick dismissal is intended, use release velocity as well as distance. Tune and
   record the speed threshold on a device. For position-only snap actions, use their declared
-  distance threshold and disable competing inertia instead.
+  distance threshold. Use the [drag release recipe](recipes.md#drag-release) for settle ownership.
 - Past a boundary, resist with increasing friction instead of a hard stop.
 
 ## Provenance

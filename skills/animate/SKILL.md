@@ -26,6 +26,10 @@ animating the right thing with the wrong ingredients.
   reduced-motion policy. Extend a token set; never add a parallel one. The values in
   [web defaults](references/defaults.md) apply only to web projects with none, and each default
   you use is reported as a choice.
+- **Use relevant motion references.** When the motion direction is open and the
+  design-reference-library MCP is available, check confirmed project preferences and open a
+  relevant interaction-motion card. Cite its ID. Use the live example or a trace for timing
+  and interruption.
 - **Cheapest tool, no new dependency.** Installing a runtime needs the user's approval. A
   component need (toast, drawer, menu, dialog) goes to the project's existing primitive, not
   a hand-rolled one with an animation on top.

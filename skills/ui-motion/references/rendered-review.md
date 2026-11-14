@@ -15,6 +15,8 @@ Use this for the running application after reading its own verification contract
    For gestures, exercise the relevant pointer/touch input and cancellation path. Check the
    declared threshold and snap behavior, page scrolling, drag-versus-tap cancellation, and
    equivalent actions without dragging. A deliberate position-only snap needs no inertia.
+   For a custom settle, release inside and past an elastic bound where supported. Check
+   for an unintended rebound or a second snap from the primitive.
    If a backdrop or another effect follows a drag, check its alignment at an intermediate
    position during tracking, during release, and after grabbing the moving element again.
    Record the input and engine used; viewport emulation alone is not touch or physical-device proof.
