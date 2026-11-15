@@ -1,5 +1,12 @@
 #!/bin/sh
 # Run the same catalog checks as CI, then scan staged changes for secrets.
 set -e
-sh "$(git rev-parse --show-toplevel)/scripts/verify.sh"
+repo_root=$(git rev-parse --show-toplevel)
+(
+    # Tests create separate repositories and must use their own Git state.
+    for git_env in $(git rev-parse --local-env-vars); do
+        unset "$git_env"
+    done
+    sh "$repo_root/scripts/verify.sh"
+)
 gitleaks git --pre-commit --staged --no-banner --redact

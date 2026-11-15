@@ -134,6 +134,10 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
+[Documentation lookup](skills/find-docs/SKILL.md#sources) can use an existing Google
+Developer Knowledge connection. The [security audit coverage guide](skills/security-audit/references/coverage.md)
+records what a policy simulator evaluated and which cases need further checks.
+
 The [editing notes](skills/motion-film/references/sources-editing.md) credit the research on
 proposed speech cuts and saved revisions. The [21st.dev reference](skills/web-app-design/references/sites/19-21st-dev.md)
 records the legacy Magic proxy and hosted request boundary.

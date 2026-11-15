@@ -13,12 +13,17 @@ Retrieve current documentation and code examples when exact external behavior is
 1. State the precise fact or API behavior that is uncertain and identify the relevant library and version when known.
 2. Read matching local documentation or dependency source when it establishes the exact installed version's behavior. Discover available documentation tools instead of assuming a particular local service exists.
 3. If local evidence is absent or insufficient and the uncertainty remains material, resolve the exact library and version in Context7, then query that ID through its MCP integration or an installed CLI.
-4. If those integrations are unavailable or insufficient, use an available web/search
-   capability to read the official versioned documentation, release notes, or source.
+4. If Context7 is unavailable or insufficient and the question is about a Google product,
+   use Google Developer Knowledge when its tools are already connected and authorized.
+   Search with `search_documents` and use `get_documents` when the excerpt leaves out
+   relevant conditions. Continue to the official web sources below if the result is empty,
+   failed, or cannot establish the applicable version.
+5. Use available web/search tools to read official versioned documentation, release notes,
+   or source if the integrations above leave the question open.
    Search snippets are leads; read the cited page before relying on them. When the answer
    is in a dependency's source, read it at the version the lockfile pins, for example a
    shallow clone of that tag outside the repository, not the default branch.
-5. Stop when the precise uncertainty is resolved. Report the source link or local
+6. Stop when the precise uncertainty is resolved. Report the source link or local
    reference, applicable version, and any mismatch or inference. Current documentation
    does not prove compatibility with an older installed version. The absence of an exact
    local source does not require another lookup when the available evidence resolves the question.
@@ -48,3 +53,11 @@ Use the official library name and the narrowest relevant version. When alternati
 ## Error Handling
 
 If no available source resolves the uncertainty, explain the gap and any qualified inference. Do not expose or solicit credentials to work around a documentation lookup limitation.
+
+## Sources
+
+Reviewed November 14, 2026. The optional Google fallback draws on the Apache-2.0
+[Developer Knowledge skill](https://github.com/google/skills/blob/e3c591afe426ea585e4c21799e5199d6d47cd1be/skills/developers/retrieving-developer-knowledge/SKILL.md)
+and the [official tool guide](https://developers.google.com/knowledge/mcp#server-capabilities).
+This bundle uses an existing connection when available and falls through to public sources.
+Recheck when Google changes the tool names or source coverage.
