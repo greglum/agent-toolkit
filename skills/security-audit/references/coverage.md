@@ -24,6 +24,13 @@ A coverage row can be PASS only for an assertion the method can establish. For e
 source review can establish that a handler checks a bearer token; it cannot establish that
 all deployed routes reach that handler. Keep that deployment claim in its own row.
 
+When reviewing a policy change backed by a simulator, tie the result to the tested
+policy revision, principals, actions, resources and context. Record replay errors,
+indeterminate outcomes and cases the tool could not cover, including access absent from
+historical logs. An empty diff or zero revocations supports only the cases that were
+successfully evaluated. Check critical uncovered cases with targeted policy tests and
+report live enforcement separately.
+
 For tool integrations, distinguish advertised read-only behavior from enforced backend
 authority. Map credential references without reading secret values. A shared identity
 increases the possible blast radius but does not alone prove an exploitable path. Check

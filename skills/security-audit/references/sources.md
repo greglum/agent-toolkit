@@ -54,3 +54,9 @@ failure-state response contracts, preserved detection, and current versus carrie
 No project code, private findings or payloads are bundled. This supplied-skill run has no
 no-skill control and does not establish comparative benefit. Recheck when a real audit or
 blind comparison contradicts these procedures.
+
+Reviewed November 14, 2026. The Apache-2.0 [Google IAM simulator skill](https://github.com/google/skills/tree/e3c591afe426ea585e4c21799e5199d6d47cd1be/skills/cloud/iam-helper-for-policy-simulator)
+prompted the simulation coverage check. [Google's replay limits](https://docs.cloud.google.com/policy-intelligence/docs/iam-simulator-overview#policy-simulator-results)
+and [AWS's simulator limits](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html)
+document distinct ways a simulation can miss live behavior. Recheck when a target's
+policy engine or simulator changes.
