@@ -13,7 +13,11 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Model threats, review a model change, audit security or interpret existing SARIF | [security-audit](../skills/security-audit/SKILL.md) | Repository remediation workflow when requested | A reproduction or specific proof in the source, with open limits stated |
 | Diagnose database behavior | [postgres-investigate](../skills/postgres-investigate/SKILL.md) | [reconcile-metric](../skills/reconcile-metric/SKILL.md) for disputed aggregates | Plans, locks, or source rows that explain the symptom |
 | Find related confirmed bugs | [find-bug-variants](../skills/find-bug-variants/SKILL.md) | Fix each confirmed owner | A search with set limits, each candidate classified and existing behavior kept |
-| Simplify or prevent repeated mistakes | [simplify-code](../skills/simplify-code/SKILL.md) or [encode-correction](../skills/encode-correction/SKILL.md) | Existing behavior checks | Behavior unchanged, or a correction checked at its cause |
+| Audit a whole repository for what can be removed | [delete-first](../skills/delete-first/SKILL.md), on explicit request | The repository's own checks | Refuted candidates, verified cuts applied when requested, and owner decisions listed with evidence |
+| Simplify, delete dead code, or prevent repeated mistakes | [delete-first](../skills/delete-first/SKILL.md), [audit-ai-code](../skills/audit-ai-code/SKILL.md), [simplify-code](../skills/simplify-code/SKILL.md), or [encode-correction](../skills/encode-correction/SKILL.md) | Existing behavior checks and blind refutation | Dead code removed safely, behavior unchanged, or a correction checked at its cause |
+| Audit or update project docs | [docs-sync](../skills/docs-sync/SKILL.md) | Repository documentation gates | Claims checked against owning source, stale docs corrected |
+| Review current source without edits | [review-source](../skills/review-source/SKILL.md) | Conditional runtime checks | Evidenced findings for current source and open limits stated |
+| Audit, speed up, or prune tests | [tune-tests](../skills/tune-tests/SKILL.md) | Target test suite and gates | Measured timings, coverage kept, and dead-code or approved prunes verified |
 | Find an offline design starting point or check a color pair | [web-app-design](../skills/web-app-design/SKILL.md) and its [reference tool](../skills/web-app-design/references/design-reference-tool.md) | Existing product design owners and rendered verification | A draft you can trace to its sources or a plain no-match, contrast calculated for the declared color pairs and accepted rules kept |
 | Build or improve a web surface | [web-app-design](../skills/web-app-design/SKILL.md) | [fit-surface](../skills/fit-surface/SKILL.md), [deslop-ui](../skills/deslop-ui/SKILL.md) | Layout, focus, accessibility and key user actions checked in the running app |
 | Let a model arrange trusted results | [bounded-generative-ui](../skills/bounded-generative-ui/SKILL.md) | Existing UI components and a fixed view | A validated layout with source, keyboard, and fallback checks |
@@ -49,12 +53,10 @@ Codex; respect the catalog's harness restrictions.
 | --- | --- |
 | Vet linked sources and harvest lessons, or research the whole catalog | [skill-research](../skills/skill-research/SKILL.md), with URLs for a focused assessment |
 | Audit and behavior-test an existing skill | [harden-skill](../skills/harden-skill/SKILL.md) |
-| Audit or update project docs | [docs-sync](../skills/docs-sync/SKILL.md) |
-| Review current source, including Java or React | [review-source](../skills/review-source/SKILL.md); read-only, including unchanged code |
 | Review client/API integration | [review-integration](../skills/review-integration/SKILL.md) |
-| Audit tests | [tune-tests](../skills/tune-tests/SKILL.md) |
 | Audit or clean only comments | Request that scope explicitly with [simplify-code](../skills/simplify-code/SKILL.md); an unclear comment request is an audit |
 | Run the full delegated animation loop | [polish-animations](../skills/polish-animations/SKILL.md) |
+| Take committed branch work to merged | [land-pr](../skills/land-pr/SKILL.md) |
 | Prepare social drafts | [distribution-draft](../skills/distribution-draft/SKILL.md) |
 | Review pending changes, commits, or a PR in Codex | [review-pending-changes](../skills/review-pending-changes/SKILL.md), [review-recent-commits](../skills/review-recent-commits/SKILL.md), [review-pr](../skills/review-pr/SKILL.md) |
 | Commit/push or create a PR in Codex | [acp](../skills/acp/SKILL.md), [create-pr](../skills/create-pr/SKILL.md), with authority for the identified destination |
