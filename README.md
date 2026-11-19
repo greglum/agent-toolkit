@@ -47,14 +47,15 @@ python3 scripts/install.py --only fit-surface,guided-review
 ```
 
 Read the selected skills before running the installer, then inspect the dry-run output
-before installing. Add `--harness claude` or `--harness codex` to select one
-harness; the default is both. Leave out `--only`
-to install the whole catalog.
+before installing. Add `--harness claude`, `--harness codex`, `--harness antigravity`,
+or `--harness all` to select harnesses; the default is `both` (Codex and Claude Code).
+Leave out `--only` to install the whole catalog. Use `--only` with Antigravity to keep its
+list curated; Codex-only skills get no Claude Code or Antigravity link.
 
 The installer creates links into your clone. Keep it in one place. In `~/.agents/skills`
 it archives an identical existing directory before linking. A differing copy there, any
-real file or directory in `~/.claude/skills`, and a link to another clone are reported as
-conflicts and left untouched.
+real file or directory in `~/.claude/skills` or `~/.gemini/config/skills`, and a link to
+another clone are reported as conflicts and left untouched.
 It reports stale links; only `--prune-stale` or `--prune-only` removes those links.
 It does not change providers, permissions, credentials, settings, or Git hooks.
 
@@ -90,10 +91,10 @@ python3 scripts/install.py --prune-only
 | `Node.js 18+ is required` | The full test run and some bundled tools need Node. Use a supported version, or choose skills that do not require it. |
 | `unknown skills: ...` | Nothing was installed. Check the spelling against the [catalog](docs/catalog.md). If a stale link has the same name, that skill has left the catalog; see [update](#update). |
 | `conflict: ... differs from the catalog` | A real file or directory in `~/.agents/skills` differs from this clone's copy. It was left alone; other names in the same run were still installed. It stays a conflict until it matches or moves. To use the catalog version, copy out anything you want and move it elsewhere, then rerun. To keep yours, leave that name out of `--only`. |
-| `conflict: ... is a real file or directory` | Something other than a link occupies that `~/.claude/skills` path. It is left alone even when its files match the catalog; only `~/.agents/skills` copies are archived. Handle it the same way. |
+| `conflict: ... is a real file or directory` | Something other than a link occupies that `~/.claude/skills` or `~/.gemini/config/skills` path. It is left alone even when its files match the catalog; only `~/.agents/skills` copies are archived. Handle it the same way. |
 | `Stopped: ...` | The installer could not use a path, such as a file where a skills folder belongs. Fix that path and rerun. |
 | `conflict: ... links to ...` | The skill is linked from another clone. See the [migration guide](docs/migrations.md). |
-| A skill is missing from the agent's list | Start a new session. Codex-only skills have no Claude Code link; see the [catalog](docs/catalog.md). |
+| A skill is missing from the agent's list | Start a new session. Codex-only skills have no Claude Code or Antigravity link; see the [catalog](docs/catalog.md). |
 | A browser cannot start | Record its error and report rendered checks as unverified. See [what was tested](docs/verification.md#tested-in-real-harnesses). |
 
 ## Use a skill

@@ -1,7 +1,6 @@
 ---
 name: tune-tests
-description: "Audit, prune, or speed up an existing test suite without losing failure detection. Audit mode scores every in-scope test and returns a ledger without edits. Speed mode makes behavior-preserving speedups with measured before and after timings. Prune mode proposes removals and deletes only ledger items the user approves. Use when a suite is slow, flaky, bloated, or due for a value review."
-disable-model-invocation: true
+description: "Audit, prune, or speed up a test suite without losing failure detection. Audit scores tests without edits; speed makes measured behavior-preserving speedups; prune gates live-code test removals on approval while allowing cleanup of tests covering only deleted dead code. Use when a suite is slow, flaky, bloated, or due for review."
 compatibility: Uses the destination repository's existing test runner and measurement tools. Read runner setup and side effects before execution; no dependency or service installation is implied. Missing timing, coverage or mutation evidence remains unavailable or unrun, rather than an inferred pass.
 arguments:
   - name: mode
@@ -25,7 +24,11 @@ Pick the mode:
   applicable authority; isolate the measurement or report it unrun when that is missing.
 - **Speed:** "make it faster", "too slow". Edit tests without changing what they assert.
   Delete nothing.
-- **Prune:** remove, trim, or consolidate tests. Propose removals, then stop for approval.
+- **Prune:** remove, trim, or consolidate tests. Live-code test removals always require a
+  ledger proposal and explicit approval. Tests that exclusively cover proven-dead code being
+  deleted in the same change may be deleted automatically alongside that dead code, provided
+  every assertion covering still-live behavior is preserved and repository policy does not
+  require approval for every test removal.
 
 Read repository instructions, test policy, runner configuration, and CI scripts. Record the
 test command, any value score or threshold the repository defines, its removal rules, branch,
@@ -92,7 +95,14 @@ verified work counts and outcomes, and the scoped suite passes.
 ## 5. Prune (prune mode)
 
 Present the ledger's removal candidates as a short list with IDs, exact cases, overlap
-evidence, and coverage tradeoffs. Then stop. Removal is its own approval boundary.
+evidence, and coverage tradeoffs. Then stop. Removal of tests covering still-live code is its
+own approval boundary.
+
+Exception for dead-code cleanup: when a change deletes proven-dead production code, tests or
+fixtures that exclusively exercise that dead code may be removed automatically in the same
+change without a separate pruning approval, unless repository policy requires approval for
+every test removal. Inspect every case in the affected test file first
+and preserve any assertion covering still-live behavior.
 
 The user may approve in plain English ("all except the parser ones"). Map that to IDs
 yourself and echo the mapping. Approving the skill, a directory, a goal, or a quota approves
@@ -113,5 +123,6 @@ or update a snapshot to get green or fast. This skill authorizes no commit or pu
 ## Finish
 
 Report the ledger with every in-scope test dispositioned: kept, sped up, proposed for
-removal, or removed with its approval ID. Include measured timings with conditions, coverage
+removal, removed with its approval ID, or removed alongside proven-dead code in the same
+change. Include measured timings with conditions, coverage
 or mutation before and after, suite pass evidence, and checks that were not run.

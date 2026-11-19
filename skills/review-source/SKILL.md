@@ -2,7 +2,6 @@
 name: review-source
 description: Review named source files, a feature, or a codebase for reachable defects, contract failures, and maintenance problems with concrete impact, including unchanged code. Read-only source audit; not a PR verdict or commit-history assessment. Discover the stack and apply only relevant runtime checks.
 compatibility: Requires source access and native read-only file or Git tools. Exact-version framework documentation is needed for claims that depend on it; missing contracts remain unverified. No package, server, credentials, or model provider is required.
-disable-model-invocation: true
 ---
 
 # Review source

@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Link this catalog's skills into the harness skill directories.
 
-~/.agents/skills/<name>  -> <repo>/skills/<name>        (Codex and other agents read here)
-~/.claude/skills/<name>  -> ../../.agents/skills/<name>  (Claude Code reads here), except the
-                                                         skills harnesses.json keeps Codex-only
+~/.agents/skills/<name>        -> <repo>/skills/<name>             (Codex and other agents read here)
+~/.claude/skills/<name>        -> ../../.agents/skills/<name>      (Claude Code reads here), except the
+                                                                    skills harnesses.json keeps Codex-only
+~/.gemini/config/skills/<name> -> ../../../.agents/skills/<name>   (Antigravity, with --harness all;
+                                                                    --harness antigravity links directly),
+                                                                    except the same Codex-only skills
 
 An installed real directory whose files match the catalog copy is archived under
 ~/.agents/skills-archive/pre-catalog-<stamp>/ and replaced by the link. One that differs is
 left alone and reported: copy its edits into the catalog first.
 
-A link into this clone's skills/ for a skill no longer in the catalog, or a Claude link for a
-Codex-only skill, is reported as stale. Nothing is deleted unless --prune-stale or --prune-only
+A link into this clone's skills/ for a skill no longer in the catalog, or a Claude or Antigravity
+link for a Codex-only skill, is reported as stale. Nothing is deleted unless --prune-stale or --prune-only
 is given, which remove only those links; --prune-only also installs nothing.
 """
 
@@ -70,27 +73,35 @@ def link_agents(name: str, home: Path, archive: Path, dry: bool) -> str:
     return "linked"
 
 
-def link_claude(name: str, home: Path, dry: bool, *, shared: bool = True) -> str:
+def link_mirror(name: str, home: Path, root: str, rel_agents: str, dry: bool, *, shared: bool = True) -> str:
     source = home / ".agents/skills" / name if shared else SKILLS / name
-    dest = home / ".claude/skills" / name
+    dest = home / root / name
     if dest.is_symlink():
-        if same_link(dest, source):
+        if same_link(dest, source) or (dry and shared and same_link(dest, SKILLS / name)):
             return "ok"
         return f"conflict: {dest} links to {dest.readlink()}"
     if dest.exists():
         return f"conflict: {dest} is a real file or directory"
     if not dry:
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.symlink_to(Path("../../.agents/skills") / name if shared else source)
+        dest.symlink_to(Path(rel_agents) / name if shared else source)
     return "linked"
+
+
+def link_claude(name: str, home: Path, dry: bool, *, shared: bool = True) -> str:
+    return link_mirror(name, home, ".claude/skills", "../../.agents/skills", dry, shared=shared)
+
+
+def link_antigravity(name: str, home: Path, dry: bool, *, shared: bool = True) -> str:
+    return link_mirror(name, home, ".gemini/config/skills", "../../../.agents/skills", dry, shared=shared)
 
 
 def stale_links(home: Path, codex_only: set[str]) -> list[tuple[Path, str]]:
     """Find links into this catalog that it no longer installs. Never other links or folders."""
     found, seen = [], set()
-    for root in (".agents/skills", ".claude/skills"):
+    for root in (".agents/skills", ".claude/skills", ".gemini/config/skills"):
         directory = home / root
-        # One folder can serve both harnesses through a directory link; count its links once.
+        # One folder can serve multiple harnesses through a directory link; count its links once.
         if not directory.is_dir() or directory.resolve() in seen:
             continue
         seen.add(directory.resolve())
@@ -105,7 +116,7 @@ def stale_links(home: Path, codex_only: set[str]) -> list[tuple[Path, str]]:
                 continue
             if not (target / "SKILL.md").is_file():
                 found.append((link, "no longer in the catalog"))
-            elif root == ".claude/skills" and target.name in codex_only:
+            elif root != ".agents/skills" and target.name in codex_only:
                 found.append((link, "Codex-only in harnesses.json"))
     return found
 
@@ -126,14 +137,18 @@ def report_unknown(unknown: list[str], stale: list[tuple[Path, str]]) -> int:
 def blocked_path(home: Path, harness: str, names: list[str], codex_only: set[str]):
     """Something other than a folder where these names need one, which a dry run would otherwise miss."""
     roots = []
-    if harness != "claude":
+    if harness in ("both", "codex", "all"):
         roots.append(".agents/skills")
-    if harness != "codex" and set(names) - codex_only:
+    if harness in ("both", "claude", "all") and set(names) - codex_only:
         roots.append(".claude/skills")
+    if harness in ("antigravity", "all") and set(names) - codex_only:
+        roots.append(".gemini/config/skills")
     for root in roots:
-        for path in (home / root, (home / root).parent):
+        path = home / root
+        while path != home:
             if os.path.lexists(path) and not path.is_dir():
                 return path
+            path = path.parent
     return None
 
 
@@ -161,22 +176,41 @@ def run(a: argparse.Namespace) -> int:
     archive = home / ".agents/skills-archive" / f"pre-catalog-{time.strftime('%Y%m%dT%H%M%S')}-{time.time_ns()}"
     conflicts = 0
     for name in names:
-        # Claude-only installation links directly to the catalog and does not create Codex paths.
+        # Single-harness Claude/Antigravity installs link directly to the catalog without creating Codex paths.
         if a.harness == "claude":
             agents = "not selected"
             claude = "codex only" if name in codex_only else link_claude(name, home, a.dry_run, shared=False)
+            antigravity = "not selected"
+        elif a.harness == "antigravity":
+            agents = "not selected"
+            claude = "not selected"
+            antigravity = "codex only" if name in codex_only else link_antigravity(name, home, a.dry_run, shared=False)
         else:
             agents = link_agents(name, home, archive, a.dry_run)
             if a.harness == "codex":
                 claude = "not selected"
-            elif agents.startswith("conflict"):
-                claude = "skipped"
-            elif name in codex_only:
-                claude = "codex only"
+                antigravity = "not selected"
             else:
-                claude = link_claude(name, home, a.dry_run)
-        conflicts += agents.startswith("conflict") + claude.startswith("conflict")
-        print(f"{name:<26} agents: {agents}; claude: {claude}")
+                if agents.startswith("conflict"):
+                    claude = "skipped"
+                elif name in codex_only:
+                    claude = "codex only"
+                else:
+                    claude = link_claude(name, home, a.dry_run)
+                if a.harness == "all":
+                    if agents.startswith("conflict"):
+                        antigravity = "skipped"
+                    elif name in codex_only:
+                        antigravity = "codex only"
+                    else:
+                        antigravity = link_antigravity(name, home, a.dry_run)
+                else:
+                    antigravity = "not selected"
+        conflicts += agents.startswith("conflict") + claude.startswith("conflict") + antigravity.startswith("conflict")
+        if a.harness in ("antigravity", "all"):
+            print(f"{name:<26} agents: {agents}; claude: {claude}; antigravity: {antigravity}")
+        else:
+            print(f"{name:<26} agents: {agents}; claude: {claude}")
     stale = stale_links(home, codex_only)
     pruning = a.prune_stale or a.prune_only
     prune = pruning and not a.dry_run
@@ -195,8 +229,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true", help="print the plan and change nothing")
     ap.add_argument("--only", help="comma-separated skill names")
-    ap.add_argument("--harness", choices=["both", "codex", "claude"], default="both",
-                    help="install for both harnesses (default), Codex, or Claude Code")
+    ap.add_argument("--harness", choices=["both", "codex", "claude", "antigravity", "all"], default="both",
+                    help="install for Codex and Claude Code (both, default), Codex, Claude Code, Antigravity, or all three")
     ap.add_argument("--prune-stale", action="store_true",
                     help="after installing, remove stale links into this catalog; nothing else is removed")
     ap.add_argument("--prune-only", action="store_true",

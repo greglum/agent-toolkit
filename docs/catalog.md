@@ -5,7 +5,7 @@ From the clone's root, preview an individual install with
 `python3 scripts/install.py --dry-run --only name`. Remove `--dry-run` after reviewing it.
 
 “Automatic” means the agent can select a skill from its description. “By name” requires
-`/name` in Claude Code or `$name` in Codex. Five Git workflows are Codex-only; the installer skips their Claude Code links.
+`/name` in Claude Code or `$name` in Codex. Codex-only skills have names that could shadow a project's own skills; the installer skips their Claude Code and Antigravity links.
 [harnesses.json](../harnesses.json) records those names. Each bundle includes the
 references and tools it needs. Extra runtime tools are listed in its `compatibility` field.
 
@@ -16,17 +16,19 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`analyze-agent-history`](../skills/analyze-agent-history/SKILL.md) | Analyze supplied agent-history exports into text-free correction candidates and coverage counts. | Automatic |
 | [`animate`](../skills/animate/SKILL.md) | Build interface motion with purposeful timing, interruption, and reduced-motion behavior. | Automatic |
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
+| [`audit-ai-code`](../skills/audit-ai-code/SKILL.md) | Audit changed code for recurring AI-authoring defects and fix confirmed issues when requested. | Automatic |
 | [`bounded-generative-ui`](../skills/bounded-generative-ui/SKILL.md) | Build and verify model-selected layouts that preserve app-owned facts and evidence. | Automatic |
 | [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Measure codebase or task/harness quality against a fixed profile with source evidence. | Automatic |
 | [`compare-experiments`](../skills/compare-experiments/SKILL.md) | Compare paired observations with visible missing/failure evidence and selected-candidate confirmation. | Automatic |
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan source-backed website, YouTube and LinkedIn content, then compare matched measurement windows. | Automatic |
 | [`continue-pr`](../skills/continue-pr/SKILL.md) | Recover inherited work or reassess an old PR before continuing it. | Automatic |
 | [`create-pr`](../skills/create-pr/SKILL.md) | Create a PR after checking the repository, head, base, push destination, and existing PRs. | By name, Codex only |
+| [`delete-first`](../skills/delete-first/SKILL.md) | Remove dead code and overbuilt layers on request, using blind refutation; whole-repo sweeps need an explicit or scheduled request. | Automatic |
 | [`deslop`](../skills/deslop/SKILL.md) | Edit prose and interface copy for AI writing patterns while preserving meaning. | Automatic |
 | [`deslop-ui`](../skills/deslop-ui/SKILL.md) | Review and improve repetitive layouts, generic copy, and other AI-looking UI patterns. | Automatic |
 | [`diagram-design`](../skills/diagram-design/SKILL.md) | Create static diagrams or searchable graph maps with tracing, comparison, and export. | Automatic |
 | [`distribution-draft`](../skills/distribution-draft/SKILL.md) | Prepare source-backed LinkedIn and X drafts for human review; never posts them. | By name |
-| [`docs-sync`](../skills/docs-sync/SKILL.md) | Check or update project documentation against current source and commands. | By name |
+| [`docs-sync`](../skills/docs-sync/SKILL.md) | Audit or update project documentation against current source, commands, plans, and ownership. | Automatic |
 | [`encode-correction`](../skills/encode-correction/SKILL.md) | Turn repeated mistakes into constraints at the source of the problem. | Automatic |
 | [`extract-documents`](../skills/extract-documents/SKILL.md) | Extract document collections and reconcile input coverage, provenance and content-loss records. | Automatic |
 | [`find-animation-opportunities`](../skills/find-animation-opportunities/SKILL.md) | Identify useful interface motion and explain where motion would not help. | Automatic |
@@ -37,6 +39,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`graph-engineering`](../skills/graph-engineering/SKILL.md) | Trace source-backed dependencies and change impact, then verify affected consumers. | Automatic |
 | [`guided-review`](../skills/guided-review/SKILL.md) | Build a human reading guide for a PR or significant diff. | Automatic |
 | [`harden-skill`](../skills/harden-skill/SKILL.md) | Audit, revise, and behavior-test an existing skill across supported agent clients. | By name |
+| [`land-pr`](../skills/land-pr/SKILL.md) | Take committed branch work from ready to merged through review, fixes, gates, and squash-merge. | By name |
 | [`learn-taste`](../skills/learn-taste/SKILL.md) | Carry verified lessons into project standards or skill guidance. | Automatic |
 | [`loop-engineering`](../skills/loop-engineering/SKILL.md) | Run bounded improve, review, and verify iterations against fixed acceptance conditions. | Automatic |
 | [`monitor-pr`](../skills/monitor-pr/SKILL.md) | Watch PR events and independently assess CI, reviews, and readiness. | Automatic |
@@ -53,7 +56,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`review-pending-changes`](../skills/review-pending-changes/SKILL.md) | Review staged, unstaged, untracked, renamed, and deleted work before committing. | By name, Codex only |
 | [`review-pr`](../skills/review-pr/SKILL.md) | Review a committed PR diff for defects, unnecessary complexity, and guideline compliance. | By name, Codex only |
 | [`review-recent-commits`](../skills/review-recent-commits/SKILL.md) | Review selected Git history against repository rules and the current state. | By name, Codex only |
-| [`review-source`](../skills/review-source/SKILL.md) | Audit named current source, including unchanged files, with conditional runtime checks. | By name |
+| [`review-source`](../skills/review-source/SKILL.md) | Audit named current source, including unchanged files, with conditional runtime checks. | Automatic |
 | [`security-audit`](../skills/security-audit/SKILL.md) | Verify repository security findings and remediate confirmed issues when requested. | Automatic |
 | [`simplify-code`](../skills/simplify-code/SKILL.md) | Simplify code while preserving behavior; supports explicitly requested comment-only work. | Automatic |
 | [`skill-research`](../skills/skill-research/SKILL.md) | Vet linked sources or research the catalog and apply supported improvements. | By name |
@@ -62,7 +65,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`system-anatomy`](../skills/system-anatomy/SKILL.md) | Create an interactive anatomy, cutaway, or spatial explanation grounded in source. | Automatic |
 | [`thumbnail-production`](../skills/thumbnail-production/SKILL.md) | Create YouTube thumbnails, LinkedIn video covers, and social images from cleared sources. | Automatic |
 | [`to-spec`](../skills/to-spec/SKILL.md) | Turn the current conversation into a spec with scope, decisions, and acceptance conditions. | Automatic |
-| [`tune-tests`](../skills/tune-tests/SKILL.md) | Audit, prune, or speed up tests while preserving failure detection and required gates. | By name |
+| [`tune-tests`](../skills/tune-tests/SKILL.md) | Audit, speed up, or prune tests while preserving live failure detection and required gates. | Automatic |
 | [`ui-motion`](../skills/ui-motion/SKILL.md) | Diagnose and fix loading continuity, transitions, overlays, and gestures in a running app. | Automatic |
 | [`web-app-design`](../skills/web-app-design/SKILL.md) | Build or redesign a web app from researched references, or document its design language. | Automatic |
 | [`write-swift`](../skills/write-swift/SKILL.md) | Implement Swift changes with explicit toolchain, isolation, cancellation and error contracts. | Automatic |

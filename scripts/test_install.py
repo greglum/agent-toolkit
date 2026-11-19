@@ -188,5 +188,95 @@ class InstallChecks(unittest.TestCase):
         self.assertFalse((archive / "find-docs").exists())
 
 
+    def test_antigravity_and_all_harnesses(self):
+        # Single-harness antigravity links directly to the catalog without creating .agents or .claude.
+        dry = self.run_install("--harness", "antigravity", "--only", "find-docs,acp", "--dry-run")
+        self.assertEqual(dry.returncode, 0, dry.stderr)
+        self.assertEqual(list(self.home.iterdir()), [])
+
+        first = self.run_install("--harness", "antigravity", "--only", "find-docs,acp")
+        self.assertEqual(first.returncode, 0, first.stderr)
+        link = self.home / ".gemini/config/skills/find-docs"
+        self.assertEqual(link.readlink(), REPO / "skills/find-docs")
+        self.assertEqual(link.resolve(), REPO / "skills/find-docs")
+        self.assertFalse((self.home / ".gemini/config/skills/acp").exists())
+        self.assertFalse((self.home / ".agents").exists())
+        self.assertFalse((self.home / ".claude").exists())
+
+        stamp = (self.home / ".gemini/config/skills/find-docs").lstat().st_mtime_ns
+        second = self.run_install("--harness", "antigravity", "--only", "find-docs,acp")
+        self.assertEqual(second.returncode, 0, second.stderr)
+        self.assertEqual((self.home / ".gemini/config/skills/find-docs").lstat().st_mtime_ns, stamp)
+
+        # --harness all installs Codex, plus Claude and Antigravity except codex_only, via ~/.agents/skills.
+        with tempfile.TemporaryDirectory() as directory:
+            self.home = Path(directory)
+            result = self.run_install("--harness", "all", "--only", "find-docs,acp")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual((self.home / ".agents/skills/find-docs").resolve(), REPO / "skills/find-docs")
+            self.assertEqual((self.home / ".agents/skills/acp").resolve(), REPO / "skills/acp")
+            self.assertEqual((self.home / ".claude/skills/find-docs").readlink(), Path("../../.agents/skills/find-docs"))
+            self.assertFalse((self.home / ".claude/skills/acp").exists())
+            self.assertEqual(
+                (self.home / ".gemini/config/skills/find-docs").readlink(),
+                Path("../../../.agents/skills/find-docs"),
+            )
+            self.assertFalse((self.home / ".gemini/config/skills/acp").exists())
+            self.assertEqual((self.home / ".gemini/config/skills/find-docs").resolve(), REPO / "skills/find-docs")
+            # Default --harness both does not create .gemini.
+        with tempfile.TemporaryDirectory() as directory:
+            self.home = Path(directory)
+            both = self.run_install("--harness", "both", "--only", "find-docs")
+            self.assertEqual(both.returncode, 0, both.stderr)
+            self.assertTrue((self.home / ".agents/skills/find-docs").is_symlink())
+            self.assertTrue((self.home / ".claude/skills/find-docs").is_symlink())
+            self.assertFalse((self.home / ".gemini").exists())
+
+    def test_antigravity_stale_links_and_blocked_paths(self):
+        agents = self.home / ".agents/skills"
+        gemini = self.home / ".gemini/config/skills"
+        agents.mkdir(parents=True)
+        gemini.mkdir(parents=True)
+        removed_agents = agents / "removed-skill"
+        removed_agents.symlink_to(REPO / "skills/removed-skill")
+        removed_gemini_rel = gemini / "removed-skill"
+        removed_gemini_rel.symlink_to(Path("../../../.agents/skills/removed-skill"))
+        removed_gemini_direct = gemini / "other-removed"
+        removed_gemini_direct.symlink_to(REPO / "skills/other-removed")
+        (gemini / "acp").symlink_to(REPO / "skills/acp")
+        foreign = gemini / "foreign"
+        foreign.symlink_to(self.home / "elsewhere/foreign")
+        (gemini / "personal").mkdir()
+
+        dry = self.run_install("--prune-only", "--dry-run")
+        self.assertEqual(dry.returncode, 0, dry.stderr)
+        self.assertEqual(dry.stdout.count("stale: "), 4)
+        self.assertTrue(removed_gemini_rel.is_symlink())
+        self.assertTrue(removed_gemini_direct.is_symlink())
+
+        pruned = self.run_install("--prune-only")
+        self.assertEqual(pruned.returncode, 0, pruned.stderr)
+        self.assertFalse(removed_agents.is_symlink())
+        self.assertFalse(removed_gemini_rel.is_symlink())
+        self.assertFalse(removed_gemini_direct.is_symlink())
+        self.assertTrue(foreign.is_symlink())
+        self.assertTrue((gemini / "personal").is_dir())
+
+        # Blocked paths under .gemini, .gemini/config, and .gemini/config/skills stop cleanly.
+        for blocker in (".gemini", ".gemini/config", ".gemini/config/skills"):
+            with self.subTest(blocker=blocker), tempfile.TemporaryDirectory() as directory:
+                self.home = Path(directory)
+                target = self.home / blocker
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("not a folder\n")
+                for args in (
+                    ("--harness", "antigravity", "--only", "find-docs", "--dry-run"),
+                    ("--harness", "all", "--only", "find-docs"),
+                ):
+                    result = self.run_install(*args)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn("Stopped:", result.stderr)
+                    self.assertNotIn("Traceback", result.stderr)
+
 if __name__ == "__main__":
     unittest.main()
