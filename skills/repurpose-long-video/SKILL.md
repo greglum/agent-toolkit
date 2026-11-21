@@ -1,6 +1,6 @@
 ---
 name: repurpose-long-video
-description: "Cut short vertical clips from licensed long video using sentence-snapped selection, context checks, reviewed reframing, captions and edit lists. Includes an offline selector and fixed-crop exporter; uses existing tools for transcription/tracking. Film/export rules: motion-film."
+description: "Cut short vertical clips (Shorts, Reels, podcast/talk highlights) from licensed long video using sentence snapping, context checks, reframing, captions, and edit lists; film/export rules: motion-film. Not new films (motion-film), thumbnails (thumbnail-production), campaigns (content-marketing), or social drafts (distribution-draft)."
 compatibility: The offline selector needs Python 3.10+. Local clip export also needs FFmpeg/ffprobe with libx264/AAC and a supplied timed transcript/manual crop. Other paths use existing transcription/tracking tools. Missing motion-film guidance leaves final caption/export acceptance blocked; selection remains usable. No installs, paid APIs or hosted providers without user authority.
 ---
 
@@ -136,9 +136,20 @@ selection file and rank, and any unverified check. Never overwrite an earlier ou
 edit list; use a new name or version.
 
 Report the clips, the rejected candidates in brief, and every check that was blocked or
-unrun. For posting copy, tell the user to invoke `distribution-draft` by name; this skill
-does not run it. For campaign planning or link placement, use `content-marketing`: links in
-a Shorts description are not a clickable traffic route. Nothing is posted or uploaded.
+unrun. Pass a handoff packet containing the `edit-list.json` path, source identity
+(`source.sha256` and locator), clip and caption paths, context verdicts, and unverified
+checks when continuing to downstream owners:
+
+- **Caption/export acceptance (`motion-film`):** pass the exported clips, captions, and
+  `edit-list.json` to `motion-film`; if `motion-film` is unavailable, mark those checks
+  blocked/unverified in the report.
+- **Cover thumbnails (`thumbnail-production`):** pass the source identity, clip time range,
+  approved title/promise, and target aspect; this skill does not create thumbnails or covers.
+- **Posting copy (`distribution-draft`):** tell the user to invoke `distribution-draft` by
+  name with the handoff packet; this skill does not run it.
+- **Campaign planning or link placement (`content-marketing`):** pass the handoff packet
+  and verify current destination link rules before assuming clickable links. Nothing is posted
+  or uploaded.
 
 Done when every delivered clip has an edit list entry and the report names every
 unverified check.

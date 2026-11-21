@@ -17,7 +17,7 @@ Always include:
    observed upstream containment.
 2. **Scope and evidence**: initial/final HEAD, branch/upstream, dirty overlap,
    instruction files read, path coverage, generated/binary handling, and whether
-   validation commands were authorized or run.
+   validation commands were authorized or run (with exact commands and exit codes when run).
 3. **Resolved or out-of-scope observations**: only when relevant.
 4. **Verdict: APPROVE | REVISE | REVERT**: concise rationale tied to findings and
    coverage.

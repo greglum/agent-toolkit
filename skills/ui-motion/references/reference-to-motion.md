@@ -1,12 +1,13 @@
 # Reference to interaction
 
-Read this for a supplied motion reference, an expressive effect, scroll choreography, or a
-brief such as "make this feel smoother." Use the reference to explain behavior, then implement
-that behavior in the application's existing system.
+Read this when diagnosing or refining an existing interaction from a supplied motion
+reference, expressive effect, scroll choreography, or brief such as "make this feel
+smoother." Hand off net-new motion implementations to `animate`. Use the reference to explain
+behavior, then align that behavior with the application's existing system.
 
-If the design-reference-library MCP is available, check confirmed project preferences and search
-interaction-motion for the decision at hand. Open relevant cards and available previews. Cite the
-card IDs used and apply the project's standards.
+If an available project design/motion reference catalog or MCP exists, check confirmed
+project preferences and search interaction-motion for the decision at hand. Open relevant
+cards and available previews. Cite the card IDs used and apply the project's standards.
 
 ## Extract a motion contract
 
@@ -40,6 +41,9 @@ product's design and runtime decisions; adopt reference values only when they fi
 Done when the normal, interrupted, and fallback paths have explicit final states and one owner.
 
 ## Choose references by the missing decision
+
+Observed October 7, 2026 (verified November 20, 2026). Recheck when selecting a gallery or
+when upstream terms, licenses, or APIs change.
 
 | Need | Useful primary source | Limit |
 | --- | --- | --- |

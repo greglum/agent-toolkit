@@ -59,6 +59,34 @@ Keep the executive view focused on responsibilities and consequences. Technical 
 carry contracts and failure paths, using the same identities and semantic encodings. Shared
 branding does not require every view to have the same layout.
 
+## Map roles and relationship grammar
+
+Use this role sheet when a diagram set needs a coherent visual system; extend the
+destination's design language rather than its application component library.
+
+| Role | Treatment | Meaning to preserve |
+| --- | --- | --- |
+| Canvas | Existing background token | Quiet field, not a status |
+| Ownership region | Subtle alternate surface and group label | Contains responsibilities; no arrowhead on region |
+| Ordinary component | Neutral surface, readable name, short responsibility | A participant, not automatically a process step |
+| Focal decision or boundary | Primary fill with paired foreground | The view's main point; not a claim of success |
+| Source / store / actor | Simple, consistent silhouette or outline icon when useful | Actual entity type; label remains sufficient alone |
+| Supporting evidence | Muted text with measured contrast | Subordinate information, never an unreadable caveat |
+| Status / unknown | Explicit words plus shape or line cue | Unknown stays unknown; missing evidence must not look approved |
+
+Measure each foreground against every fill it appears on; bright accent fills often need
+dark text, and decorative borders must stay distinct from required boundaries and
+connectors. Define edge meanings actually needed in each figure and include them in its key:
+solid directional edges name the request, handoff, or dependency; dashed edges carry one
+explicitly named secondary meaning; unarrowed regions mean containment; junction dots mark
+deliberate shared origin or fan-out only; parallel edges with distinct meanings stay separate.
+Keep unchanged node IDs and relative positions stable across comparisons.
+
+For a 1600 x 900 presentation figure, a practical starting point (not a hard threshold) is
+64px outer margins, 24px node padding, 24-48px connector corridors, 44-48px takeaway type,
+26-30px node names, 22-24px body, 18-20px supporting type, and an 8px spacing rhythm. At
+800px embed, split the view or supply a full-size alternative if the main story blurs.
+
 ## Review the rendered composition
 
 Check these against the pixels and the source ledger, not the author's description:
@@ -87,8 +115,13 @@ verification. No single style is professional for every audience.
 ## Basis
 
 This original local guidance extends the source-grounded procedure using the
-[Diagram Design reference](fidelity.md#provenance), the source systems linked in the
-[visual profile](visual-profile.md), and a user review of the first clinical
-application diagrams. This reference owns visual composition and critique; interactive graph
-machinery lives in its own reference. No upstream templates or assets were copied. Recheck when a different
-diagram type or audience exposes a concrete readability or semantic failure.
+[Diagram Design reference](fidelity.md#provenance), a user review of the first production
+application diagrams, and conceptual notation references observed 2026-11-20:
+[C4 notation](https://c4model.com/diagrams/notation),
+[LikeC4 styling](https://likec4.dev/dsl/styling/), and
+[Diagram Design](https://github.com/cathrynlavery/diagram-design) (pinned in
+[fidelity provenance](fidelity.md#provenance)). No upstream templates, fonts, or icon assets
+are bundled. This reference owns visual composition, role tokens, and critique; interactive
+graph machinery lives in [interactive graphs](interactive-graphs.md). Recheck when adopting
+new notation conventions, updating target design tokens, or when a different diagram type or
+audience exposes a concrete readability or semantic failure.

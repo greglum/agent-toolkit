@@ -118,7 +118,6 @@ def build(manifest_path):
                 "baseline": records[0]["id"], "variants": records}
     digest = hashlib.sha256(json.dumps(identity, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
     payload = {**identity, "board_sha256": digest}
-    # Untrusted JSON never becomes markup, including closing script tags in labels.
     encoded = json.dumps(payload, ensure_ascii=True).replace("<", "\\u003c")
     viewport = context["viewport"]
     capture = f'{viewport["width"]} × {viewport["height"]} CSS pixels; {context["theme"]}; {context["state"]}'
@@ -126,9 +125,8 @@ def build(manifest_path):
     values = {"TITLE": html.escape(title), "QUESTION": html.escape(question),
               "CONTEXT": html.escape(capture), "CARDS": "\n".join(cards),
               "IDENTITY": digest, "REVIEW_DATA": encoded}
-    # One pass prevents user text resembling a placeholder from being substituted again.
     rendered = re.sub(r"__(TITLE|QUESTION|CONTEXT|CARDS|IDENTITY|REVIEW_DATA)__",
-                      lambda match: values[match.group(1)], template.read_text())
+                      lambda match: values[match.group(1)], template.read_text(encoding="utf-8"))
     return rendered, digest
 
 

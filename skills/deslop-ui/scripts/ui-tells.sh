@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
-# ui-tells.sh: grep source trees for the class-name and markup tells of AI-generated UI.
-# Usage: ui-tells.sh PATH...   Exit 1 on a strong hit, 0 otherwise, 2 on scan failure.
 set -euo pipefail
 if [ $# -eq 0 ]; then echo "usage: ui-tells.sh PATH..." >&2; exit 2; fi
-for dependency in grep find xargs sed perl; do
+for dependency in grep find sed perl; do
   if ! command -v "$dependency" >/dev/null 2>&1; then
     printf 'ui-tells: missing dependency: %s\n' "$dependency" >&2
     exit 2
   fi
 done
+targets=()
 for target in "$@"; do
   if [ ! -f "$target" ] && [ ! -d "$target" ]; then
     printf 'ui-tells: target is not a file or directory: %s\n' "$target" >&2
     exit 2
   fi
+  case "$target" in /*) targets+=("$target") ;; *) targets+=("./$target") ;; esac
 done
+set -- "${targets[@]}"
 INCLUDE=(--include='*.tsx' --include='*.jsx' --include='*.ts' --include='*.js' --include='*.vue' --include='*.svelte' --include='*.html' --include='*.css' --include='*.scss' --include='*.mdx')
 EXCLUDE=(--exclude-dir=node_modules --exclude-dir=dist --exclude-dir=build --exclude-dir=coverage --exclude-dir=.git --exclude='*.test.*' --exclude='*.spec.*' --exclude='*.stories.*')
 strong=0
@@ -47,8 +48,29 @@ run_all() {
   run "V4 glassmorphism" 'backdrop-blur|bg-white/[0-9]{1,2}\b.*border-white/|bg-black/[0-9]{1,2}\b.*border-white/' strong "$@"
   run "V6 uniform large radius" 'rounded-(2xl|3xl|\[[0-9]{2,}px\])' weak "$@"
   run "V7 heavy shadow on content" 'shadow-(xl|2xl)\b' weak "$@"
-  # shellcheck disable=SC2016 # Perl owns these variables, so keep shell expansion off.
-  if emoji_hits=$(find -H "$@" \( -type d \( -name node_modules -o -name dist -o -name build -o -name coverage -o -name .git \) -prune \) -o \( -type f \( -name '*.tsx' -o -name '*.jsx' -o -name '*.ts' -o -name '*.js' -o -name '*.vue' -o -name '*.svelte' -o -name '*.html' -o -name '*.mdx' \) ! -name '*.test.*' ! -name '*.spec.*' ! -name '*.stories.*' -print0 \) | xargs -0 perl -CSD -ne 'print "$ARGV:$.:$_" if /[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B50}\x{2705}]/; close ARGV if eof' --); then
+  # shellcheck disable=SC2016
+  if emoji_hits=$(find -H "$@" \( -type d \( -name node_modules -o -name dist -o -name build -o -name coverage -o -name .git \) -prune \) -o \( -type f \( -name '*.tsx' -o -name '*.jsx' -o -name '*.ts' -o -name '*.js' -o -name '*.vue' -o -name '*.svelte' -o -name '*.html' -o -name '*.css' -o -name '*.scss' -o -name '*.mdx' \) ! -name '*.test.*' ! -name '*.spec.*' ! -name '*.stories.*' -print0 \) | perl -CSD -e '
+    local $/ = "\0";
+    my $status = 0;
+    while (my $file = <STDIN>) {
+      chomp $file;
+      next unless length $file;
+      my $fh;
+      unless (open $fh, "<:encoding(UTF-8)", $file) {
+        warn "ui-tells: cannot read $file: $!\n";
+        $status = 2;
+        next;
+      }
+      local $/ = "\n";
+      my $ln = 0;
+      while (my $line = <$fh>) {
+        $ln++;
+        print "$file:$ln:$line" if $line =~ /[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B50}\x{2705}]/;
+      }
+      close $fh;
+    }
+    exit $status;
+  '); then
     emit_hits "V8 emoji in markup or strings" strong "$emoji_hits"
   else
     echo 'ui-tells: emoji scan failed' >&2
@@ -63,6 +85,6 @@ run_all() {
   run "C8 chat register" '"[^"]*(Welcome back!|Oops|Awesome|Great job|You.re all set!|Let.s get started!|Hooray|Yay)[^"]*"|>[^<]*![^<]*<' weak "$@"
   run "C1 aspirational headline" '"[^"]*\b(Work smarter|your potential|Take control|All in one place|Built for teams|Made simple|Reimagined?)\b[^"]*"' strong "$@"
 }
-run_all "$@"
+run_all "${targets[@]}"
 if [ "$strong" -eq 1 ]; then echo; echo "ui-tells: strong hits found"; exit 1; fi
 echo; echo "ui-tells: no strong hits"; exit 0

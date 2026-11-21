@@ -1,4 +1,19 @@
-# Research-to-design source
+# Provenance and local departures
+
+## Core workflow
+
+Adapted from the `to-spec` skill in [mattpocock/skills](https://github.com/mattpocock/skills)
+(`skills/engineering/to-spec/SKILL.md`), MIT License, Copyright (c) 2026 Matt Pocock (full
+license text in [LICENSE](LICENSE)). Observed October 2026; exact upstream commit was
+recorded only as an installer folder hash, with newest upstream commit checked
+`5c89081d4bbeb3d039a42093653f90bb698d780e`.
+
+Local departures: delivers a single conversation-derived spec without a separate interview,
+Linear/Slack/GitHub automation, or unrequested tracker creation; adds `Decision Budget`,
+`Testing Decisions`, optional `AI system contracts`, and comprehension handoff review.
+Recheck upstream `mattpocock/skills` if adopting new template sections or tracker integrations.
+
+## Research-to-design source
 
 Observed October 24, 2026. The added research handoff guidance is original procedure informed
 by HumanLayer's Apache-2.0 source at `2f66a45b186d88488fa356862be0117db1ccae9f`:
@@ -7,7 +22,7 @@ by HumanLayer's Apache-2.0 source at `2f66a45b186d88488fa356862be0117db1ccae9f`:
 - [Technical design](https://github.com/humanlayer/humanlayer/blob/2f66a45b186d88488fa356862be0117db1ccae9f/apps/riptide-rpi-claude-plugin/skills/create-tdd/SKILL.md): system boundaries before code shape; keep resolved decisions coherent.
 - [Structure outline](https://github.com/humanlayer/humanlayer/blob/2f66a45b186d88488fa356862be0117db1ccae9f/apps/riptide-rpi-claude-plugin/skills/create-structure-outline/SKILL.md): each phase produces a result that can be checked without waiting for the next phase.
 
-No upstream text, template, code, or asset was copied. This catalog keeps `to-spec` as one
+No upstream text, template, code, or asset was copied. This bundle keeps `to-spec` as one
 conversation-derived spec, with no required interview, Linear integration, named worker,
 artifact service, extra document, or automatic commit. User and repository authority remain
 above any generated artifact. Existing test policy governs new tests; rendered and human
@@ -37,7 +52,7 @@ Living-page reuse rights were not established. The guide's numerical loop defaul
 provider failover, persistent memory and exactly-once wording are not adopted. This remains
 a spec procedure, not a shipped agent runtime or a measured performance improvement. Recheck
 when execution semantics or the target system's contracts change. Paired behavioral evaluation
-is not yet run. The dated catalog report records the full assessment and source boundaries.
+is not yet run.
 
 ## Spec handoff review
 

@@ -28,7 +28,7 @@ compared before display rounding. `--kind large` uses 3:1 only for qualifying la
 `--kind ui` uses 3:1 for applicable [non-text component or graphical contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html). The caller must
 determine whether a criterion applies. This is not an automatic semantic or size classifier.
 
-The [monitoring example](../examples/monitoring-brief.md) is a synthetic draft. It shows the
+The `examples/monitoring-brief.md` sample (linked from `SKILL.md`) is a synthetic draft. It shows the
 complete artifact, including unresolved product mapping. Output files use exclusive creation:
 an existing path, including an existing symbolic link, is an error. The tool has no overwrite
 option. Save a fresh candidate and review it before changing any accepted product file.
@@ -77,3 +77,10 @@ recipe. Preserve the distinction between original curation and source-supported 
 changing retrieval or data, run the bundled CLI tests and try a realistic query not used while
 editing plus an unrelated no-match query. Verify candidate roles, content, focus and layout
 in the actual product before accepting a draft direction.
+
+## Design-reference-library MCP
+
+Observed **2026-11-20**. When a local `design-reference-library` MCP server is available, use
+`get_preferences` for the confirmed project scope, `search_references` for the open design
+question, and `get_reference` to inspect relevant cards and previews. Recheck tool names
+and parameters when the MCP server schema changes.

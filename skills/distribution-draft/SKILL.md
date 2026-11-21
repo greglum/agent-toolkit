@@ -1,13 +1,14 @@
 ---
 name: distribution-draft
 description: >-
-  Turn content the user owns (a post, doc, pull request, release note, or page) into LinkedIn
-  and X drafts. Each draft is traced to the source, checked against a used-source ledger, and
-  held for the user to accept, edit, revise, or drop. Drafts only: never posts, schedules, or
-  signs in. Invoke explicitly with /distribution-draft SOURCE or $distribution-draft SOURCE.
-  For prose cleanup alone, use deslop.
+  Turn content the user owns (post, doc, PR, release note, or page) into LinkedIn and X
+  drafts traced to the source, checked against a used-source ledger, and held for accept,
+  edit, revise, or drop. Drafts only: never posts, schedules, or signs in. Invoke explicitly
+  with /distribution-draft SOURCE or $distribution-draft SOURCE. Not for prose-only cleanup
+  (deslop), campaign planning/analytics (content-marketing), cutting video clips
+  (repurpose-long-video), or peer post research (social-research).
 disable-model-invocation: true
-compatibility: Uses the catalog's deslop skill; without it, the prose pass is reported as unrun. Confirming a platform's counting rule needs web access; without it, counts are labeled unconfirmed. Needs no platform account or API key.
+compatibility: Uses the catalog's deslop skill; without it, the prose pass is reported as unrun. The bundled draft helper needs Python 3.10+ and stdlib. Confirming a platform's counting rule needs web access; without it, counts are labeled unconfirmed. Needs no platform account or API key.
 ---
 
 # Distribution draft
@@ -24,20 +25,32 @@ ledger.
 
 ## 1. Bind the source and the rules
 
-Read the source in full. Confirm the user owns or authored it; if unclear, ask. Search the
-destination repository's instructions and code comments for rules on public naming, voice,
-disclosure, and operational details kept private (limits, internal URLs, identifiers). Follow
-them as written; they override this skill's defaults.
+Read the source in full (including clip handoff packets from `repurpose-long-video` with
+`edit-list.json` path, `source.sha256`, clip/caption paths, context verdicts, and unverified
+checks when supplied). If `SOURCE` is missing, empty, unreadable, or the user states they do
+not own or hold rights to it, stop and report the gap without drafting. If ownership is
+unclear, ask before proceeding.
+
+Search the destination repository's instructions and code comments for rules on public
+naming, voice, disclosure, and operational details kept private (limits, internal URLs,
+identifiers). Follow them as written; they override this skill's defaults.
 
 Done when the source is read, ownership is confirmed by the user or the repository, and each
 applicable rule is listed by file, or "none found".
 
 ## 2. Check the ledger
 
-Use the ledger path the repository names. With none, propose a gitignored default and confirm
-it at the gate. Match on the source key and platform: a normalized URL, `path@commit`, or a
-pull request number, plus `linkedin` or `x`. On a match, show the earlier record and stop
-unless the user asks for a new angle.
+Use the ledger path the repository names. With none, propose a gitignored JSONL default
+(such as `.distribution-draft-ledger.jsonl`) and confirm it at the gate. Resolve this skill's
+folder from the loaded file and check `(source_key, platform)` deterministically (where
+`source_key` is a normalized URL, `path@commit`, or pull request number):
+
+```bash
+python3 -I <skill>/scripts/draft_helper.py ledger-check --ledger <path> --source-key <key> --platform <linkedin|x>
+```
+
+Exit `0` means no prior match; exit `1` means a match exists (show the earlier record and
+stop unless the user asks for a new angle); exit `2` means an invalid or unreadable ledger.
 
 Done when there is no match, or the user has chosen a new angle.
 
@@ -54,21 +67,29 @@ Done when every claim has a locator and every flag is resolved.
 ## 4. Draft
 
 For both platforms, write LinkedIn first, then X; for a single-platform request, write only
-that draft. Match the user's voice from posts they supply or the repository's
-voice rules. Every sentence traces to the fact sheet; nothing is added for effect. Measure each
-draft with the platform's own counting rule: X weights characters and counts every link at a
-fixed length, so a plain character count can pass a draft that X rejects. Over the limit,
-shorten, or offer a thread on X. When the rule cannot be confirmed from the platform's own
-documentation, say so with the count.
+that draft. Match the user's voice from posts they supply or the repository's voice rules.
+Every sentence traces to the fact sheet; nothing is added for effect. Measure each draft
+with the platform's own counting rule using the bundled helper (passing confirmed platform
+`--url-weight`, `--wide-weight`, and `--limit`, or omitting unconfirmed rules so the output
+records `unconfirmed`):
 
-Done when each draft has a measured count within its limit, or the gap is stated.
+```bash
+python3 -I <skill>/scripts/draft_helper.py count --platform <linkedin|x> --file <draft-file>
+```
+
+Over the limit, shorten, or offer a thread on X. When the limit or URL weight cannot be
+confirmed from the platform's own documentation, say so with the count.
+
+Done when each draft has a helper-measured count within its confirmed limit, or the
+unconfirmed rule gap is stated.
 
 ## 5. Clean the prose
 
-Run the `deslop` skill on the drafts. Record which of its checks ran. Then recheck the counts
-and the fact trace, since edits move both.
+Run the `deslop` skill on the drafts when available; if unavailable, mark the prose pass as
+unrun. Record which checks ran. Then rerun `draft_helper.py count` and recheck the fact
+trace, since edits move both.
 
-Done when the deslop result is attached, or reported unrun, and counts and traces still hold.
+Done when the deslop result is attached (or reported unrun), and counts and traces still hold.
 
 ## 6. Hold for the user
 
@@ -77,8 +98,8 @@ ledger path if step 2 proposed one, then wait. Accept one of four replies per dr
 than one draft pending, a reply names its platform.
 
 - **accept:** keep the text as is.
-- **edit:** the user's text replaces the draft; recheck length and private details, and flag
-  any claim not on the fact sheet.
+- **edit:** the user's text replaces the draft; rerun `draft_helper.py count`, recheck private
+  details, and flag any claim not on the fact sheet.
 - **revise:** redraft from the user's notes and return to this step.
 - **drop:** discard it.
 
@@ -89,9 +110,18 @@ Done when every draft is accepted, edited, or dropped.
 ## 7. Record
 
 Before the first write, confirm the ledger path is gitignored or the user chose to commit it.
-Append one row per draft after the decision, dropped ones included, so a later run sees them.
-Keep the text only for accepted or edited drafts, and store no flagged detail. Then give the
+Write each decided record JSON (`text` omitted for `dropped`, `flags` empty) and append it
+deterministically:
+
+```bash
+python3 -I <skill>/scripts/draft_helper.py ledger-append --ledger <path> --record <record.json>
+```
+
+Pass `--allow-new-angle` only when the user approved a new angle in step 2. Then give the
 user the final text to paste.
 
-Done when every draft has a ledger row and the user has the final text. Report that nothing
-was posted, scheduled, or authenticated.
+Done when every draft has a ledger row (with command and exit receipt) and the user has the
+final text. Report that nothing was posted, scheduled, or authenticated.
+
+Read [sources and platform notes](references/sources.md) only when checking provenance,
+adapting the workflow, or rechecking X character-counting references.

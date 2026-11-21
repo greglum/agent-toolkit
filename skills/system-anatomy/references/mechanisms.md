@@ -44,10 +44,10 @@ has a derivation or an explicit illustrative label.
 
 ## Start from the bundled slider-crank
 
-From the catalog root, build into a new destination:
+Replace `<skill>` with this installed skill's directory and build into a new destination:
 
 ```bash
-node skills/system-anatomy/scripts/build-mechanism.mjs /tmp/slider-crank.html
+node <skill>/scripts/build-mechanism.mjs /tmp/slider-crank.html
 ```
 
 Open that file directly in a browser. The builder refuses to replace an existing file.

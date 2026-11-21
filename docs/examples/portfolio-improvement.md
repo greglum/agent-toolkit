@@ -1,7 +1,7 @@
 # Improving a portfolio with skills and small swarms
 
 Use this example to assess an existing portfolio, make bounded changes, and check the
-result in another round. These prompts work with Claude Code or Codex. Each run discovers
+result in another round. These prompts work with Claude Code, Codex, or Antigravity. Each run discovers
 the target repository's current rules, owners, and checks.
 
 ## Choose skills from the task

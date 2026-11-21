@@ -17,10 +17,11 @@ Read this only when the project already uses Remotion or the task explicitly cho
   give the same frame different values depending on seek history. Draw strokes with
   `pathLength={1}` so no length is measured, and reveal filled areas with a clip.
 - Compute a `spring()` config's damping ratio, damping / (2 sqrt(stiffness x mass)), before
-  using it, and hold it to the overshoot rules in [timing defaults](timing.md#eases-by-role).
+  using it, and hold it to the overshoot rules in `references/timing.md` (Eases by role).
   `overshootClamping` only cuts the value at the target, so the motion stops abruptly; raise
   damping instead. Check how the installed `interpolate` applies easing over several keys:
-  in 4.0.535 one easing applies to each segment, so motion stops at every key, and an
+  in Remotion 4.0.535 (observed October 23, 2026; recheck when upgrading Remotion's
+  `interpolate` API), one easing applies to each segment, so motion stops at every key, and an
   easing per segment is accepted.
 - Register the requested compositions with correct dimensions, fps, duration, and props.
   For programmatic variant renders, use the same input props when selecting a composition
@@ -33,7 +34,7 @@ Read this only when the project already uses Remotion or the task explicitly cho
   Register the same scene component with intended props, then open it directly in a fresh
   Studio preview before opening its parent to expose missing initialization.
   If editable delivery is promised, test actual editing, saving and reopening through
-  [studio handoff](production.md#verify-an-editable-studio-handoff); selectable nodes alone
+  `references/production.md` (Verify an editable studio handoff); selectable nodes alone
   do not establish that edits survive into the requested export.
 - Use the supported readiness and asset-loading mechanisms. Measure with actual fonts and
   delivery bounds. Verify scene overlap and total runtime after adding transitions or a

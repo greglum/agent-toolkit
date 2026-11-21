@@ -1,6 +1,11 @@
 ---
 name: encode-correction
-description: "Prevent repeated agent mistakes by finding their source in history or user corrections, then changing the owning architecture, types, or checks. Use for recurring review findings, correction sweeps, or requests inspired by pstack /correct. A single incident needs evidence of a recurring rule."
+description: >-
+  Prevent repeated mistakes by changing owning code, types, or checks. Use to add a
+  guardrail or fix recurring defects. Not for retros (retro-guardrails,
+  retro-agent-context, retro-verification, retro-agent-friction), log counts
+  (analyze-agent-history), taste guides (learn-taste), repo setup (agent-readiness), or
+  diff review (global-code-review).
 compatibility: Needs repository read access and incident evidence or an explicit user rule. Prevention proof uses the repository's native checks. Without history or check execution, report the evidence gap and leave recurrence or prevention unverified. Installs no tools or hooks.
 ---
 
@@ -19,10 +24,15 @@ within its scope; publication, deployment, destructive changes, and harness conf
 still need their own authority. Reuse authority already given.
 
 For a sweep, inspect recent commits, reverts, available review findings, and existing rule
-owners. Record the revision range and unavailable sources. Group concrete incidents by the
-same failed invariant, not by similar wording. A recurring class needs two distinct incidents;
-a re-review of one incident is still one. An explicit user rule can also establish the class.
-Treat an instruction without a check as a lead, not proof the mistake happened.
+owners, or accept verified finding handoffs from `retro-guardrails`, `retro-verification`,
+`retro-agent-friction`, `retro-agent-context`, `analyze-agent-history`, `learn-taste`, or
+`agent-readiness` (supplying source revision, finding ID, verified incidents, target owner,
+and unresolved limits). When invoked outside a repository or with neither incident history nor an explicit
+user rule, stop without editing and report the missing evidence. Record the revision range
+and unavailable sources. Group concrete incidents by the same failed invariant, not by
+similar wording. A recurring class needs two distinct incidents; a re-review of one incident
+is still one. An explicit user rule can also establish the class. Treat an instruction
+without a check as a lead, not proof the mistake happened.
 
 For each class, record source locations, a real bad example, the intended behavior, its current
 owner, and whether today's code already prevents recurrence. Prioritize material impact and
@@ -44,8 +54,10 @@ options in order, stopping at the first that preserves the repository's contract
    offending location and the supported replacement. Wire it into the actual required gate.
 4. **Behavior test:** extend the nearest suite only when it meets the repository's test-value
    policy and detects a material failure beyond existing checks.
-5. **Judgment guidance:** one line at the existing instruction owner only when a mechanical
-   boundary cannot express the decision. Report that this remains unenforced.
+5. **Judgment guidance:** hand off qualitative style, design, or preference lessons to
+   `learn-taste` (with verified examples, scope, and owner); keep one line at an existing
+   instruction owner only when an unenforced boundary must remain inline, and report that it
+   remains unenforced.
 
 Explain why higher levels do not fit. Reuse the existing owner; a second policy table, hook,
 framework, or CI job needs a concrete gap. Apply coherent caller migrations when architecture
@@ -89,9 +101,10 @@ repeat unchanged checks just to count a pass.
 
 When the user requests several runs, keep one worktree and record each run's base/head,
 examined evidence, classes, changes or no-change result, proof, and review outcome in the
-existing task record. Each run reassesses current evidence. A clean run is a valid result;
-neither a quota of edits nor repeated speculation establishes a new class. Stop at the
-requested bound and report any unfinished work.
+existing task record, or in the final report or session scratch notes when no task record
+exists. Each run reassesses current evidence. A clean run is a valid result; neither a quota
+of edits nor repeated speculation establishes a new class. Stop at the requested bound and
+report any unfinished work.
 
 Keep rule-to-enforcement links at the existing rule owner when they help future changes.
 Avoid duplicating instructions in a new always-loaded ledger. Publish or merge only under
@@ -101,6 +114,8 @@ the user's target authority and the repository's final-head delivery rules.
 
 Return each class's incidents, owner, selected level, reasons higher levels did not fit,
 change or disposition, bad/good proof, existing violations, and remaining judgment calls.
-State the reviewed revision, required check results, completed run count, and delivery state.
+State the reviewed revision, exact check commands with exit codes (distinguishing PASS,
+FAIL, UNAVAILABLE, and NOT RUN), completed run count, and delivery state.
 
-Source and intentional departures: [pstack /correct adaptation](references/provenance.md).
+Read [pstack /correct adaptation](references/provenance.md) only when checking upstream
+provenance or local departures.

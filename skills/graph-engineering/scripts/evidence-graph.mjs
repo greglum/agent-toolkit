@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// Original source-evidence snapshots. No source extraction or runtime reachability claim.
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, realpathSync } from 'node:fs';
@@ -26,6 +25,7 @@ function source(root, locator) {
 }
 
 export function validate(graph, root) {
+  root = realpathSync(root);
   if (graph.version !== 1 || !Array.isArray(graph.nodes) || !graph.nodes.length || !Array.isArray(graph.edges)) fail('Expected version 1, nonempty nodes, and edges');
   if (typeof graph.question !== 'string' || !graph.question.trim() || typeof graph.coverage !== 'string' || !graph.coverage.trim()) fail('Name the question and coverage limits');
   const ids = new Set();
@@ -68,7 +68,6 @@ export function check(graph, root) {
 
 export function impact(graph, id) {
   if (!graph.nodes.some(node => node.id === id)) fail(`Unknown node: ${id}`);
-  // Edges mean consumer -> dependency. Include inferred/proposed paths visibly as leads.
   const queue = [id];
   const seen = new Set(queue);
   const paths = [];
@@ -82,7 +81,7 @@ export function impact(graph, id) {
     limit: 'Authored dependency impact only; conditions and runtime behavior are not evaluated. Missing edges do not prove absence.' };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   try {
     const [command, input, root, id, ...extra] = process.argv.slice(2);
     if (!['seal', 'check', 'impact'].includes(command) || !input || !root || extra.length || (command === 'impact' ? !id : id !== undefined)) fail('Usage: evidence-graph.mjs seal|check|impact graph.json repo-root [node-id]');

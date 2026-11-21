@@ -32,7 +32,7 @@ For end-to-end comparisons, preserve each run's coarse mesh instead of requiring
 coarse inputs. Check global structure before refinement: structural errors may persist.
 For single-image reconstruction, unseen surfaces may be plausible completions. Save the
 selected asset and its generator/weight revision and input identity in the existing asset
-ledger. Apply the [production rights checks](production.md#establish-the-production-contract) before use.
+ledger. Apply the production rights checks (`references/production.md`) before use.
 
 For GLB files, run `python3 scripts/inspect_glb.py <asset.glb>` from this bundle's folder and
 keep its JSON inventory with the asset record. It reads only that file and reports declared
@@ -62,13 +62,13 @@ those cues. Trigger a simulated release at an explicit timeline event. Never let
 wall clock or the order of render-worker visits decide when the object breaks.
 
 Prefer an analytic deformation or keyed pose when it provides the requested visible behavior.
-For history-dependent motion, follow [seekable simulations](simulations.md). A deforming mesh's
+For history-dependent motion, follow `references/simulations.md`. A deforming mesh's
 checkpoint must also preserve its topology, active constraints and break events; positions
 alone cannot reconstruct a tear. A texture-only wipe cannot stand in for physical separation.
 Keep shadow deformation and cutouts consistent with the beauty pass, and match color management
 across composited layers.
 
-For procedural sound, follow [narration and sound](narration.md#produce-and-time-the-audio).
+For procedural sound, follow `references/narration.md` (Produce and time the audio).
 Keep contact, release and settle cues on the same timeline as the encoded audio.
 
 **Ready:** repeated and out-of-order requests produce the same intended shot state and cues;
@@ -89,9 +89,8 @@ Test motion blur and temporal samples with seekable state; they evaluate interme
 Do not make the production export depend on live diagnostic overlays.
 
 Measure final-profile render cost on this shot before committing the series to the effect.
-Time one frame in each candidate engine first: a GPU rasterizer (Blender EEVEE) rendered
-plate frames in about 3 s where CPU path tracing (Cycles) took 79 to 566 s in one measured case.
-Keep the successful clip as a visual reference with its source and settings. If the effect
+Time one representative frame in each candidate engine first; GPU rasterization and CPU path
+tracing can differ by orders of magnitude. Keep the successful clip as a visual reference with its source and settings. If the effect
 misses the deadline or readability budget, use a simpler authored version with the same
 meaning and check it again. A software-rendered export can behave differently from the
 interactive GPU preview; confirm the actual export environment.

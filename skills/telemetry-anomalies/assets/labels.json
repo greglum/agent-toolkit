@@ -1,0 +1,14 @@
+[
+  {
+    "channel": "fuel_pressure_kpa",
+    "start": 15.0,
+    "end": 15.2,
+    "kind": "spike"
+  },
+  {
+    "channel": "oil_temp_c",
+    "start": 30.0,
+    "end": 33.0,
+    "kind": "drift"
+  }
+]

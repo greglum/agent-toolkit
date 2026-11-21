@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "unit": "one completed lap for one hypothetical car",
+  "hierarchy": ["lap", "stint", "race", "season"],
+  "prediction_time": "the lap's timing-line crossing, when the strategy model must answer",
+  "label_horizon": "pit stop within the next 180 seconds (about three laps)",
+  "label_horizon_time": 180,
+  "group_key": "race in laps.csv; stint in stints.csv",
+  "forward_only": true,
+  "embargo_time": 0,
+  "features": {
+    "gap_ahead": "timing feed value, available after a 2 second ingest delay",
+    "tyre_age": "laps on the current set, known at the timing-line crossing"
+  },
+  "regime_breaks": [
+    {"time": "2026-05-10T00:00:00Z", "note": "hypothetical mid-season tyre compound change"}
+  ],
+  "notes": "Synthetic fixture. Times are ISO 8601 UTC; embargo_time is in seconds."
+}

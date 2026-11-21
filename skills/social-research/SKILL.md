@@ -107,6 +107,10 @@ be quoted briefly with their link.
 
 Done when the record exists, every notable post is covered or marked not analyzed, every
 interpretation points to observed items, and the conclusion is a finding or insufficient
-evidence. Report the record path, sample obtained, and which steps were skipped.
+evidence. Hand off the dated `YYYY-MM-DD-<topic>.md` findings record to `content-marketing`
+when planning the next campaign experiment. Report the record path, sample obtained, which
+steps were skipped, and when outlier scoring ran, the exact `lift.py` command, exit code
+receipt, output directory, and `input_sha256`.
 
-[Sources and local departures](references/sources.md).
+Read [sources and local departures](references/sources.md) only when checking provenance or
+revising collection and scoring methods.

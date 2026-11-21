@@ -61,8 +61,8 @@ Generate the shortest section that exposes the uncertain action. Compare methods
 same shot contract and take budget; retain failed and rejected attempts in the record.
 Count accepted takes and total effort, not just the fastest successful generation.
 
-Probe the actual clip with the existing [export checks](export-checks.md), then inspect its
-decoded frames and playback through [render review](render-review.md). Check the intended
+Probe the actual clip with the metadata helper (`references/review-helpers.md`), then inspect its
+decoded frames and playback through `references/render-review.md`. Check the intended
 action, prompt adherence, subject and prop identity, contact, occlusion, flicker, warping and
 both shot boundaries. Inspect any crop, interpolation or upscale separately. Correct file
 metadata and a promising still cannot accept temporal behavior.

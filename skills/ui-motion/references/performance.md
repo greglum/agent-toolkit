@@ -1,9 +1,10 @@
 # Diagnose animation performance
 
-Use for a reported performance defect. For a new continuous canvas or GPU effect without
-a reported defect, inspect the lifecycle checks in step 3 and verify hide/restore/unmount
-behavior; the diagnosis and before/after trace steps apply only to a reproduced problem.
-Keep the requested audit or implementation mode.
+Use for a reported performance defect on existing motion. For an existing continuous canvas
+or GPU effect without a reported defect, inspect the lifecycle checks in step 3 and verify
+hide/restore/unmount behavior; the diagnosis and before/after trace steps apply only to a
+reproduced problem. Net-new motion or effects belong to `animate`. Keep the requested audit
+or implementation mode.
 
 1. **Capture the failing action.** Record browser and library versions, device, refresh
    rate, content size, and competing work such as navigation or hydration. Capture a trace

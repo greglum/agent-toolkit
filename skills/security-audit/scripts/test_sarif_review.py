@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from sarif_review import InvalidSarif, main, review_log
+from sarif_review import MAX_BYTES, InvalidSarif, main, review_log
 
 
 def scan():
@@ -209,6 +209,29 @@ class SarifReviewTests(unittest.TestCase):
             self.assertEqual(ledger["result_count"], 1)
             self.assertEqual(ledger["runs"][0]["execution"], "failed")
             self.assertEqual(ledger["runs"][0]["findings"][0]["triage_status"], "needs-validation")
+
+    def test_cli_runs_on_bundled_example_and_rejects_oversized_input(self):
+        example = Path(__file__).resolve().parent.parent / "examples" / "scanner-report.sarif"
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main([str(example)])
+        ledger = json.loads(output.getvalue())
+        self.assertEqual(code, 0)
+        self.assertTrue(ledger["complete"])
+        self.assertEqual(ledger["result_count"], 1)
+        self.assertEqual(ledger["runs"][0]["findings"][0]["rule_id"], "DEMO001")
+        self.assertEqual(ledger["runs"][0]["findings"][0]["triage_status"], "needs-validation")
+
+        with tempfile.TemporaryDirectory() as folder:
+            oversized = Path(folder) / "oversized.sarif"
+            oversized.write_bytes(b" " * (MAX_BYTES + 1))
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                code = main([str(oversized)])
+            error_ledger = json.loads(output.getvalue())
+            self.assertEqual(code, 2)
+            self.assertFalse(error_ledger["complete"])
+            self.assertIn("20 MiB", error_ledger["error"])
 
 
 if __name__ == "__main__":

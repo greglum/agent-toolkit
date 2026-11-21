@@ -1,0 +1,165 @@
+{
+  "note": "Install groups for scripts/install.py --pack. A skill may sit in several packs; every catalog skill sits in at least one. companions lists the skills a skill needs or works best with; the installer warns when they are missing and installs nothing extra. scripts/check.py validates this file.",
+  "packs": {
+    "engineering": [
+      "app-verifier",
+      "audit-ai-code",
+      "codebase-metrics",
+      "delete-comment",
+      "delete-first",
+      "deslop",
+      "deslop-ui",
+      "diagram-design",
+      "docs-sync",
+      "find-bug-variants",
+      "find-docs",
+      "fit-surface",
+      "global-code-review",
+      "graph-engineering",
+      "guided-review",
+      "loop-engineering",
+      "postgres-investigate",
+      "review-integration",
+      "review-pending-changes",
+      "review-pr",
+      "review-recent-commits",
+      "review-source",
+      "security-audit",
+      "simplify-code",
+      "state-machine-audit",
+      "system-anatomy",
+      "to-spec",
+      "tune-tests",
+      "ui-motion",
+      "write-swift"
+    ],
+    "git-and-pr": [
+      "acp",
+      "continue-pr",
+      "create-pr",
+      "guided-review",
+      "land-pr",
+      "monitor-pr",
+      "plan-pr-stack",
+      "refresh-worktrees",
+      "repository-cleanup",
+      "review-pr"
+    ],
+    "agent-meta": [
+      "agent-readiness",
+      "analyze-agent-history",
+      "app-verifier",
+      "encode-correction",
+      "harden-skill",
+      "learn-taste",
+      "retro",
+      "retro-agent-context",
+      "retro-agent-friction",
+      "retro-guardrails",
+      "retro-verification",
+      "skill-research"
+    ],
+    "design-and-motion": [
+      "animate",
+      "bounded-generative-ui",
+      "deslop",
+      "deslop-ui",
+      "find-animation-opportunities",
+      "fit-surface",
+      "polish-animations",
+      "review-animations",
+      "ui-motion",
+      "web-app-design"
+    ],
+    "film-and-content": [
+      "content-marketing",
+      "deslop",
+      "distribution-draft",
+      "motion-film",
+      "repurpose-long-video",
+      "social-research",
+      "thumbnail-production"
+    ],
+    "data": [
+      "compare-experiments",
+      "extract-documents",
+      "learn-domain",
+      "map-data-source",
+      "onboard-data",
+      "postgres-investigate",
+      "reconcile-metric",
+      "telemetry-anomalies",
+      "telemetry-contract",
+      "temporal-validation"
+    ]
+  },
+  "companions": {
+    "animate": [
+      "review-animations",
+      "ui-motion"
+    ],
+    "content-marketing": [
+      "thumbnail-production",
+      "deslop"
+    ],
+    "continue-pr": [
+      "monitor-pr"
+    ],
+    "delete-first": [
+      "simplify-code"
+    ],
+    "deslop-ui": [
+      "fit-surface",
+      "deslop"
+    ],
+    "diagram-design": [
+      "deslop",
+      "deslop-ui"
+    ],
+    "distribution-draft": [
+      "deslop"
+    ],
+    "learn-domain": [
+      "extract-documents"
+    ],
+    "motion-film": [
+      "deslop"
+    ],
+    "onboard-data": [
+      "learn-domain",
+      "map-data-source"
+    ],
+    "polish-animations": [
+      "find-animation-opportunities",
+      "animate",
+      "review-animations",
+      "ui-motion"
+    ],
+    "repurpose-long-video": [
+      "motion-film"
+    ],
+    "retro": [
+      "retro-guardrails",
+      "retro-verification",
+      "retro-agent-context",
+      "retro-agent-friction"
+    ],
+    "review-animations": [
+      "ui-motion",
+      "animate"
+    ],
+    "system-anatomy": [
+      "deslop",
+      "deslop-ui",
+      "ui-motion"
+    ],
+    "telemetry-anomalies": [
+      "telemetry-contract"
+    ],
+    "web-app-design": [
+      "ui-motion",
+      "deslop-ui",
+      "fit-surface"
+    ]
+  }
+}

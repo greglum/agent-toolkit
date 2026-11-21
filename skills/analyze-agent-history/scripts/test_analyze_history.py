@@ -137,6 +137,38 @@ class HistoryCliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertEqual(report['inputs'][0]['status'], 'record_limit')
 
+    def test_cli_usage_errors_exit_one_without_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory) / 'repo'
+            repo.mkdir()
+            cases = [
+                ['--days', '0', '--repo', str(repo)],
+                ['--repo', str(repo), str(FIXTURES / 'codex.jsonl')],
+                [],
+                [str(FIXTURES / 'codex.jsonl')] * 129,
+            ]
+            for argv in cases:
+                with self.subTest(argv=len(argv)):
+                    result = subprocess.run([sys.executable, str(SCRIPT), *argv],
+                                            text=True, capture_output=True, check=False)
+                    self.assertEqual(result.returncode, 1)
+                    self.assertEqual(result.stdout, '')
+                    self.assertIn('Invalid arguments', result.stderr)
+                    with self.assertRaises(json.JSONDecodeError):
+                        json.loads(result.stderr)
+
+    def test_non_git_repo_exits_one_with_non_json_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            plain = Path(directory) / 'plain'
+            plain.mkdir()
+            result = subprocess.run([sys.executable, str(SCRIPT), '--repo', str(plain), '--days', '1'],
+                                    text=True, capture_output=True, check=False)
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(result.stdout, '')
+            self.assertIn('not a git repository', result.stderr)
+            with self.assertRaises(json.JSONDecodeError):
+                json.loads(result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()

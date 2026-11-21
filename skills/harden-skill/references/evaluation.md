@@ -102,8 +102,9 @@ version, expected winner, or previous output. Run each case from a neutral, proj
 so names like candidate or baseline do not reveal the test. Place that copy outside any
 repository or folder whose instruction files state the skill's lesson: Claude Code `-p` loads
 every `CLAUDE.md` above its working directory, which leaks guidance into both arms. User-level
-instructions such as `~/.claude/CLAUDE.md` still load; run with `--bare` (it skips `CLAUDE.md`
-discovery but needs API-key auth) or record which user instructions both arms carried. Deny
+instructions such as `~/.claude/CLAUDE.md` still load; run with `--bare` (observed
+2026-11-20 on Claude Code 2.1.325; it skips `CLAUDE.md` discovery but needs API-key auth) or
+record which user instructions both arms carried. Deny
 tools that reach other sessions or live services (in Claude Code, `SendMessage` and
 `ListAgents`), and route tools that click, write, or run commands to mocks that record the
 calls. Have one judge grade both versions of each case under shuffled labels, assertion by
@@ -204,10 +205,11 @@ passing with at least two observed loads and a negative as passing with at most 
 load. Report raw counts, client, model, and the trace mechanism. This adaptive default spends
 repeated runs where variance is visible.
 
-Claude Code traces are Skill tool calls in `claude -p --output-format json`. Codex 0.161.0
-and later emit `codex.skill_invocation` events marked explicit or implicit; they carry account
-identifiers, so export them only to a local collector. A load proves selection, not task
-success.
+Observed 2026-11-20: Claude Code 2.1.325 traces are Skill tool calls in
+`claude -p --output-format json`, and Codex 0.161.0 and later emit `codex.skill_invocation` events marked explicit or implicit;
+they carry account identifiers, so export them only to a local collector. Recheck when Claude
+Code or Codex changes `--bare`, Skill tool tracing, or `codex.skill_invocation` schemas. A
+load proves selection, not task success.
 
 For `full benchmark`, use 8–10 positives and 8–10 negatives, a fixed roughly 60/40
 train/validation split containing both labels, and three runs per query. Revise from train

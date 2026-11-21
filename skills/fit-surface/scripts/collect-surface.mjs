@@ -71,7 +71,6 @@ export function collectSurface(options = {}) {
   if (current) omissions.push({ kind: 'element-limit', limit: maxElements, remaining: 'not-counted' });
   let skipped = 0;
   for (const node of nodes) {
-    // Inspect tree boundaries even when their host is hidden; descendants were not visited.
     if (node.shadowRoot) omissions.push({ kind: 'shadow-root', selector: locator(node) });
     if (node.localName === 'iframe') omissions.push({ kind: 'frame-document', selector: locator(node) });
     if (!isRendered(node)) { skipped++; continue; }

@@ -10,7 +10,7 @@ behavior are different outcomes. Skills provide procedures; authority comes from
 | Review | Repository review or a requested catalog reviewer | Immutable comparison, governing instructions, path coverage, finding IDs | Revision-bound verdict; material findings fixed or explained |
 | Publish | Repository publication workflow; [create-pr](../skills/create-pr/SKILL.md) when explicitly invoked in Codex | Exact repository/head/base, complete change scope and proof | Verified created or existing PR; no implied readiness |
 | Reconcile CI/review | [monitor-pr](../skills/monitor-pr/SKILL.md) | Live endpoints, current gates, unresolved findings and watcher ownership | Ready, waiting or blocked, independently assessed from event notifications |
-| Merge or hand off | Repository delivery workflow | Verified gates, action authority and final head | Open and unmerged, or verified merge commit, according to the request |
+| Merge or hand off | Repository delivery workflow; [land-pr](../skills/land-pr/SKILL.md) when explicitly invoked with merge authority | Verified gates, action authority and final head | Open and unmerged, or verified merge commit, according to the request |
 
 For several dependent PRs, [plan-pr-stack](../skills/plan-pr-stack/SKILL.md) can build candidate
 waves from a supplied snapshot. Unknown file coverage, outside dependencies and ambiguous

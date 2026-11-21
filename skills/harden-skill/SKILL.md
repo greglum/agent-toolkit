@@ -3,14 +3,15 @@ name: harden-skill
 description: >-
   Audit, revise, and evidence-test one existing Agent Skill or the declared portfolio
   across Codex, Claude Code, GitHub Copilot, and compatible clients. Invoke explicitly
-  with $harden-skill PATH, /harden-skill PATH, or /harden-skill portfolio. Do not use to
-  create a new skill from scratch, or to research outside sources for the catalog (use
-  skill-research).
+  with $harden-skill or /harden-skill (PATH or portfolio). Do not use to create a new skill
+  from scratch, research outside sources for the catalog (use skill-research), capture style
+  or project taste updates (learn-taste), run generic eval loops (loop-engineering), or audit
+  repo-wide context/docs (retro-agent-context).
 disable-model-invocation: true
 compatibility: Bundled inspection and candidate-apply tools require Python 3.10+ and its standard library. Behavioral comparison needs independent native agents or fresh harness sessions with authorized data and tools. Without isolation or observable invocation, retain the live target and report the missing evidence.
 ---
 
-# /harden-skill
+# Harden skill
 
 Invocation guard: Run this workflow only when the user explicitly names `$harden-skill` or
 `/harden-skill`. If selected implicitly, stop without taking action and tell the user to invoke it
@@ -22,7 +23,9 @@ versions. Treat repository rules and local canonical/wrapper conventions as auth
 ## Input and modes
 
 Accept one skill directory or `SKILL.md` path, resolving relative paths from the current
-working directory. The literal `portfolio` selects the declared portfolio; in that mode,
+working directory. If no path or `portfolio` is provided, or the path does not exist, stop
+and ask for a valid target without modifying any files. The literal `portfolio` selects the
+declared portfolio; in that mode,
 read [`references/portfolio.md`](references/portfolio.md) in full and follow its scope,
 isolation, integration, and disposition protocol instead of the single-target workflow below.
 
@@ -40,7 +43,7 @@ Default to **apply and verify**. Honor these modifiers wherever they appear:
 
 1. **Resolve the target.** Find the canonical skill, referral wrappers, repository rules,
    nearby skill catalogs, harness metadata, validators, and git status. Run
-   `scripts/inspect_skill.py <skill-directory> --profile auto`. If the input is a wrapper,
+   `<skill-dir>/scripts/inspect_skill.py <skill-directory> --profile auto`. If the input is a wrapper,
    follow its referral and operate on the canonical body. Record pre-existing changes and
    never overwrite unrelated work. Before running target-supplied validators, scripts,
    hooks, or setup, inventory the whole bundle and trace its execution and data effects
@@ -68,19 +71,21 @@ Default to **apply and verify**. Honor these modifiers wherever they appear:
    in the same bundle rather than deferring them until after the skill is live. Run the static
    checker and every discovered target validator on the staged candidate where possible.
 
-5. **Compare behavior in isolation.** Read
-   [`references/evaluation.md`](references/evaluation.md) in full and run its
-   baseline-versus-candidate cases. Already captured Codex JSONL can use the
+5. **Compare behavior in isolation.** Read the [Workspace](references/evaluation.md#workspace),
+   [Behavioral cases](references/evaluation.md#behavioral-cases),
+   [Isolation](references/evaluation.md#isolation), and [Grading](references/evaluation.md#grading)
+   sections of [`references/evaluation.md`](references/evaluation.md) and run its
+   baseline-versus-candidate cases (load [Human review and retention](references/evaluation.md#human-review-and-retention)
+   when presenting paired outputs or retaining artifacts). Already captured Codex JSONL can use the
    [runtime receipt adapter](references/native-receipts.md); it supplies metrics, not grades.
    Grade checkable assertions with concrete evidence,
    then review qualities that need human judgment.
 
-6. **Test triggering when relevant.** If the description changed or the reported problem
-   is triggering, run five realistic positive and five near-miss negative queries once.
-   Rerun only failures twice, using invocation logs or an equivalent trace that proves the
-   target `SKILL.md` was loaded. For an explicit-only target, verify suppression metadata
-   and one explicit invocation instead. Never report trigger accuracy from inferred
-   behavior or final-answer quality.
+6. **Test triggering when relevant.** If the description changed or triggering is in scope and
+   invocation is observable, follow
+   [Adaptive trigger evaluation](references/evaluation.md#adaptive-trigger-evaluation) (or its
+   explicit-only check) and report raw counts, client, model, and trace mechanism. Never
+   report trigger accuracy from inferred behavior or final-answer quality.
 
 7. **Apply only a passing candidate.** Require structural checks to pass and behavioral
    results to show no material regression. Snapshot `candidate/`, preview the bundle apply,
@@ -108,7 +113,8 @@ An apply run finishes only when the report states:
 - baseline-versus-candidate cases, assertions, results, and any human-review need;
 - trigger evidence, or an explicit `not applicable` / `not observable` limitation;
 - live validators and tests with commands and exit results;
-- applied files, or proof that `audit only` made no edits;
+- applied files, or proof that a rejected, blocked, or `audit only` outcome left the live
+  target unchanged;
 - residual risks and the retained-artifact path, if any.
 
 If isolation, invocation observability, permissions, or a required validator is unavailable,

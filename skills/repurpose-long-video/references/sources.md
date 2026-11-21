@@ -46,10 +46,21 @@ format limits.
 
 ## Local clip export, November 4, 2026
 
-The [supplied-transcript/manual-crop exporter](clip-export.md) is original local code.
-The pinned MIT Clipify comparison identified reusable crop/caption machinery, while its
-30 fps assumption is deliberately not adopted. Our exporter records actual decoded
-presentation timestamps and checks encoded outputs against the selected source frames.
-It does not supply transcription, subject tracking, semantic review or media acceptance.
-No upstream implementation, prompts or media copied. Recheck on decoder, timing or
-destination-contract changes; synthetic CLI checks are separate from task-level benefit.
+The supplied-transcript and manual-crop exporter (`references/clip-export.md`) is original
+local code. The pinned MIT
+[Clipify](https://github.com/hadimousavi79/clipify-skill/tree/621855bdc0ea67c40d872ffb8f216f5f10c7bc73)
+comparison identified reusable crop/caption machinery, while its 30 fps assumption is
+deliberately not adopted. Our exporter checks installed FFmpeg option help for encoder time
+base and frame synchronization, records actual decoded presentation timestamps, and checks
+encoded outputs against the selected source frames. It does not supply transcription, subject
+tracking, semantic review or media acceptance. No upstream implementation, prompts or media
+copied. Recheck on decoder, timestamp mapping or destination-contract changes; synthetic CLI
+checks are separate from task-level benefit.
+
+## Destination link and format rules, November 20, 2026
+
+Destination rules (aspect limits, duration caps, caption burn-in, and whether descriptions
+render clickable links, such as YouTube Shorts description link limits observed October 25,
+2026) change by platform and account. Check the destination's current documentation before
+handing off clip packages for campaign or post drafting. Recheck whenever a target platform
+updates its Shorts, Reels, or feed-link behavior.

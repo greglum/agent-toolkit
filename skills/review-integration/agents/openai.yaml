@@ -1,2 +1,7 @@
+interface:
+  display_name: "Review Integration"
+  short_description: "Audit client-API feature boundaries for wire mismatches and error gaps"
+  default_prompt: "Use $review-integration to audit the client-API boundary for this feature."
+
 policy:
   allow_implicit_invocation: false

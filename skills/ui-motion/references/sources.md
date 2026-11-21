@@ -39,7 +39,8 @@ upstream change; project design and accessibility policy remain the authority.
 
 [Impeccable](https://github.com/pbakaus/impeccable) `d98b0be` (October 7, Apache-2.0) retired
 a layout-transition rule after judges rated its findings harmless; the matching measurement
-clause was cut here. Observed stutter is still profiled.
+clause was cut here. Observed stutter is still profiled. Recheck these sources when revising
+the core interaction procedure or when upstream skill policies change.
 
 ## October 11 performance review
 
@@ -74,6 +75,8 @@ and conflict questions. Its [distribution license](https://github.com/Vanguardia
 is PolyForm Noncommercial plus attribution. This skill links to the source without copying
 its prompts, components, metadata, rules, or MCP. Gallery and asset links are optional discovery
 routes with item-specific rights and access checks. No upstream bundle or installer was run.
+Observed October 7, 2026; recheck when selecting an upstream pattern or when runtime or
+license terms change.
 
 ## October 15 effect lifecycle review
 

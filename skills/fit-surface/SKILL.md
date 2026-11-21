@@ -1,10 +1,10 @@
 ---
 name: fit-surface
 description: >-
-  Make one existing web surface fit every supported viewport width, chrome state, theme, and
-  data state, measured in the running app. Use for overflow, worst-case content, or controls
-  hidden by mobile chrome or keyboards. For new design direction use web-app-design;
-  for generic AI-looking UI, deslop-ui; for motion, ui-motion.
+  Audit or fix one web surface across viewport widths, chrome, themes, and states in the
+  running app (overflow, clipping, worst-case text). Audits edit nothing. Not for new
+  design (web-app-design), AI-slop UI (deslop-ui), motion (ui-motion, review-animations),
+  model-chosen UI (bounded-generative-ui), or launch harnesses (app-verifier).
 compatibility: Needs a way to load the running app at chosen viewport sizes and read DOM measurements, such as browser automation or a headless browser script. Without it, source fixes can proceed but rendered fit is reported unverified.
 ---
 
@@ -17,7 +17,8 @@ them. Preserve the repository's design system, primitives, and library choices.
 
 ## Procedure
 
-1. **Derive the boxes.** Read the repository's instructions and its design owner: the design
+1. **Derive the boxes.** If a named target path does not exist or contains no web UI surface,
+   stop and report the gap instead of guessing scope. Read the repository's instructions and its design owner: the design
    document, layout guidance, app shell, and tokens. Record the supported viewport range, the
    design target, the floor, the height budget, every chrome state that changes width (such as
    a sidebar open or collapsed, or a docked panel), and the shipped themes. Compute the usable
@@ -28,15 +29,13 @@ them. Preserve the repository's design system, primitives, and library choices.
    and each value cites a source or is labeled assumed.
 
 2. **Get the surface rendering.** Find the repository's no-login fixture harness, component
-   specimen page, or seeded local entry before declaring rendering unavailable. Use the port
-   the dev server reports, not the configured one. A sign-in or configuration page is a
-   setup state, not a finding. Load dense, realistic data. List every view the surface owns:
-   in-page tabs, expanded rows, menus, dialogs, and drawers, not just routes. Reach states
-   through fixtures or seed data. Never submit forms, mutate real data, or change permissions.
-   A sandbox can stop a browser from starting: Chromium failed this way under Codex's
-   `workspace-write` sandbox on macOS (Codex 0.165.0, November 2026). Record the error; do not
-   weaken the sandbox on your own. Done when every listed view renders real content, or the blocker is recorded and rendered
-   fit is marked unverified.
+   specimen page, or seeded local entry before declaring rendering unavailable. Cover every
+   view (in-page tabs, expanded rows, menus, dialogs, and drawers, not just routes) and
+   follow the observation traps and state-setup rules in [measuring](references/measuring.md).
+   Load dense, realistic data; never submit forms, mutate real data, or change permissions.
+   A sandbox can stop a browser from starting; record the error without weakening the
+   sandbox and report rendered fit as unverified. Done when every listed view renders real
+   content, or the blocker is recorded and rendered fit is marked unverified.
 
 3. **Measure the matrix.** Read [measuring](references/measuring.md) for the method, traps,
    and state matrix. For phone, tablet, or installed-web-app surfaces, also use [mobile
@@ -58,7 +57,7 @@ them. Preserve the repository's design system, primitives, and library choices.
 
 5. **Fix at the owning layer.** In audit mode, propose fixes and skip to step 7. In edit
    mode, fix the shared primitive or token before adding a per-page override, and say which
-   layer changed. Apply these rules:
+   layer changed. Edit mode does not authorize commits, pushes, or dependency installs. Apply these rules:
    - Key floors to the container's width, with a container query or the repository's
      equivalent, so they step down when chrome narrows the box. A viewport breakpoint cannot
      see chrome.
@@ -80,18 +79,22 @@ them. Preserve the repository's design system, primitives, and library choices.
 6. **Recheck affected cells.** Re-measure every box, chrome state, theme, and data state the
    change can reach, including other callers of a changed primitive. Match initial conditions
    for before and after checks; preserve action-produced scroll for interaction continuity
-   as described in the measurement method. Run the repository's required gates. Restore the
-   original theme and viewport. Done when each affected cell passes with numbers, or each
-   failure is listed with its measurement.
+   as described in the measurement method. If a fix causes a regression in another viewport,
+   chrome state, theme, data state, or caller, revert or narrow it before continuing. Run the
+   repository's required gates. Restore the original theme and viewport. Done when each
+   affected cell passes with numbers, or each failure is listed with its measurement.
 
 7. **Report.** Give the box table, then the matrix with every cell marked covered, skipped
    with a reason, or unreachable. List findings with viewport, chrome state, theme, measured
    numbers, and location. For edit mode, add each fix and its layer, the give-way order, and
-   gate results. List choices made where the repository was silent, with confidence, least
-   confident first. Source-only work means rendered fit is unverified; say so. Done when the
-   report accounts for every cell and every finding.
+   exact gate commands with their exit statuses. List choices made where the repository was
+   silent, with confidence, least confident first. Source-only work means rendered fit is
+   unverified; separate passed, failed, unavailable, and unrun checks explicitly. Done in audit
+   mode when the box table, matrix, and findings are delivered without editing app files; done
+   in edit mode when affected cells pass (or remaining failures are listed with measurements),
+   required repository gates pass with command/exit receipts, and every cell is accounted for.
 
 ## Provenance
 
-Generalized from one product's repeated viewport-fit and state-stress work. Source notes:
-[sources](references/sources.md).
+Generalized from one product's repeated viewport-fit and state-stress work. Read
+[sources](references/sources.md) only when reviewing provenance or updating this method.

@@ -1,6 +1,6 @@
 # Review checklist
 
-Load from Step 4 for the guideline and bug questions and the confidence scale.
+Load from [Multi-Perspective Review](../SKILL.md#step-4-multi-perspective-review) for the guideline and bug questions and the confidence scale.
 
 ## Guideline compliance
 

@@ -46,7 +46,6 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(manifest["status"], "EXTRACTED")
         self.assertAlmostEqual(sample["reference"]["decoded_seconds"], 0.2, places=5)
         self.assertAlmostEqual(sample["draft"]["decoded_seconds"], 0.167, places=5)
-        # Non-square input pixels describe a 2:1 picture, centered without distortion.
         raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(output / sample["image"]),
                               "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
                              capture_output=True, check=True).stdout

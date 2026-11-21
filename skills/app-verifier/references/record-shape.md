@@ -20,7 +20,7 @@ name only user paths, stable handles, required state, commands, and observable r
    instances can run side by side.
 2. **Credential-free access.** Each fixture harness, seeded entry, or no-login route, with
    its URL pattern, its scenario or seed parameters, and the data states it reaches. Say what
-   still needs credentials, without naming any secret value.
+   still needs credentials without printing secret values (per the no-secrets rule in `SKILL.md`).
 3. **Traps.** Each trap you met, with its symptom and how to tell it from a defect: the port
    moved, a setup or configuration page, a sign-in page, in-page tabs a route sweep misses,
    a slow first compile, a browser that needs a flag in containers.

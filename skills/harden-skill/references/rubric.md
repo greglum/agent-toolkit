@@ -8,7 +8,7 @@ existing workflow, not whether the author followed one preferred style.
 - [Precedence and evidence](#precedence-and-evidence)
 - [Dimensions](#dimensions)
 - [Whole-bundle trust intake](#whole-bundle-trust-intake)
-- [Harness boundaries](#harness-boundaries)
+- [Harness boundaries (observed 2026-11-20)](#harness-boundaries-observed-2026-11-20)
 - [Common failure modes](#common-failure-modes)
 - [Audit output](#audit-output)
 
@@ -72,7 +72,12 @@ Static inspection and isolated evaluation do not prove sandbox security or preve
 filesystem changes. Report only the boundaries actually established, without reproducing
 secret values in findings.
 
-## Harness boundaries
+## Harness boundaries (observed 2026-11-20)
+
+Client discovery paths, metadata budgets, and suppression controls are version-sensitive
+(Claude Code notes checked against 2.1.325 on 2026-11-20).
+Recheck these facts when a target client updates skill discovery, metadata budgeting,
+suppression keys, or invocation behavior.
 
 ### Agent Skills clients
 

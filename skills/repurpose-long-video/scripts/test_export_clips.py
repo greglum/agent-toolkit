@@ -155,6 +155,28 @@ class ClipExportTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), original)
         self.assertEqual(hashlib.sha256(rotated.read_bytes()).hexdigest(), identity)
 
+    def test_na_and_zero_sar_default_to_square_pixels(self):
+        from fractions import Fraction
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('export_clips', SCRIPT)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        h = 'a' * 64
+        selection = {'source': {'sha256': h}, 'kept': [{'id': 'c1', 'start': 0, 'end': 1}]}
+        plan = {'source_sha256': h, 'output_size': [180, 320],
+                'clips': [{'id': 'c1', 'crop': [114, 10, 90, 160], 'context_verdict': 'pass'}]}
+        transcript = {'source': {'sha256': h}, 'segments': [{'start': 0, 'end': 1, 'text': 'Hello.'}]}
+        for sar in ('N/A', '0:1'):
+            with self.subTest(sar=sar):
+                source = {
+                    'video': {'width': 320, 'height': 180, 'sample_aspect_ratio': sar},
+                    'times': [Fraction(0), Fraction(1, 2)],
+                    'end': Fraction(1),
+                }
+                clips, size = mod.plan_exports(selection, plan, transcript, source, h)
+                self.assertEqual(size, [180, 320])
+                self.assertEqual(len(clips), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

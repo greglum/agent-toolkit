@@ -22,7 +22,7 @@ covers comparison, input requirements and verification.
 
 ## Use it for a real system
 
-Invoke `diagram-design` in Claude Code or Codex and identify the subsystem and source revision.
+Invoke `diagram-design` in Claude Code, Codex, or Antigravity and identify the subsystem and source revision.
 The skill asks the agent to inspect source, record the supported relationships and author a
 graph with stable identities. The renderer validates that model; it does not discover the
 architecture or establish runtime behavior. Check the relationships against source and the

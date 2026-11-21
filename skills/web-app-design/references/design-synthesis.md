@@ -26,8 +26,8 @@ panel. One reference informs row hierarchy, another shows a filtering flow. The 
 current table, tokens, and focus behavior implement it. This is a reasoning example, not
 a template to impose on every dashboard.
 
-Say exactly what the reference teaches. “Dense rows separate identity from metadata through
-type weight and alignment” is actionable. “Make it premium like that site” leaves the
+Say exactly what the reference teaches. "Dense rows separate identity from metadata through
+type weight and alignment" is actionable. "Make it premium like that site" leaves the
 agent to invent all the consequential choices.
 
 Before building, ask whether the same brief for another product would yield the same
@@ -59,9 +59,10 @@ short comparison can settle an obvious choice; render candidates when geometry o
 is what remains uncertain. Do not generate variants for an already settled local correction.
 
 For a portable screenshot comparison with human feedback, build the optional
-[offline review board](variant-review.md). It embeds supplied images and capture/source
-identities; it does not capture screens, generate variants, or validate their claims.
-For interaction or timing comparisons, use [live comparison](live-comparison.md) instead.
+offline review board (`references/variant-review.md`, linked from `SKILL.md`). It embeds
+supplied images and capture/source identities; it does not capture screens, generate
+variants, or validate their claims. For interaction or timing comparisons, use live comparison
+(`references/live-comparison.md`, linked from `SKILL.md`) instead.
 
 Judge each candidate by the task: what can the user find, compare, or act on without opening
 another view or decoding a truncated label? Preserve required information and actions while
@@ -113,41 +114,12 @@ browser coverage limits. Recheck feature support when targets or the feature cha
 
 ## Craft that survives real content
 
-**Hierarchy.** Build the reading order around the user's question. Put the current object,
-status, and next action where users look first. Give the dominant content most of the useful
-space. Establish hierarchy through size, weight, grouping, and alignment before adding color.
+Check these non-obvious failure traps when carrying the design direction across screens:
 
-**Typography.** Reuse font roles with clear differences between page titles, section labels,
-body content, and metadata. Give headings useful wording and room to wrap. Align comparable
-numbers and use tabular numerals where the font supports them. Legible secondary text helps
-scanning; making it faint or tiny makes the user work harder.
-
-**Spacing and density.** Create a rhythm from the existing spacing scale. Tighten within a
-group and open the space between groups. Match density to frequency and content: daily
-workflows benefit from scannable information, while a decision or introduction may need
-more breathing room. Check short, long, missing, and translated content rather than tuning
-only to a tidy fixture.
-
-**Surfaces.** Use background changes, dividers, or containers to express grouping and
-interaction. A container earns its boundary by holding a meaningful unit. Consistent edge
-treatment and alignment often provide polish without extra shadows or effects. Maintain
-the same visual meaning in dark mode; inspect actual composited colors for transparency.
-
-**Color and icons.** Give accents a job, preserve semantic roles, and express statuses with
-text as well as color. Use the current icon family with consistent geometry. Pair unfamiliar
-actions with labels; visual novelty should not force users to decode basic controls.
-
-**Detail.** Tune row baselines, control heights (matched across a shared row), label
-proximity, truncation, scroll boundaries, empty-state proportions, and popover anchoring. These details carry the
-direction after the first impression. Confirm hover, focus, active, disabled, and pending
-states on the controls that changed.
-
-**States.** Keep user input on failure, give actionable inline errors, and focus the first
-invalid field. Keep reader position and useful existing data during refresh. Completion
-follows the operation's actual state, not a visual timer.
-
-**Motion.** Keep everyday actions immediate and retarget interrupted transitions correctly.
-Shaders, 3D, blur, and scroll choreography must justify their loading and interaction cost.
+- **Tabular alignment and wrapping:** align comparable numbers with tabular numerals where supported; verify long, missing, and translated strings rather than tuning only to a short English fixture.
+- **Composited contrast in dark mode:** inspect actual composited colors when translucent surfaces overlap background layers; express statuses with text or labels as well as color.
+- **Row and popover precision:** match control heights across a shared row, keep scroll boundaries inside their owner, anchor popovers to moving triggers, and verify hover, focus, active, disabled, and pending states on changed controls.
+- **Input preservation on failure:** keep user input on save failure, focus the first invalid field, preserve scroll position on refresh, and drive completion states from actual operation state rather than a timer.
 
 ## Fit the surface to its job
 
@@ -225,8 +197,8 @@ Use this when implementing a `DESIGN.md` or brand spec in the product.
    can be built from tokens and variants alone; one that needs a raw value exposes a gap.
 
 Report the mapping and each deliberate deviation (substituted fonts, derived values, a hover
-kept where the spec omits it), with the contrast results from the [rendered
-checks](rendered-checks.md).
+kept where the spec omits it), with the contrast results from `references/rendered-checks.md`
+(linked from `SKILL.md`).
 
 A design system page, when requested, proves the contract: foundations, then components,
 then compositions. Show color as role pairs with measured contrast before the raw palette.
@@ -239,9 +211,9 @@ screen built only from tokens and components. Exhaustive combinations belong in 
 
 Adapt this to the task rather than filling every blank by assumption:
 
-> Use $web-app-design on [surface] for [users and task]. Preserve [design owners and
-> behavior contracts]. Use [references, or research a small relevant set] to improve
-> [concrete friction]. Explain the adopted choices, implement the requested states, and
+> Use `/web-app-design` (Claude Code) or `$web-app-design` (Codex) on [surface] for [users and task].
+> Preserve [design owners and behavior contracts]. Use [references, or research a small relevant set]
+> to improve [concrete friction]. Explain the adopted choices, implement the requested states, and
 > verify [viewport/theme/journey scope] in the running app. Report missing evidence.
 
 The request specifies a result and boundaries. It does not require an external builder,

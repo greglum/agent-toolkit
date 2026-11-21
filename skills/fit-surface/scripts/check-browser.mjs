@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { accessSync, constants, realpathSync, statSync } from 'node:fs';
+import { accessSync, constants, lstatSync, realpathSync, statSync } from 'node:fs';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -7,7 +7,6 @@ import { collectSurface } from './collect-surface.mjs';
 
 const [playwrightPath, destination] = process.argv.slice(2);
 if (!playwrightPath || !destination) throw new Error('Usage: node check-browser.mjs playwright/index.mjs output-folder');
-// Keep each collector independently installable. Preflight explicit browsers before creating evidence.
 const configured = process.env.CHROME_PATH || undefined;
 let executablePath;
 if (configured) {
@@ -18,7 +17,6 @@ if (configured) {
   } catch (cause) {
     throw new Error('CHROME_PATH must name an executable headless browser; use a headless shell or Chrome for Testing', { cause });
   }
-  // Installed Chrome grows the macOS keychain on every launch (Chromium issue 577651758).
   const installedChrome = /(?:^|[/\\])(?:Google Chrome(?: (?:Beta|Canary|Dev))?\.app|google-chrome(?:-stable|-beta|-unstable)?)(?:[/\\]|$)|^\/opt\/google\/chrome(?:-beta|-unstable)?(?:\/|$)/i;
   if ([configured, executablePath].some(path => installedChrome.test(path))) {
     throw new Error('CHROME_PATH must not use installed Google Chrome; use a headless shell or Chrome for Testing');
@@ -27,6 +25,23 @@ if (configured) {
 const { chromium } = await import(pathToFileURL(resolve(playwrightPath)).href);
 const output = resolve(destination);
 await mkdir(output, { recursive: true });
+const pathExists = target => {
+  try {
+    lstatSync(target);
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+};
+const desktopJson = join(output, 'desktop.json');
+const narrowJson = join(output, 'narrow.json');
+const narrowPng = join(output, 'narrow.png');
+for (const existing of [desktopJson, narrowJson, narrowPng]) {
+  if (pathExists(existing)) {
+    throw new Error(`Refusing to overwrite existing evidence artifact: ${existing}`);
+  }
+};
 const fixture = `<!doctype html><html lang="en"><meta charset="utf-8"><title>Surface evidence fixture</title>
 <style>
   * { box-sizing: border-box; } body { margin: 16px; font: 16px system-ui; color: #17212b; background: #fff; }
@@ -75,7 +90,7 @@ try {
   assert.ok(!has(desktop, 'small-target', '#disabled'));
   assert.ok(!desktop.observations.some(o => /hidden|invisible|outside-clip|dialog/.test(o.selector)));
   assert.ok(!JSON.stringify(desktop).includes('DO-NOT-COLLECT-INPUT-VALUES'));
-  await writeFile(join(output, 'desktop.json'), JSON.stringify(desktop, null, 2));
+  await writeFile(desktopJson, JSON.stringify(desktop, null, 2), { flag: 'wx' });
   await page.setViewportSize({ width: 390, height: 700 });
   await page.locator('#secret').focus();
   await page.evaluate(() => { window.scrollTo(0, 180); document.querySelector('#grid').scrollLeft = 70; });
@@ -90,8 +105,9 @@ try {
   assert.equal(narrow.observations.find(o => o.selector === '#grid' && o.kind === 'scroll-container').scrollLeft, 70);
   assert.ok(narrow.observations.some(o => o.kind === 'viewport-edge' && o.horizontalOwner?.selector === '#grid'));
   assert.ok(has(narrow, 'scroll-container', '#rtl'));
-  await writeFile(join(output, 'narrow.json'), JSON.stringify(narrow, null, 2));
-  await page.screenshot({ path: join(output, 'narrow.png'), fullPage: true });
+  await writeFile(narrowJson, JSON.stringify(narrow, null, 2), { flag: 'wx' });
+  if (pathExists(narrowPng)) throw new Error(`Refusing to overwrite existing evidence artifact: ${narrowPng}`);
+  await page.screenshot({ path: narrowPng, fullPage: true });
   const capped = await page.evaluate(collectSurface, { state: 'bounded', maxElements: 2 });
   assert.equal(capped.coverage.inspected, 2);
   assert.equal(capped.coverage.status, 'partial');

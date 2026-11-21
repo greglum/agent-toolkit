@@ -22,7 +22,6 @@ STATUSES = {"verified", "partial", "failed", "unsupported"}
 def open_regular(path):
     if not path.is_file():
         raise OSError("input is not a regular file")
-    # A path can be replaced with a FIFO after the type check.
     with os.fdopen(os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0)), "rb") as stream:
         if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
             raise OSError("input is not a regular file")
@@ -72,7 +71,6 @@ def reconcile(manifest, inputs, root):
         try:
             info = source.stat()
         except OSError:
-            # Failed/unsupported sources may be unreadable; their status is checked below.
             continue
         original_identities.add((info.st_dev, info.st_ino))
     seen_paths, seen_ids, errors, counts = set(), set(), [], Counter()

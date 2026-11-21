@@ -31,7 +31,6 @@ query($owner:String!, $name:String!, $number:Int!, $endCursor:String) {
 def gh(args, allowed=(0,), empty_checks=False):
     result = subprocess.run(["gh", *args], text=True, capture_output=True, timeout=30)
     if result.returncode not in allowed:
-        # Keep response bodies and credential-bearing diagnostics out of event logs.
         raise ValueError(f"GitHub command failed ({result.returncode}): gh {' '.join(args[:2])}")
     if (empty_checks and result.returncode == 1 and not result.stdout.strip()
             and re.fullmatch(r"no checks reported on the '[^\n]+' branch\s*", result.stderr)):
@@ -68,7 +67,6 @@ def rest_records(repo, number, kind):
     records = []
     for page in pages:
         for row in page:
-            # Body digests catch edits without persisting comment text.
             records.append({"id": row["id"], "url": row["html_url"],
                             "updated": row.get("updated_at", row.get("submitted_at")),
                             "state": row.get("state"), "commit": row.get("commit_id"),
@@ -157,7 +155,6 @@ def watch(args, path, target):
         if event["changed"] or args.once or terminal:
             print(json.dumps(event, sort_keys=True), flush=True)
         save_state(path, target, current)
-        # Initial state is visible, then a normal run waits for a subsequent change.
         if args.once or terminal or (previous is not None and event["changed"]):
             return 0
         previous = current
@@ -182,7 +179,6 @@ def main():
     if (args.number < 1 or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", args.repo)
             or args.interval < 5 or args.timeout < 1):
         parser.error("positive PR/timeout, interval >= 5, and owner/repository required")
-    # gh must use the same host as the identity stored in state.
     os.environ["GH_HOST"] = "github.com"
     target = f"{args.repo.lower()}#{args.number}"
     args.state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)

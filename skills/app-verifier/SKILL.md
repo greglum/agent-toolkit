@@ -1,10 +1,10 @@
 ---
 name: app-verifier
 description: >-
-  Set up a way for agents to run and check this app: create or update a project-owned skill
-  or doc that records how to launch it, reach each feature without real credentials, and see
-  the end state proving it works. Use to record how to verify features, or refresh that record
-  after code changes. Not for auditing or fixing UI.
+  Record how to launch an app, reach its features via a fixture harness or no-login entry
+  without real credentials, and check end states, or refresh that record. Not for auditing or
+  fixing UI (deslop-ui, fit-surface), repo agent-readiness plans (agent-readiness), or
+  auditing/tuning test suites (tune-tests).
 compatibility: Needs a shell to run the repository's own setup and dev commands, and browser automation or a headless browser to drive the running app. Without a browser, launch and HTTP checks can still be recorded, and rendered end states are marked unverified. Installs nothing beyond the repository's documented setup.
 ---
 
@@ -21,27 +21,34 @@ one the stack supports, and build it only when the user asks for one.
 
 ## Procedure
 
-1. **Choose the mode and the home.** Search the repository's agent instructions, README,
-   contributor docs, and skills for a record that already launches the app or lists features
-   to check. Include an existing native launch or verification recipe in that search;
+1. **Choose the mode and the home.** Stop and report if the target repository is not a
+   launchable app (for example, a pure library with no runnable surface). When starting from an
+   `agent-readiness` handoff, accept `target revision`, `evidence locations`, `candidate owner`,
+   and `unresolved items` and verify them against current source. Otherwise search the
+   repository's agent instructions, README, contributor docs, and skills for a record that
+   already launches the app or lists features to check. Include an existing native launch or
+   verification recipe in that search;
    [reuse its proven steps](references/record-shape.md#reuse-a-native-recipe) rather than
-   create a second launch record. If one exists, this is a maintenance run: go to step 6. Otherwise place the
-   record where the project keeps its skills, else in its developer docs, else beside the
-   README, and follow its naming, frontmatter, and index conventions. Never name it plain
-   `verify` unless the user asks: some harnesses run a project skill with that name before
-   every commit. Done when the mode and the destination path are chosen, and each cites the
-   convention it follows or is listed as a choice.
+   create a second launch record. If a full record exists, go to step 6; if an informal README
+   or native recipe lacks `Sources` paths or verified commits, upgrade it in place per that
+   reuse rule before or during step 6. Otherwise place the record where the project keeps its
+   skills, else in its developer docs, else beside the README, and follow its naming,
+   frontmatter, and index conventions. Never name it plain `verify` unless the user asks: some
+   harnesses run a project skill with that name before every commit. Done when the mode and
+   the destination path are chosen, and each cites the convention it follows or is listed as
+   a choice.
 
-2. **Launch the app.** Find the documented dev command in package scripts, task runners, the
-   README, and CI, with its prerequisites: config sync, environment files, generated assets,
-   and work a pre-script does that a direct invocation skips. Check where startup and the
-   intended entry points send requests. Verify that relevant dependencies are local or fully
-   stubbed, including fallback requests, without reading or printing secret values. If a
-   destination is unresolved, mark the affected launch or journey blocked. For a verified
-   launch, run the command and read the address from its log. Never drive or stop a server
-   you did not start. Done when the app answers at the address it reported, from commands
-   run in this session, or the launch is recorded as blocked with the destination gap
-   or failing command and error.
+2. **Launch the app.** If shell execution is unavailable, stop and report the launch and
+   feature steps as unverified. Otherwise find the documented dev command in package scripts,
+   task runners, the README, and CI, with its prerequisites: config sync, environment files,
+   generated assets, and work a pre-script does that a direct invocation skips. Check where
+   startup and the intended entry points send requests. Verify that relevant dependencies are
+   local or fully stubbed, including fallback requests, without reading or printing secret
+   values. If a destination is unresolved, mark the affected launch or journey blocked. For a
+   verified launch, run the command and read the address from its log. Never drive or stop a
+   server you did not start. Done when the app answers at the address it reported, from
+   commands run in this session, or the launch is recorded as blocked with the destination
+   gap or failing command and error.
 
 3. **Find credential-free entry points.** An app with no sign-in needs only its routes.
    Otherwise look for fixture harness entries, mock service layers, story or specimen pages,
@@ -62,29 +69,33 @@ one the stack supports, and build it only when the user asks for one.
    unverified or blocked mark with the reason.
 
 5. **Write and prove the record.** Follow [record shape](references/record-shape.md). Record
-   commands and actions exactly as they worked, plus every trap you met: the actual port,
-   setup and sign-in pages, in-page tabs, slow first loads. Give each entry its source paths
-   and the commit it was verified at. Then, from a fresh shell, follow the written launch and
-   one feature entry exactly as written, and stop every process you started. Done when that
-   cold run passes, nothing you started is still running, and every recorded step either ran
-   this session or is marked unverified.
+   commands and actions exactly as they worked, plus each runtime trap listed in that
+   reference's `Traps` section. Give each entry its source paths and the commit it was
+   verified at. Then, from a fresh shell, run the written launch and one feature entry
+   exactly as written, capture the command and exit code, and stop every process you started.
+   Done when that cold run passes, nothing you started is still running, and every recorded
+   step either ran this session or is marked unverified.
 
-6. **Maintain.** Check each entry's source paths for changes since its recorded commit, and
-   look for routes, harness entries, and tabs added since then. Apply the destination check
-   from step 2 to startup and each changed or new entry before running it. Re-run the verified
-   launch and eligible entries, then update their actions, end states, and commits. When an entry
-   fails, relaunch and retry it once. A second failure through real user actions is either
-   drift in the record, which you fix, or a product regression, which you report and never
-   write into the record as expected behavior. Done when every entry is unchanged,
-   re-verified at the current commit, or reported with its failure, and nothing you started
-   is still running.
+6. **Maintain.** When upgrading an informal README or native recipe, first fill missing
+   `Sources` paths, readiness cues, and commits using
+   [reuse a native recipe](references/record-shape.md#reuse-a-native-recipe). Check each
+   entry's source paths for changes since its recorded commit, and look for routes, harness
+   entries, and tabs added since then. Apply the destination check from step 2 to startup
+   and each changed or new entry before running it. Re-run the verified launch and eligible
+   entries, then update their actions, end states, and commits. When an entry fails, relaunch
+   and retry it once. A second failure through real user actions is either drift in the
+   record, which you fix, or a product regression, which you report and never write into the
+   record as expected behavior. Done when every entry is unchanged, re-verified at the current
+   commit, or reported with its failure, and nothing you started is still running.
 
-7. **Hand off.** Report the record's path, the mode, and the features verified, unverified,
-   blocked (with prerequisites), and unmapped. List regressions found and the choices you
-   made where the repository was silent, least confident first. Tell the user that
-   `fit-surface`, `web-app-design`, and `deslop-ui` look for exactly this harness, port, and
-   view list before judging a rendered UI. Done when the report accounts for every listed
-   feature and every regression.
+7. **Hand off.** Report the record's path, the mode, cold-run command and exit-code receipts
+   (or unavailable/blocked status), and the features verified, unverified, blocked (with
+   prerequisites), and unmapped. List regressions found and the choices you made where the
+   repository was silent, least confident first. Note that any downstream UI or browser audit
+   can reuse this project-owned launch harness, port, and view list instead of inventing a
+   separate setup. Done when the report accounts for every listed feature, cold-run receipt,
+   and regression.
 
-The record at its destination, proven by step 5 or re-run in step 6, marks the run
-finished.
+The record at its destination, proven by step 5, re-run in step 6, or honestly recorded as a
+blocked launch per step 2 (with failing command/error or missing prerequisite and nothing left
+running), marks the run finished.

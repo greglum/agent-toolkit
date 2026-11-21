@@ -1,0 +1,6 @@
+interface:
+  display_name: "Retro"
+  short_description: "Triage recent work and run the two most useful retros"
+  default_prompt: "Use $retro on this repository for the last 7 days and give me the action items."
+policy:
+  allow_implicit_invocation: true

@@ -6,7 +6,7 @@ start an author/reviewer loop or authorize fixes, thread resolution, or further 
 1. Recover the prior report's repository identity, comparison base, head, path coverage and
    findings. Without that evidence, perform the complete initial review. Prior approval alone
    is not coverage evidence.
-2. Pin the current endpoints using Step 1. Keep the full base-to-head comparison as the
+2. Pin the current endpoints following [Resolve immutable review objects](../SKILL.md#step-1-resolve-immutable-review-objects). Keep the full base-to-head comparison as the
    verdict's scope. Compare the prior head with the current head to locate fixes and new
    changes. Read complete current blobs for new or changed text paths and base blobs for
    deletions. Recheck affected callers, contracts and instructions. Reuse

@@ -62,7 +62,8 @@ Research leads were inspected at
 (root CC BY-SA 4.0, observed October 26, 2026). Semantics were checked against
 [OASIS SARIF 2.1.0 plus Errata 01](https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/sarif-v2.1.0-errata01-os-complete.html),
 sections 3.4.5, 3.20.14, 3.27.6-10 and 3.54.2. Recheck when adding another SARIF version or
-an unsupported feature. The bundled example is synthetic.
+an unsupported feature. The [bundled synthetic example](../examples/scanner-report.sarif) demonstrates
+the supported input shape.
 
 ```sh
 python3 -m unittest discover -s scripts -p 'test_sarif_review.py'

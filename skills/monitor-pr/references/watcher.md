@@ -1,11 +1,14 @@
 # Event watcher
 
-Run by absolute script path, with an explicit target:
+Run by absolute script path, with an explicit `github.com` target (`scripts/watch_pr.py` pins
+`GH_HOST=github.com`; GitHub Enterprise Server hosts are unsupported by the bundled watcher):
 
 ```bash
 python3 <skill-dir>/scripts/watch_pr.py 24 --repo owner/repo --once
-python3 <skill-dir>/scripts/watch_pr.py 24 --repo owner/repo --timeout 300
+python3 <skill-dir>/scripts/watch_pr.py 24 --repo owner/repo --timeout 300 --interval 30
 ```
+
+`--interval <seconds>` defaults to `30` and requires a minimum of `5` seconds.
 
 The first observation emits the current snapshot summary, including existing unresolved
 threads. Subsequent runs compare persistent state and emit only changed categories. It watches

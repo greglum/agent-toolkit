@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 from html.parser import HTMLParser
+import http.client
 import json
 import re
 import urllib.error
@@ -53,7 +54,6 @@ class ApiRedirects(urllib.request.HTTPRedirectHandler):
 def fetch_json(url):
     request = urllib.request.Request(url, headers={"User-Agent": "skill-research/1.0",
                                                  "Accept": "application/json"})
-    # This opener has no browser cookie jar or authentication handler.
     with urllib.request.build_opener(ApiRedirects()).open(request, timeout=25) as response:
         raw = response.read(MAX_BYTES + 1)
     if len(raw) > MAX_BYTES:
@@ -194,7 +194,7 @@ def recover(url, secondary=False):
             record = reader(data, source)
             result["records"].append(record)
             attempt["status"] = "RETRIEVED"
-        except (OSError, ValueError, urllib.error.URLError) as error:
+        except (OSError, ValueError, urllib.error.URLError, http.client.HTTPException) as error:
             attempt["status"] = "FAILED"
             attempt["error"] = str(error)
             if isinstance(error, urllib.error.HTTPError):

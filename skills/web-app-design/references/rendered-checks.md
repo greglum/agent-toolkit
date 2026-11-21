@@ -1,7 +1,7 @@
 # Rendered checks
 
 Run the checks that apply to the changed surface in its requested conditions. The surface
-table in [design synthesis](design-synthesis.md#fit-the-surface-to-its-job) names what each
+table in `references/design-synthesis.md` (`Fit the surface to its job`) names what each
 kind of surface needs beyond a tidy screenshot.
 
 - **Comprehension.** From the rendered content, identify the current object, what needs

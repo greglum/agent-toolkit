@@ -41,18 +41,17 @@ For each scene, add two fields to the existing contract:
 
 ## Words, motion, and objects
 
-- On-screen text anchors the narration; it does not repeat the full spoken line. Keep it to
-  short labels and at most two lines at once. Captions carry the exact speech.
-- Use one name per thing, every time, on screen and in narration.
-- Every number traces to a source in the brief. Label illustrative values as examples.
-- Motion must carry meaning: grouping, order, cause, or scale. One focal action at a time;
-  everything else holds still while text is read.
-- Keep objects alive across scenes and transform them rather than replacing them, so a dot can
-  become a node and a label can become an axis. Track each persistent object in the storyboard.
+Follow `SKILL.md` (`## 2. Ground the story`, `## 3. Write the scene contract`),
+`references/narration.md`, and `references/timing.md` for sourced numbers, single terminology,
+single focal action, narration anchoring, and reading holds; add only these explainer rules:
+
+- Keep on-screen labels to at most two lines at once.
+- Transform persistent objects into their next role across scenes (for example, dot to node or
+  label to axis) rather than replacing them, and track each transform in the storyboard.
 - Reframe between ideas, not during reading. Settle without bounce unless the owner's motion
   language says otherwise.
-- Prefer real UI, real data, and plain diagrams to decoration. Drop effects that do not serve
-  the idea: glow, stock 3D shapes, gradient title cards, ambient particles, invented metrics.
+- Prefer real UI, real data, and plain diagrams to decoration. Drop visual effects that do not
+  serve the idea: glow, stock 3D shapes, gradient title cards, and ambient particles.
 
 ## Choosing a direction
 

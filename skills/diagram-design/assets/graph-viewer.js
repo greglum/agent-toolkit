@@ -143,7 +143,6 @@ byId('components').addEventListener('click', event => {
   const button = event.target.closest('[data-select-node]');
   if (button) {
     chooseNode(button.dataset.selectNode);
-    // The list is rebuilt after selection; give its replacement a stable keyboard focus.
     byId('components').querySelector(`[data-select-node="${state.selected}"]`)?.focus();
     const container = picture().closest('.snapshot');
     const node = picture().querySelector(`[data-node-id="${state.selected}"]`);

@@ -1,6 +1,6 @@
 # Agent toolkit
 
-Skills, command-line tools, and workflow guides for Claude Code and Codex,
+Skills, command-line tools, and workflow guides for Claude Code, Codex, and Antigravity,
 maintained by Greg Lum. They cover code review, debugging, web design, diagrams,
 films, and source-backed writing.
 
@@ -27,6 +27,8 @@ of his work. This repository holds the installable bundles and usage documentati
 | Check a rendered film | [motion-film](skills/motion-film/SKILL.md) | Source, playback and export checks using its production tools |
 | Export selected short clips | [repurpose-long-video](skills/repurpose-long-video/SKILL.md) | Local MP4s, caption sidecars and an edit list from supplied timings and crops |
 | Reconcile an extracted corpus | [extract-documents](skills/extract-documents/SKILL.md) | Requested-input coverage, file identities and explicit conversion failures |
+| Get up to speed on unfamiliar data and a new domain | [onboard-data](skills/onboard-data/SKILL.md) (by name), [learn-domain](skills/learn-domain/SKILL.md), [map-data-source](skills/map-data-source/SKILL.md) | A cited primer and glossary, an evidence-backed data dictionary and one ranked question list |
+| Check sensor data, find faults or validate time-ordered models | [telemetry-contract](skills/telemetry-contract/SKILL.md), [telemetry-anomalies](skills/telemetry-anomalies/SKILL.md), [temporal-validation](skills/temporal-validation/SKILL.md) | Contract findings, budgeted event-level faults and leakage audits |
 | Turn a conversation into buildable work | [to-spec](skills/to-spec/SKILL.md) | A spec with scope, decisions and acceptance conditions |
 
 Browse the [full catalog](docs/catalog.md) or [workflow map](docs/workflows.md).
@@ -49,8 +51,23 @@ python3 scripts/install.py --only fit-surface,guided-review
 Read the selected skills before running the installer, then inspect the dry-run output
 before installing. Add `--harness claude`, `--harness codex`, `--harness antigravity`,
 or `--harness all` to select harnesses; the default is `both` (Codex and Claude Code).
-Leave out `--only` to install the whole catalog. Use `--only` with Antigravity to keep its
+Leave out `--only` and `--pack` to install the whole catalog. Use `--only` with Antigravity to keep its
 list curated; Codex-only skills get no Claude Code or Antigravity link.
+
+To install a group, use a pack from `packs.json`. `--list-packs` prints each pack and its
+skills. `--pack` takes comma-separated pack names and combines with `--only`:
+
+```bash
+python3 scripts/install.py --list-packs
+python3 scripts/install.py --dry-run --pack engineering,data
+python3 scripts/install.py --pack engineering,data --only fit-surface
+```
+
+An unknown pack name stops the run, changes nothing, and lists the valid packs. Some skills
+need companions: for example, `polish-animations` needs `find-animation-opportunities`,
+`animate` and `review-animations`. When a selected skill's companions are neither selected
+nor installed, the run warns, names them, and prints the `--only` line that adds them. It
+never installs a companion on its own.
 
 The installer creates links into your clone. Keep it in one place. In `~/.agents/skills`
 it archives an identical existing directory before linking. A differing copy there, any
@@ -89,6 +106,7 @@ python3 scripts/install.py --prune-only
 | --- | --- |
 | `Python 3.10 or later is required` | Use a newer installed Python, for example `python3.12 scripts/check.py`. `sh scripts/verify.sh` always runs `python3`, so put the newer one first on your `PATH` for it. |
 | `Node.js 18+ is required` | The full test run and some bundled tools need Node. Use a supported version, or choose skills that do not require it. |
+| `unknown packs: ...` | Nothing was installed. Run `python3 scripts/install.py --list-packs` for the valid names. |
 | `unknown skills: ...` | Nothing was installed. Check the spelling against the [catalog](docs/catalog.md). If a stale link has the same name, that skill has left the catalog; see [update](#update). |
 | `conflict: ... differs from the catalog` | A real file or directory in `~/.agents/skills` differs from this clone's copy. It was left alone; other names in the same run were still installed. It stays a conflict until it matches or moves. To use the catalog version, copy out anything you want and move it elsewhere, then rerun. To keep yours, leave that name out of `--only`. |
 | `conflict: ... is a real file or directory` | Something other than a link occupies that `~/.claude/skills` or `~/.gemini/config/skills` path. It is left alone even when its files match the catalog; only `~/.agents/skills` copies are archived. Handle it the same way. |
@@ -113,6 +131,9 @@ $guided-review Explain the changes on this branch against main.
 Give me a reading order and describe the important behavior changes.
 ```
 
+In Antigravity, name the skill in your prompt or rely on automatic selection from its
+`description` (it uses no `/` or `$` prefix).
+
 [What was tested in each harness](docs/verification.md#tested-in-real-harnesses) records the
 revision, versions and limits, including a browser that would not start under Codex's
 `workspace-write` sandbox on macOS.
@@ -125,7 +146,8 @@ to another service.
 ## What is checked
 
 The catalog validator checks packaging, invocation controls, portable paths, local
-links and that the catalog table agrees with the skills folder. Bundled tools have automated tests. Review a skill's output using
+links, that the catalog table and workflow map agree with the skills folder, and that
+`packs.json` names real skills and places every skill in a pack. Bundled tools have automated tests. Review a skill's output using
 the destination project's own tests, browser checks and release gates.
 
 From the clone's root, run `sh scripts/verify.sh` for the automated checks. See
@@ -135,12 +157,12 @@ For a longer explanation with a runnable example, see [how the toolkit works](do
 
 ## Sources and credits
 
-[Documentation lookup](skills/find-docs/SKILL.md#sources) can use an existing Google
+[Documentation lookup](skills/find-docs/references/sources.md#google-developer-knowledge) can use an existing Google
 Developer Knowledge connection. The [security audit coverage guide](skills/security-audit/references/coverage.md)
 records what a policy simulator evaluated and which cases need further checks.
 
-The [editing notes](skills/motion-film/references/sources-editing.md) credit the research on
-proposed speech cuts and saved revisions. The [21st.dev reference](skills/web-app-design/references/sites/19-21st-dev.md)
+The [editing notes](skills/motion-film/references/sources-earlier.md#speech-editing-and-frame-feedback-sources-october-25-to-november-6-2026) credit the research on
+proposed speech cuts and saved revisions. The [21st.dev reference](skills/web-app-design/references/resource-index.md#21stdev-magic-proxy-and-request-boundary)
 records the legacy Magic proxy and hosted request boundary.
 
 The [campaign source notes](skills/motion-film/references/sources.md#reusable-campaigns-november-14-2026)
@@ -166,7 +188,7 @@ share mutable backing.
 The [state machine audit source notes](skills/state-machine-audit/SKILL.md#sources) credit
 the verification workflow and distinguish a model check from an implementation test.
 
-The [cleanup inventory](skills/repository-cleanup/SKILL.md#establish-scope-and-a-complete-inventory)
+The [cleanup inventory](skills/repository-cleanup/SKILL.md#1-establish-scope-and-a-complete-inventory)
 keeps worktree status unavailable when inspection would need a configured Git filter.
 The [extraction checker](skills/extract-documents/references/manifest-check.md) accounts for
 unsupported inputs and refuses ambiguous manifest keys.
@@ -202,13 +224,13 @@ For skill evaluations, the [case and grading protocol](skills/harden-skill/refer
 separates regression protection from capability probes and checks required behavior while
 allowing valid alternative methods.
 
-For linked X sources, the [recovery procedure](skills/skill-research/references/source-intake.md#x-post-and-article-recovery)
+For linked X sources, the [recovery procedure](skills/skill-research/references/url-and-source-intake.md#x-post-and-article-recovery)
 checks other permitted browsers and rendered text when a reader or browser backend fails.
 
 For generated 3D props, the [film mesh checks](skills/motion-film/references/material-3d.md#qualify-an-imported-mesh)
 cover coarse inputs, scene scale and exported geometry cost.
 
-For recorded footage, the [speech-editing notes](skills/motion-film/references/sources-editing.md#october-27-video-editor-review)
+For recorded footage, the [speech-editing notes](skills/motion-film/references/sources-earlier.md#october-27-video-editor-review)
 explain verbatim transcript checks and matched-frame correction review.
 
 For a film based on an existing format, [map the reference's story beats to the new subject](skills/motion-film/references/direction.md#adapt-a-references-story-structure)

@@ -31,15 +31,12 @@ class Inventory:
 
     def object_storage(self, common):
         directory = self.git("rev-parse", "--path-format=absolute", "--git-path", "objects")
-        # Native Git resolves relative, chained and environment alternates. Diagnostics can
-        # report an unavailable lender even when count-objects exits zero.
         counts = self.git("-c", "core.quotePath=true", "count-objects", "-v",
                           require_no_diagnostics=True)
         alternates = [] if counts is not None else None
         for line in (counts or "").splitlines():
             if line.startswith("alternate: "):
                 value = line.removeprefix("alternate: ")
-                # With quotePath=true, Git quotes non-ASCII bytes as C octal escapes.
                 path = os.fsdecode(ast.literal_eval(value).encode("latin-1")) if value.startswith('"') else value
                 alternates.append(path)
         return {
@@ -60,7 +57,6 @@ class Inventory:
         return {"behind": behind, "ahead": ahead, "tip_reachable_from_base": ahead == 0}
 
     def worktree_status(self, path):
-        # A working-tree comparison may execute an attribute's configured clean filter.
         config = self.git("config", "--includes", "--name-only", "--null", "--list", repo=path)
         if config is None:
             return None
@@ -82,7 +78,6 @@ class Inventory:
             if drivers.intersection(attributes.split("\0")[2::3]):
                 self.errors.append({"repo": path, "error": "worktree status needs a configured Git filter"})
                 return None
-        # Retain gitlink changes without descending into child Git configurations.
         return self.git("status", "--ignore-submodules=dirty", "--porcelain=v1", "-z",
                         "--untracked-files=all", repo=path)
 

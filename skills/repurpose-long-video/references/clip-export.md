@@ -91,11 +91,5 @@ and rerun only into a new path. Recheck the original source identity before resu
 
 ## Provenance
 
-Original implementation, November 4, 2026. The current source comparison with MIT
-[Clipify](https://github.com/hadimousavi79/clipify-skill/tree/621855bdc0ea67c40d872ffb8f216f5f10c7bc73)
-identified a useful crop/caption capability; no upstream code, prompts or media copied.
-The local tool uses supplied fixed crops and actual decoded timestamps, rather than its
-speaker heuristic or 30 fps assumption. Checked installed FFmpeg option help for encoder
-time base and frame synchronization. Recheck decoding, timestamp mapping and the chosen
-destination after tool/input changes. Synthetic CLI proof does not establish broader skill
-selection, semantic quality or a no-skill benefit.
+Source provenance, Clipify comparison details, and recheck triggers live in
+`references/sources.md` (linked from `SKILL.md`).

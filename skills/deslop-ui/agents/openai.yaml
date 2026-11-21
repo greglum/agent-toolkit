@@ -1,0 +1,7 @@
+interface:
+  display_name: "Deslop UI"
+  short_description: "Audit and fix AI-looking web UI patterns"
+  default_prompt: "Use $deslop-ui to audit or fix generic AI-looking patterns in this web UI while keeping its design system."
+
+policy:
+  allow_implicit_invocation: true

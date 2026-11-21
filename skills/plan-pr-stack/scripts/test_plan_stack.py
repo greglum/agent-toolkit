@@ -130,6 +130,36 @@ class StackPlannerTests(unittest.TestCase):
                 self.assertEqual(result.stdout, "")
                 self.assertIn("duplicate JSON object member", result.stderr)
 
+    def test_example_snapshot_fixture_runs_cleanly(self):
+        fixture = Path(__file__).resolve().parent.parent / "assets" / "example-snapshot.json"
+        before = fixture.read_text()
+        result = subprocess.run([sys.executable, str(SCRIPT), str(fixture)],
+                                capture_output=True, text=True)
+        self.assertEqual(fixture.read_text(), before, "example fixture was modified")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        plan = json.loads(result.stdout)
+        self.assertEqual(plan["status"], "incomplete")
+        self.assertEqual(plan["blocked_prs"], [120])
+        self.assertEqual(plan["candidate_waves"], [[101, 110], [102, 111]])
+        self.assertEqual(plan["overlaps"], [
+            {"prs": [102, 110], "files": ["contracts/api.json"], "ordering": "known"},
+        ])
+        self.assertEqual(plan["unresolved"][0]["pr"], 120)
+
+    def test_internal_merged_dependency_flags_reconciliation_unknown(self):
+        rows = [
+            pr(1, "first"),
+            pr(2, "second", dependencies=[dependency(1, state="merged")]),
+        ]
+        result, plan = self.run_plan(snapshot(rows))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertEqual(plan["status"], "incomplete")
+        self.assertEqual([(edge["before"], edge["after"]) for edge in plan["edges"]], [(1, 2)])
+        self.assertEqual(plan["unknowns"], [
+            {"pr": 2, "reason": "declared merged dependency is also selected; reconcile snapshot"},
+        ])
+        self.assertEqual(plan["candidate_waves"], [[1], [2]])
+
 
 if __name__ == "__main__":
     unittest.main()

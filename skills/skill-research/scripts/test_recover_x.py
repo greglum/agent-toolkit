@@ -1,4 +1,5 @@
 from contextlib import redirect_stdout
+import http.client
 import io
 import json
 import unittest
@@ -6,7 +7,7 @@ from unittest.mock import patch
 import urllib.error
 import urllib.request
 
-from recover_x import ApiRedirects, parse_source, read_embed, read_extraction, recover, main
+from recover_x import ApiRedirects, MAX_BYTES, fetch_json, parse_source, read_embed, read_extraction, recover, main
 
 
 URL = "https://x.com/example/status/2115810209214107833"
@@ -137,6 +138,53 @@ class PublicSourceRecovery(unittest.TestCase):
             result = recover("https://x.com/i/article/2113242613214048257", secondary=True)
         self.assertEqual(result["coverage"], "NEEDS_ARTICLE_ROUTE")
         self.assertFalse(result["attempts"])
+
+    def test_truncated_http_exception_records_failed_attempt(self):
+        class FailingOpener:
+            def open(self, request, timeout=25):
+                raise http.client.IncompleteRead(b'{"partial":')
+
+        with patch("urllib.request.build_opener", return_value=FailingOpener()):
+            result = recover(URL)
+        self.assertEqual(result["coverage"], "UNAVAILABLE")
+        self.assertFalse(result["records"])
+        self.assertEqual(result["attempts"][0]["status"], "FAILED")
+        self.assertIn("IncompleteRead", result["attempts"][0]["error"])
+
+    def test_fetch_json_enforces_max_bytes_cap(self):
+        class FakeResponse:
+            def __init__(self, payload):
+                self.payload = payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, size):
+                return self.payload[:size]
+
+        class FakeOpener:
+            def __init__(self, payload):
+                self.payload = payload
+
+            def open(self, request, timeout=25):
+                return FakeResponse(self.payload)
+
+        oversized = b"x" * (MAX_BYTES + 1)
+        with patch("urllib.request.build_opener", return_value=FakeOpener(oversized)):
+            with self.assertRaises(ValueError):
+                fetch_json("https://publish.x.com/oembed?url=https://x.com/example/status/1")
+            result = recover(URL)
+        self.assertEqual(result["attempts"][0]["status"], "FAILED")
+        self.assertIn("1 MiB", result["attempts"][0]["error"])
+
+        valid = json.dumps(embed()).encode("utf-8")
+        with patch("urllib.request.build_opener", return_value=FakeOpener(valid)):
+            data, digest = fetch_json("https://publish.x.com/oembed?url=https://x.com/example/status/1")
+        self.assertEqual(data["url"], URL)
+        self.assertTrue(digest)
 
 
 if __name__ == "__main__":

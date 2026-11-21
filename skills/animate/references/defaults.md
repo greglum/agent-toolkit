@@ -52,9 +52,17 @@ inventing control points.
 
 ## Provenance
 
-Curve values, duration bands, and spring forms follow Emil Kowalski's published animation
-guidance (MIT, `emilkowalski/skills` at `2d22863`) and the iOS-style drawer curve it cites.
-The bands are deliberately ranges; the project's own system outranks them.
+Curve values, duration bands, and spring forms adapt Emil Kowalski's published animation
+guidance ([emilkowalski/skills](https://github.com/emilkowalski/skills/tree/2d228630ba1446365f614a108cb8252f1feda202),
+MIT License, Copyright 2026 Emil Kowalski; observed October 11, 2026, verified against the
+catalog notice on November 20, 2026) and the iOS-style drawer curve it cites.
+Local departures: the bands are ranges, the project's own tokens outrank every fallback,
+scale cannot replace layout, opacity cannot replace hiding semantics, and no universal
+spring mandate is imported. Recheck when the project's motion tokens, target runtimes, or
+upstream skill defaults change.
+
 The living illustration recipe generalizes the idle-life method of
 [rossark-motion-skill](https://github.com/rossark0/rossark-motion-skill/tree/9b20964e32f07f8ac7e2948cd175746fa4a7712f)
-(MIT, copyright 2026 rossark0, reviewed October 23, 2026). No engine code is bundled.
+(MIT License, Copyright 2026 rossark0; observed October 23, 2026). Local departure: extracts
+only the single-clock pure-function loop rules without bundling engine code or project
+assets. Recheck when the target rendering owner or upstream guidance changes.

@@ -1,9 +1,7 @@
 #!/bin/sh
-# Run the same catalog checks as CI, then scan staged changes for secrets.
 set -e
 repo_root=$(git rev-parse --show-toplevel)
 (
-    # Tests create separate repositories and must use their own Git state.
     for git_env in $(git rev-parse --local-env-vars); do
         unset "$git_env"
     done

@@ -10,7 +10,8 @@ From this clone's root, preview the two examples below with:
 python3 scripts/install.py --dry-run --only guided-review,fit-surface
 ```
 
-Read the two skills and the dry-run output, then repeat without `--dry-run` to
+Read the two skills and the dry-run output, then repeat without `--dry-run` (add
+`--harness antigravity` or `--harness all` if using Antigravity) to
 install them. Start a new harness session if they do not appear in its skill list.
 
 ## Understand a change
@@ -23,7 +24,8 @@ Describe the behavior change, give me a sensible reading order, and point out
 what still needs checking. Do not edit source or publish anything.
 ```
 
-In Claude Code, replace `$guided-review` with `/guided-review`.
+In Claude Code, replace `$guided-review` with `/guided-review`; in Antigravity, ask to use
+`guided-review` without a prefix.
 Check the guide against the actual diff. A reading guide is not a defect verdict.
 
 ## Check a web page
@@ -38,7 +40,7 @@ focus and accessibility. Report source findings and rendered evidence separately
 Do not change source in this pass.
 ```
 
-In Codex, replace `/fit-surface` with `$fit-surface`. If the app or browser tools
+In Codex, replace `/fit-surface` with `$fit-surface`; in Antigravity, ask to use `fit-surface` without a prefix. If the app or browser tools
 are unavailable, keep the result as a source assessment and list the missing proof.
 Chromium would not start under Codex's
 `workspace-write` sandbox on macOS when [last tested](../verification.md#tested-in-real-harnesses).
@@ -46,7 +48,7 @@ Use local fixtures or approved test identities.
 
 ## Produce a standalone diagram
 
-Install `diagram-design`. In either harness, ask it to use that skill to explain
+Install `diagram-design`. In Claude Code, Codex, or Antigravity, ask it to use that skill to explain
 one named subsystem from current source. Request a small diagram first; ask for
 the bundled interactive graph viewer when search or upstream/downstream tracing
 would help. Check labels and relationships against source before sharing it.

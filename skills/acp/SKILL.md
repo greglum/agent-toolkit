@@ -1,21 +1,8 @@
 ---
 name: acp
-description: Review task-owned changes, stage and commit them in cohesive groups, then push to the authorized Git destination. Use for add/commit/push requests; preserve unrelated staged and working-tree changes.
+description: Review task-owned changes, stage and commit them in cohesive groups, and push to the authorized Git destination. Use for add/commit/push requests ($acp, Codex explicit-only); preserves unrelated staged and working-tree changes. Not for read-only pre-commit review (review-pending-changes), commit-history review (review-recent-commits), opening PRs (create-pr), or merging branches (land-pr).
 compatibility: Requires Git and, to publish, authorized access to the target remote. Subtree publication also needs git subtree. Without publish access, finish the authorized local commits and report publication pending.
 disable-model-invocation: true
-arguments:
-  - name: message
-    description: Optional commit message override (single commit mode)
-  - name: files
-    description: "Specific files to stage (default: reviewed task-owned changes)"
-  - name: no-push
-    description: Commit without pushing
-  - name: split
-    description: Analyze multiple commit groups, even for a small changeset
-  - name: no-split
-    description: Use a single cohesive commit
-  - name: no-subtree-push
-    description: Skip subtree publication; retain the identified main repository destination
 ---
 
 # Add, Commit, Push
@@ -24,7 +11,14 @@ Deliver the requested commits and publication for the identified repository and 
 Reuse authority already supplied by the user. A skill invocation does not authorize
 publishing to another repository, rewriting history, bypassing hooks, or staging others' work.
 
+Pass optional controls in plain prompt text: `--no-push` (commit locally without pushing),
+`--no-subtree-push` (skip subtree publication while keeping the main repository target), or
+grouping and message overrides ([grouping flags](references/grouping.md#flags)).
+
 ## 1. Bind the state, ownership, and destination
+
+Stop and report immediately if the target directory is not a Git repository, any explicitly
+named path does not exist, or supplied options conflict (such as `--split` with `--no-split`).
 
 Read repository instructions and required gates. Record the repository, branch, HEAD,
 upstream, remotes, staged patch, unstaged patch, and untracked paths. Inspect every selected
@@ -75,15 +69,15 @@ For each group:
    ([`references/staging.md`](references/staging.md#unrelated-staged-content) covers `--only`).
    If exact content cannot be isolated safely, report the ownership blocker rather than
    reset the index.
-4. Write the message to a temporary file and pass `git commit --file <message-file>`.
-   Preserve literal text and actual newlines. Inspect the new commit's full patch and SHA,
-   then verify unrelated staged and working-tree content remains intact.
+4. Write the message to a temporary file outside the repository (such as the OS temp
+   directory) and pass `git commit --file <message-file>`, then remove only that temporary
+   file after committing. Preserve literal text and actual newlines. Inspect the new commit's
+   full patch and SHA, then verify unrelated staged and working-tree content remains intact.
 
 Distinguish fresh execution from reused evidence. Reuse a cached result only when repository
 gates permit it and its source, inputs, dependencies and configuration still match; retain
 the original command, status and observation time. Zero selected tests, skipped checks or
-masked exit codes do not establish passing execution. A forced failure counts only after
-confirming the forcing edit applied.
+masked exit codes do not establish passing execution.
 
 Execute groups sequentially and confirm each success before the next. If a hook or command
 fails, follow [`references/staging.md`](references/staging.md#failed-hook-or-command) before
@@ -108,8 +102,9 @@ only as [`references/subtrees.md`](references/subtrees.md#publish) allows.
 ## 6. Verify and finish
 
 Report each created or reused commit with its full SHA and message, covered paths, final
-branch/status, preserved unrelated work, required checks, and each publication destination
-and observed SHA. Account for completed, unchanged, skipped, pending, failed, unavailable,
-and unrun actions, including subtrees. `--no-push` completes with verified local commits.
-Otherwise finish only when every requested commit and publication has a supported outcome;
-state any remaining blocker without claiming completion for it.
+branch/status, preserved unrelated work, required checks (with the exact command string and
+exit status for every fresh or reused run, plus observation time when reused), and each
+publication destination and observed SHA. Account for completed, unchanged, skipped, pending,
+failed, unavailable, and unrun actions, including subtrees. `--no-push` completes with
+verified local commits. Otherwise finish only when every requested commit and publication has
+a supported outcome; state any remaining blocker without claiming completion for it.

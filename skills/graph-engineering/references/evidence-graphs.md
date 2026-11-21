@@ -49,4 +49,6 @@ source review. Hashes detect accidental drift, not malicious forgery.
 After changing an owner, inspect the affected source and update the model before sealing
 again. A successful check proves that the recorded evidence is unchanged, not that the
 implementation works or the index covers the workspace. Attach real gate and browser results
-to the task record. Use diagram-design when the reader also needs a visual map.
+to the task record. Use `diagram-design` when the reader also needs a visual map; pass the
+verified nodes, directed edges, revision, and coverage limits as inputs for `diagram-design`'s
+authored diagram or graph JSON format rather than feeding `evidence-graph.mjs` JSON directly.

@@ -26,9 +26,8 @@ an editable draft or intentionally retained snapshot has a different contract. S
 components can represent distinct domain concepts. Share code only when it owns a shared
 invariant and reduces actual maintenance cost.
 
-Preserve authorization, validation, error handling, accessibility, and existing tests when
-proposing simplification. A source-only audit leaves rendering, live async ordering, focus,
-contrast, and runtime performance unverified where no observed evidence exists.
+A source-only audit leaves rendering, live async ordering, focus, contrast, and runtime
+performance unverified where no observed evidence exists.
 
 ## Origin
 

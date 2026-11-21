@@ -66,17 +66,22 @@ each launch of it adds keychain keys that are never removed (Chromium issue 5776
 Explicit paths must name executable files. The checker resolves symlinks and rejects known
 installed Chrome names before importing Playwright or creating output. With `CHROME_PATH`
 unset or empty, Playwright selects its bundled headless browser. These checks prevent known
-operator mistakes; they do not attest arbitrary browser binaries.
+operator mistakes; they do not attest arbitrary browser binaries. A sandbox can stop a browser
+from starting: under Codex 0.165.0 on macOS (observed November 2026), headless Chromium stopped
+before loading a page under `workspace-write` (recheck when Codex sandbox or Chromium headless
+launch behavior changes).
 
 ```bash
 node scripts/check-browser.mjs /path/to/playwright/index.mjs /path/to/evidence
 ```
 
-Resolve paths from this skill's directory. The check uses an isolated offline browser
-context and synthetic content. It tests desktop/narrow geometry, nested clipping versus
-intentional scrolling, RTL, hidden/disabled controls, unchanged page/focus/scroll state,
-bounded coverage, malformed inputs and ordinary content. No dependency is downloaded.
-It proves the collector on that fixture, not the destination product's fit or accessibility.
+Resolve paths from this skill's directory. The check refuses to overwrite existing
+`desktop.json`, `narrow.json`, or `narrow.png` files in the output directory, and uses an
+isolated offline browser context and synthetic content. It tests desktop/narrow geometry,
+nested clipping versus intentional scrolling, RTL, hidden/disabled controls, unchanged
+page/focus/scroll state, bounded coverage, malformed inputs and ordinary content. No
+dependency is downloaded. It proves the collector on that fixture, not the destination
+product's fit or accessibility.
 
 ## Sources
 
@@ -86,4 +91,4 @@ and [measurement gates](https://github.com/pbakaus/impeccable/blob/ade37830fee36
 Apache-2.0, observed October 26, 2026. No upstream code or rule catalog copied.
 Independent contracts: [MDN scrollWidth](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollWidth)
 and [WAI target-size exceptions](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum),
-observed October 26. Recheck on a browser geometry change or a reproduced missed condition.
+observed October 26, 2026. Recheck on a browser geometry change or a reproduced missed condition.

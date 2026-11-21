@@ -13,7 +13,6 @@ import sys
 
 TERMINAL = (".", "!", "?", "…")
 CLOSERS = "\"')]}”’"
-# Advisory only: an opening word that often points back to earlier context.
 DANGLING_OPENERS = {
     "and", "but", "so", "because", "which", "that", "this", "these", "those", "it",
     "he", "she", "they", "them", "also", "then", "anyway", "or", "plus",
@@ -144,7 +143,6 @@ def select(data, count, min_seconds, max_seconds, overlap_threshold):
             rejected.append({**base, "rejected_because": "no complete sentence inside the proposed range"})
             continue
         first, last = span
-        # Over the cap: drop trailing sentences, never cut inside one.
         while last > first and sents[last]["end"] - sents[first]["start"] > max_seconds:
             last -= 1
         clip = {**base, "start": sents[first]["start"], "end": sents[last]["end"]}
