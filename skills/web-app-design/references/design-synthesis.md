@@ -117,7 +117,7 @@ browser coverage limits. Recheck feature support when targets or the feature cha
 Check these non-obvious failure traps when carrying the design direction across screens:
 
 - **Tabular alignment and wrapping:** align comparable numbers with tabular numerals where supported; verify long, missing, and translated strings rather than tuning only to a short English fixture.
-- **Composited contrast in dark mode:** inspect actual composited colors when translucent surfaces overlap background layers; express statuses with text or labels as well as color.
+- **Composited contrast on translucent surfaces:** inspect actual composited colors in both light and dark themes when translucent badges, pills, or banners overlap background layers (an opaque pair that clears 4.5:1 can drop below AA at a 10% to 25% tint); express statuses with text or labels as well as color.
 - **Row and popover precision:** match control heights across a shared row, keep scroll boundaries inside their owner, anchor popovers to moving triggers, and verify hover, focus, active, disabled, and pending states on changed controls.
 - **Input preservation on failure:** keep user input on save failure, focus the first invalid field, preserve scroll position on refresh, and drive completion states from actual operation state rather than a timer.
 

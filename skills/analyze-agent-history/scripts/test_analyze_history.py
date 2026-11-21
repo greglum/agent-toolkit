@@ -169,6 +169,36 @@ class HistoryCliTests(unittest.TestCase):
             with self.assertRaises(json.JSONDecodeError):
                 json.loads(result.stderr)
 
+    def test_antigravity_transcript_unwraps_requests_and_skips_delegated(self):
+        secret = 'PRIVATE_SENTINEL_never_emit'
+        with tempfile.TemporaryDirectory() as directory:
+            main = self.write(directory, 'agy-main.jsonl', [
+                {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:00:00Z',
+                 'content': (
+                     f'<USER_REQUEST>\nI already asked {secret} to fix it.\n</USER_REQUEST>\n'
+                     '<ADDITIONAL_METADATA>Preserve existing unrelated files.</ADDITIONAL_METADATA>'
+                 )},
+                {'step_index': 1, 'source': 'MODEL', 'type': 'PLANNER_RESPONSE', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:00:05Z', 'tool_calls': []},
+            ])
+            delegated = self.write(directory, 'agy-swarm.jsonl', [
+                {'step_index': 0, 'source': 'SYSTEM', 'type': 'SYSTEM_MESSAGE', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:01:00Z',
+                 'content': 'You have just started. Your assignment: I already asked you to check.'},
+                {'step_index': 1, 'source': 'MODEL', 'type': 'PLANNER_RESPONSE', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:01:05Z', 'tool_calls': []},
+            ])
+            result, report = self.invoke(main, delegated)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(report['totals']['eligible_messages'], 1)
+            self.assertEqual(report['totals']['excluded_sessions'], 1)
+            self.assertEqual(report['distinct_eligible_sessions'], 1)
+            categories = {row['category']: row for row in report['candidate_categories']}
+            self.assertEqual(categories['repeated_request']['messages'], 1)
+            self.assertEqual(categories['preservation_request']['messages'], 0)
+            self.assertNotIn(secret, result.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()

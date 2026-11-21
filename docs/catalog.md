@@ -18,6 +18,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
 | [`audit-ai-code`](../skills/audit-ai-code/SKILL.md) | Audit changed code after AI work for AI-authoring defects and apply minimal --fix edits when requested. | Automatic |
 | [`bounded-generative-ui`](../skills/bounded-generative-ui/SKILL.md) | Design, build, or review model-selected component layouts that preserve app-owned facts and evidence. | Automatic |
+| [`cloud-ops-audit`](../skills/cloud-ops-audit/SKILL.md) | Audit recurring cloud alerts, reconcile live spend and free-tier cliffs against IaC and docs, and check cross-cloud cost-bound parity. | Automatic |
 | [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Score codebase or task/harness quality against a frozen eight-dimension profile and run recurring repository audits. | Automatic |
 | [`compare-experiments`](../skills/compare-experiments/SKILL.md) | Compare paired observations with visible missing/failure evidence and selected-candidate confirmation. | Automatic |
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan and review source-backed campaigns (briefs, UTM links, matched-window reviews) for owned web, YouTube, and LinkedIn. | Automatic |
@@ -40,6 +41,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`graph-engineering`](../skills/graph-engineering/SKILL.md) | Trace source-backed dependencies and blast radius for read-only impact questions or verified edits. | Automatic |
 | [`guided-review`](../skills/guided-review/SKILL.md) | Build a human reading guide for a PR or significant diff. | Automatic |
 | [`harden-skill`](../skills/harden-skill/SKILL.md) | Audit, revise, and behavior-test an existing skill or declared portfolio across supported agent clients. | By name |
+| [`iac-teardown`](../skills/iac-teardown/SKILL.md) | Preflight traps and execute safe Terraform or OpenTofu stack decommissioning and cross-stack state migrations. | By name |
 | [`land-pr`](../skills/land-pr/SKILL.md) | Take branch work (or authorized in-scope dirty branch paths) from ready to merged through review, fixes, gates, and repo-allowed merge. | By name |
 | [`learn-domain`](../skills/learn-domain/SKILL.md) | Build a cited domain primer, glossary, source map and ranked SME questions for an unfamiliar field. | Automatic |
 | [`learn-taste`](../skills/learn-taste/SKILL.md) | Carry verified lessons into project standards or skill guidance. | Automatic |

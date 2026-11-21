@@ -14,11 +14,15 @@ import re
 import stat
 import subprocess
 
+from antigravity_records import antigravity_messages, discover_antigravity, is_antigravity
+
 MAX_FILE_BYTES = 64 * 1024 * 1024
 MAX_LINE_BYTES = 1024 * 1024
 HOME = Path.home()
 ROOTS = {'claude': HOME / '.claude' / 'projects', 'codex': HOME / '.codex' / 'sessions',
-         'antigravity': HOME / '.gemini' / 'antigravity' / 'conversations'}
+         'antigravity': HOME / '.gemini' / 'antigravity' / 'conversations',
+         'antigravity_brain': HOME / '.gemini' / 'antigravity' / 'brain',
+         'antigravity_db': HOME / '.gemini' / 'antigravity' / 'conversation_summaries.db'}
 CODEX_METADATA = ('response_item', 'turn_context', 'compacted', 'token_usage_record',
                   'world_state', 'inter_agent_communication_metadata')
 
@@ -95,6 +99,8 @@ def native_messages(records, counts):
         return copilot_messages(records, counts)
     if is_claude(records):
         return claude_messages(records, counts)
+    if is_antigravity(records):
+        return antigravity_messages(records, counts)
     counts['unsupported_records'] += len(records)
     return None, [], 'unsupported_format'
 
@@ -390,20 +396,17 @@ def discover(repo, since, include_subagents=True, roots=None):
             counts['matched_subagent_transcripts'] += subagent
             sessions.append({'harness': harness, 'path': path, 'subagent': subagent, 'mtime': mtime})
     sessions.sort(key=lambda s: (s['mtime'], str(s['path'])))
-    store = Path(roots['antigravity'])
-    uncovered = {}
-    state = folder_state(store)
-    if state == 'denied':
-        uncovered['antigravity_store_unreadable'] = True
-    elif state == 'dir':
-        db_count = 0
-        for p in store.glob('*.db'):
-            try:
-                if p.stat().st_mtime >= since:
-                    db_count += 1
-            except OSError:
-                continue
-        uncovered['antigravity_sqlite_not_parsed'] = db_count
+    conv_root = Path(roots['antigravity'])
+    brain_root = Path(roots.get('antigravity_brain', conv_root.parent / 'brain'))
+    db_path = Path(roots.get('antigravity_db', conv_root.parent / 'conversation_summaries.db'))
+    agy_sessions, agy_counts, agy_blocked, uncovered = discover_antigravity(
+        brain_root, db_path, conv_root, since, include_subagents,
+        target, target_remote, cache, parents, folder_state, git_common_dir, remote_identity,
+    )
+    sessions.extend(agy_sessions)
+    sessions.sort(key=lambda s: (s['mtime'], str(s['path'])))
+    coverage['antigravity'] = agy_counts
+    blocked.extend(agy_blocked)
     report = {name: dict(sorted(c.items())) for name, c in coverage.items()}
     return sessions, {'harnesses': report, 'uncovered_stores': uncovered, 'blocked': blocked,
                       'window_start': datetime.fromtimestamp(since, timezone.utc).isoformat()}

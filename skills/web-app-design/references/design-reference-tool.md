@@ -21,12 +21,14 @@ python3 <skill-dir>/scripts/design_reference.py search "dense inventory table so
 python3 <skill-dir>/scripts/design_reference.py draft "incident monitoring dashboard" --format markdown --output candidate-brief.md
 python3 <skill-dir>/scripts/design_reference.py draft "workbench" --format json
 python3 <skill-dir>/scripts/design_reference.py contrast '#ab6400' '#fefbe9'
+python3 <skill-dir>/scripts/design_reference.py contrast '#c42b1c' '#c42b1c' --bg-alpha 0.14 --backdrop '#f5f1ea'
 ```
 
-The last example fails normal-text AA: its ratio is about 4.43295, not 4.5. Ratios are
-compared before display rounding. `--kind large` uses 3:1 only for qualifying large text;
-`--kind ui` uses 3:1 for applicable [non-text component or graphical contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html). The caller must
-determine whether a criterion applies. This is not an automatic semantic or size classifier.
+The fifth example fails normal-text AA: its ratio is about 4.43295, not 4.5. The last example
+shows a translucent badge trap: `#c42b1c` passes opaque on `#f5f1ea` (5.03:1), yet composited at
+`--bg-alpha 0.14` over `#f5f1ea` it drops to about 4.06:1 and fails AA. Ratios are compared before
+display rounding. `--kind large` uses 3:1 only for qualifying large text; `--kind ui` uses 3:1 for
+applicable [non-text component or graphical contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html). The caller must determine whether a criterion applies. This is not an automatic semantic or size classifier.
 
 The `examples/monitoring-brief.md` sample (linked from `SKILL.md`) is a synthetic draft. It shows the
 complete artifact, including unresolved product mapping. Output files use exclusive creation:
@@ -41,11 +43,13 @@ ID receives priority.
 
 ## Evidence and boundaries
 
-Color checking accepts opaque `#RGB` and `#RRGGBB` values only. It does not infer transparency,
-CSS variables, P3 colors, gradients, text sizes, user preferences or rendered backgrounds.
-Resolve supported colors through the app's existing owners, or use the repository's browser
-and accessibility setup for unsupported values. Both foreground and background must describe
-the actual pair in use before the result supports a product claim.
+Color checking accepts opaque `#RGB` and `#RRGGBB` values only, plus optional explicit sRGB
+source-over compositing via `--bg-alpha` with `--backdrop` and `--fg-alpha`. It does not infer
+transparency from `#RGBA` or `#RRGGBBAA` strings, CSS variables, P3 colors, gradients, text sizes,
+user preferences or rendered backgrounds. Resolve supported colors through the app's existing
+owners, or use the repository's browser and accessibility setup for unsupported values. Both
+foreground and background (and any composited backdrop) must describe the actual pair in use before
+the result supports a product claim.
 
 Exit codes:
 

@@ -12,15 +12,17 @@ reaches zero.
 
 ## 1. Universal multi-language ratchet (bundled script)
 
-Once the bundled `comment_audit.py` and `scanners.py` runner and `.comment-ratchet.json` are
-authorized and initialized per the ratchet section in `SKILL.md`, run the check in CI or locally:
+Once the bundled `comment_audit.py`, `scanners.py`, `c_like_scanners.py`, and
+`structured_scanners.py` runner and `.comment-ratchet.json` are authorized and initialized per the
+ratchet section in `SKILL.md`, run the check in CI or locally:
 
 ```sh
 python3 scripts/comment_audit.py check --ratchet .comment-ratchet.json
 ```
 
 Files omitted from `.comment-ratchet.json` have an implicit ceiling of `0`, so every newly created
-code file is blocked from adding non-directive comments on day one.
+code, config (YAML including `.github/workflows/*.yml`, TOML), SQL, or HCL/Terraform file is blocked
+from adding non-directive comments on day one.
 
 ## 2. ESLint (JavaScript and TypeScript)
 

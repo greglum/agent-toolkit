@@ -1,18 +1,18 @@
 ---
 name: delete-comment
 description: >-
-  Audit and delete non-directive code comments across a repository or subtree, migrate
-  architectural rationale into ADRs, draft or file issues for excuses, and install a
-  comment-ban lint ratchet. Use explicitly via delete-comment, /delete-comment, or
-  $delete-comment for full comment-ban, ADR migration, and ratchet passes; for
-  lightweight comment cleanup keeping inline rationale use simplify-code, and for
-  dead-code removal use delete-first.
+  Audit and delete non-directive comments across code, config, IaC, and SQL files, migrate
+  architectural rationale into ADRs, draft or file excuse issues, and install a comment-ban
+  lint ratchet. Use explicitly via delete-comment, /delete-comment, or $delete-comment; for
+  lightweight comment cleanup keeping inline rationale use simplify-code, and for dead-code
+  removal use delete-first.
 disable-model-invocation: true
 compatibility: >-
   Bundled scanner and ratchet CLI requires Python 3.10+ stdlib only across Python, JS/TS,
-  Shell, Go, Rust, and C/Java. Git, project tests/linters, issue trackers, and parallel
-  subagents are optional: fall back to filesystem diffs/checks, language syntax parsing,
-  markdown draft issues, and sequential directory batches when unavailable.
+  Shell, Go, Rust, C/Java, YAML, TOML, SQL, and HCL/Terraform. Git, project tests/linters,
+  issue trackers, and parallel subagents are optional: fall back to filesystem diffs/checks,
+  language syntax parsing, markdown draft issues, and sequential directory batches when
+  unavailable.
 ---
 
 # Delete Comment
@@ -34,8 +34,8 @@ check statuses without editing repository files.
    baseline file hashes and mtimes when running in a non-Git directory). Never overwrite unrelated
    unfinished edits.
 2. Stop with an explicit error and make no edits if any explicit target path does not exist, if all
-   targets fall outside the six scanner families (Python, JS/TS, Shell, Go, Rust, C/Java) or lack
-   matching shebangs, or if zero scannable files match.
+   targets fall outside the supported scanner families (Python, JS/TS, Shell, Go, Rust, C/Java,
+   YAML, TOML, SQL, HCL/Terraform) or lack matching shebangs, or if zero scannable files match.
 3. Locate existing architecture decision records (such as `docs/adr/`), `THIRD_PARTY_NOTICES.md`,
    and any synced shared copies or generated-code pairs.
 4. Run the bundle-relative scanner before copying any script into the target repository:
@@ -101,8 +101,8 @@ Keep comment cleanup separate from unrelated behavior refactors. Comment cleanup
 Read [ratchet patterns](references/ratchet-patterns.md) only when installing a new ratchet, pairing
 with ESLint/Biome/Ruff, or wiring CI and pre-commit hooks.
 
-Copying `comment_audit.py` and `scanners.py` into the target repository, adding CI steps, or
-editing Git hooks requires explicit user authorization. Before proposing or editing hooks, inspect
+Copying `comment_audit.py`, `scanners.py`, `c_like_scanners.py`, and `structured_scanners.py` into
+the target repository, adding CI steps, or editing Git hooks requires explicit user authorization. Before proposing or editing hooks, inspect
 existing hook owners (`git config core.hooksPath`, `.git/hooks/`, `.githooks/`,
 `.pre-commit-config.yaml`) and integrate with the active owner instead of overwriting it. Here
 `<runner>` is either `<skill>/scripts` for temporary runs or the authorized repository-local script

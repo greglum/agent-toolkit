@@ -1,6 +1,6 @@
 ---
 name: reconcile-metric
-description: Trace a disputed dashboard number or aggregate to its definition and source records, then recalculate independently (join inflation, rate denominators, time windows). Not for paired experiment comparisons (compare-experiments), schema profiling (map-data-source), backtest splits (temporal-validation), or DB tuning/locks (postgres-investigate).
+description: Trace a disputed number or aggregate to its definition and source records, then recalculate independently (join inflation, rate denominators, time windows). Not for experiment comparisons (compare-experiments), schema profiling (map-data-source), backtest splits (temporal-validation), DB locks (postgres-investigate), or cloud bills (cloud-ops-audit).
 compatibility: Uses authorized source records, metric definitions and an existing read-only query or calculation tool. Supplied exports can replace live access when their completeness and snapshot are known. Missing definitions or source rows limit the reconciliation; no database or connector setup is included.
 ---
 

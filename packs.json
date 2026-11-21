@@ -4,6 +4,7 @@
     "engineering": [
       "app-verifier",
       "audit-ai-code",
+      "cloud-ops-audit",
       "codebase-metrics",
       "delete-comment",
       "delete-first",
@@ -17,6 +18,7 @@
       "global-code-review",
       "graph-engineering",
       "guided-review",
+      "iac-teardown",
       "loop-engineering",
       "postgres-investigate",
       "review-integration",
@@ -97,6 +99,11 @@
     "animate": [
       "review-animations",
       "ui-motion"
+    ],
+    "cloud-ops-audit": [
+      "iac-teardown",
+      "security-audit",
+      "docs-sync"
     ],
     "content-marketing": [
       "thumbnail-production",

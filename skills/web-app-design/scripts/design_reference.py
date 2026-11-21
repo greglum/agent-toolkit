@@ -37,18 +37,48 @@ def rgb(value):
     return tuple(int(raw[index:index + 2], 16) / 255 for index in (0, 2, 4))
 
 
+def parse_alpha(value, label):
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not (0.0 <= value <= 1.0):
+        raise ValueError(f'{label} must be a finite number between 0 and 1')
+    return float(value)
+
+
+def composite_rgb(top, base, alpha):
+    return tuple(alpha * fg + (1.0 - alpha) * bg for fg, bg in zip(top, base))
+
+
+def rgb_to_hex(channels):
+    return '#' + ''.join(f'{min(255, max(0, round(channel * 255))):02x}' for channel in channels)
+
+
+def luminance_rgb(channels):
+    linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+    return sum(v * weight for v, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+
 def luminance(value):
-    channels = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in rgb(value)]
-    return sum(v * weight for v, weight in zip(channels, (0.2126, 0.7152, 0.0722)))
+    return luminance_rgb(rgb(value))
 
 
-def contrast(foreground, background, kind='normal'):
+def contrast(foreground, background, kind='normal', *, bg_alpha=None, backdrop=None, fg_alpha=None):
     if kind not in THRESHOLDS:
         raise ValueError(f'Unknown contrast kind: {kind}')
-    low, high = sorted((luminance(foreground), luminance(background)))
+    if (bg_alpha is None) != (backdrop is None):
+        raise ValueError('--bg-alpha and --backdrop must be used together')
+    bg_rgb = composite_rgb(rgb(background), rgb(backdrop), parse_alpha(bg_alpha, 'bg_alpha')) if bg_alpha is not None else rgb(background)
+    fg_rgb = composite_rgb(rgb(foreground), bg_rgb, parse_alpha(fg_alpha, 'fg_alpha')) if fg_alpha is not None else rgb(foreground)
+    low, high = sorted((luminance_rgb(fg_rgb), luminance_rgb(bg_rgb)))
     ratio = (high + 0.05) / (low + 0.05)
-    return {'foreground': foreground, 'background': background, 'kind': kind,
-            'ratio': ratio, 'threshold': THRESHOLDS[kind], 'passes': ratio >= THRESHOLDS[kind]}
+    result = {'foreground': foreground, 'background': background, 'kind': kind,
+              'ratio': ratio, 'threshold': THRESHOLDS[kind], 'passes': ratio >= THRESHOLDS[kind]}
+    if bg_alpha is not None:
+        result['bg_alpha'] = float(bg_alpha)
+        result['backdrop'] = backdrop
+        result['effective_background'] = rgb_to_hex(bg_rgb)
+    if fg_alpha is not None:
+        result['fg_alpha'] = float(fg_alpha)
+        result['effective_foreground'] = rgb_to_hex(fg_rgb)
+    return result
 
 
 def pairs(recipe):
@@ -206,11 +236,15 @@ def main(argv=None):
     command.add_argument('foreground')
     command.add_argument('background')
     command.add_argument('--kind', choices=tuple(THRESHOLDS), default='normal')
+    command.add_argument('--bg-alpha', type=float, default=None)
+    command.add_argument('--backdrop', default=None)
+    command.add_argument('--fg-alpha', type=float, default=None)
     commands.add_parser('validate')
     args = parser.parse_args(argv)
     try:
         if args.command == 'contrast':
-            result = contrast(args.foreground, args.background, args.kind)
+            result = contrast(args.foreground, args.background, args.kind,
+                              bg_alpha=args.bg_alpha, backdrop=args.backdrop, fg_alpha=args.fg_alpha)
             print(json.dumps(result, indent=2, allow_nan=False))
             return 0 if result['passes'] else 1
         data = load_corpus(args.corpus)

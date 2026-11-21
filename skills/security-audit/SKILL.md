@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Audit security boundaries, model threats, triage SARIF scanner reports, and verify or remediate exploitable vulnerabilities on request. Not general source/AI review (review-source, audit-ai-code), state-machine races alone (state-machine-audit), or known-bug variants (find-bug-variants).
+description: Audit security boundaries, model threats, triage SARIF scanner reports, and verify or remediate exploitable vulnerabilities on request. Not general source/AI review (review-source, audit-ai-code), state-machine races alone (state-machine-audit), known-bug variants (find-bug-variants), or cloud billing/alerts (cloud-ops-audit).
 compatibility: Source and shell access support the audit. Bundled local SARIF interpretation uses Python 3.10+ without dependencies. Scanners and independent workers are optional; missing execution or coverage remains explicit.
 ---
 
@@ -26,8 +26,10 @@ missing material decision or action, after preparing everything that does not de
 Audit-only preserves product code and configuration. Keep notes outside the source tree
 unless a saved report is requested. Public vulnerability disclosure, active live probes,
 cloud writes, email, data deletion, and paid workloads each need applicable authority.
-Read-only access does not make executing repository scripts safe: inspect them first.
-Finish this step with a bounded target and an explicit action boundary.
+Read-only access does not make executing repository scripts safe: inspect them first. Accept
+live-grant or sibling privilege-bleed handoffs from `cloud-ops-audit`, and verify each claim
+against current source and cloud state. Finish this step with a bounded target and an explicit
+action boundary.
 
 For scanner-report triage only, keep the review bounded to the supplied report and the affected
 source paths. Use the SARIF reader below for supported input, then challenge its candidates;

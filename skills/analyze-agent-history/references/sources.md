@@ -52,3 +52,16 @@ IETF, December 2017, duplicate-member interoperability limits. Rights follow IET
 no text or code copied. Duplicate object members now count as malformed instead of silently
 changing provenance. Untimed Codex messages remain partial coverage because ordinal fallback
 cannot suppress shifted/repeated export views reliably.
+
+## Antigravity brain JSONL decision, 2026-11-21
+
+Local Antigravity stores inspectable JSONL transcripts under
+`~/.gemini/antigravity/brain/<cid>/.system_generated/logs/transcript.jsonl` alongside a
+metadata index in `~/.gemini/antigravity/conversation_summaries.db` (column names read-only:
+`conversation_id`, `workspace_uris`, `parent_conversation_id`, `nesting_depth`). `--repo` opens
+`conversation_summaries.db` in read-only SQLite URI mode strictly to resolve `workspace_uris`
+and subagent parentage without emitting any summary text, while `conversations/*.db` blobs that
+lack a brain JSONL transcript remain reported under `uncovered_stores`. Native Antigravity step
+fields (`step_index`, `source`, `type`, `status`, `created_at`, `output_tokens`, `tool_calls`,
+`content`, `error`, `<USER_REQUEST>`) reflect local transcripts inspected on 2026-11-21; recheck
+whenever an Antigravity release changes those schemas or stores transcripts outside `brain/`.

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 
+from antigravity_records import BG_DONE_RE, HEADER_SKIP_PREFIXES, parse_antigravity_step
 from session_records import MAX_FILE_BYTES, MAX_LINE_BYTES
 
 
@@ -90,6 +91,16 @@ def view(record, harness):
         labels = [record.get('type'), a.get('type'), a.get('hookEvent'), a.get('hookName'),
                   record.get('toolDenialKind'), record.get('subtype')]
         labels += [b.get('name') for b in blocks if b.get('type') == 'tool_use']
+    elif harness == 'antigravity':
+        raw = str(record.get('content') or record.get('error') or '')
+        if record.get('type') == 'SYSTEM_MESSAGE':
+            match = BG_DONE_RE.search(raw[:600])
+            if match:
+                raw = raw[match.end():]
+        skip = HEADER_SKIP_PREFIXES + ('The following is a <SYSTEM_MESSAGE>', '<SYSTEM_MESSAGE>')
+        lines = [ln for ln in raw.splitlines() if not ln.startswith(skip)]
+        text = '\n'.join(lines).strip() or raw
+        labels = [record.get('type'), record.get('status'), record.get('source')]
     else:
         payload = record.get('payload') if isinstance(record.get('payload'), dict) else {}
         item = payload.get('item') if isinstance(payload.get('item'), dict) else payload
@@ -129,3 +140,46 @@ def numbered_records(path, issues=None):
         if issues is not None:
             issues['unreadable_input'] += 1
         return
+
+
+def feed_antigravity(session, r, line, bypass_re, program_fn, short_hash_fn):
+    """Feed one Antigravity step into a friction Session with cross-file step deduplication."""
+    if session.agy_seed is None:
+        session.agy_seed = short_hash_fn(
+            f"{r.get('created_at', '')}\0{r.get('type', '')}\0{str(r.get('content') or '')[:64]}"
+        )
+    step_id = f"{session.agy_seed}:{r.get('step_index', line)}:{r.get('created_at', '')}"
+    if not session.fresh(step_id):
+        return
+    step = parse_antigravity_step(r)
+    kind = step['kind']
+    if kind == 'USER_INPUT':
+        session.agy_queue.clear()
+        return
+    if kind == 'CHECKPOINT':
+        session.emit('compaction', line)
+        return
+    if kind == 'PLANNER_RESPONSE':
+        session.agy_queue.clear()
+        session.output_tokens += step['output_tokens']
+        for _, command, sig in step['tool_calls']:
+            if command and bypass_re.search(command):
+                session.emit('gate_bypass_flag', line, sig, program=program_fn(command))
+            session.agy_queue.append((sig, command, session.ts))
+        return
+    if kind == 'GENERIC':
+        sig, command, started = session.agy_queue.pop(0) if session.agy_queue else (f'step:{line}', None, session.ts)
+        if step['bg_task_id']:
+            session.agy_bg[step['bg_task_id']] = (sig, command, started)
+            return
+        key = f'agy:{line}'
+        session.pending[key] = (sig, command, started)
+        session.result(key, line, step['failed'], step['content'],
+                       large=step['is_truncated'], duration=step['duration'])
+        return
+    if kind == 'SYSTEM_MESSAGE' and step['bg_completion']:
+        task_id, canceled, failed, text = step['bg_completion']
+        sig, command, started = session.agy_bg.pop(task_id, (f'task:{task_id}', None, None))
+        key = f'agy-bg:{line}'
+        session.pending[key] = (sig, command, started)
+        session.result(key, line, failed, text, interrupted=canceled, large=step['is_truncated'])

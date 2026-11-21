@@ -17,6 +17,7 @@ of his work. This repository holds the installable bundles and usage documentati
 | --- | --- | --- |
 | Compare noisy measurements | [compare-experiments](skills/compare-experiments/SKILL.md) | Paired effects, failed/missing observations and confirmation evidence |
 | Order a set of pull requests | [plan-pr-stack](skills/plan-pr-stack/SKILL.md) | Candidate dependency waves and unresolved ordering decisions |
+| Audit cloud alerts, spend, and safe IaC teardowns | [cloud-ops-audit](skills/cloud-ops-audit/SKILL.md), [iac-teardown](skills/iac-teardown/SKILL.md) (by name) | Reconciled spend and alarm root causes, plus static IaC trap preflight |
 | Review selected agent-history exports | [analyze-agent-history](skills/analyze-agent-history/SKILL.md) | Text-free correction candidates and coverage limits |
 | Check a web page across widths and states | [fit-surface](skills/fit-surface/SKILL.md) | A measured layout and accessibility check |
 | Understand a large change before reviewing it | [guided-review](skills/guided-review/SKILL.md) | A reading guide tied to the actual diff |

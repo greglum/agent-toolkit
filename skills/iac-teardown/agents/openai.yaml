@@ -1,0 +1,6 @@
+interface:
+  display_name: "IaC Teardown"
+  short_description: "Preflight and run safe Terraform or OpenTofu teardowns"
+  default_prompt: "Use $iac-teardown to preflight traps and safely decommission or migrate an Infrastructure-as-Code stack."
+policy:
+  allow_implicit_invocation: false
