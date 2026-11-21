@@ -1,12 +1,12 @@
 ---
 name: deslop-ui
 description: >-
-  Audit or fix a web UI that looks AI-generated: repeated visual, structural, and copy
-  patterns. Use to deslop, de-AI, modernize, sharpen, or make a UI pop. Keeps the
-  repository's design system; an audit changes nothing. For new visual direction use
-  web-app-design; for width or overflow fit use fit-surface.
+  Audit or fix AI-looking web UI (de-AI, modernize, sharpen): visual, structural, and copy
+  tells inside the design system. Audits edit nothing. Not for prose/i18n alone (deslop),
+  new direction (web-app-design), width fit (fit-surface), motion (find-animation-opportunities),
+  model-chosen UI (bounded-generative-ui), or launch harnesses (app-verifier).
 license: MIT
-compatibility: Source review needs file access. Bundled scanner needs Bash, grep, find, xargs, sed, and Perl. Browser tooling and companion skills are optional; absent capabilities leave corresponding checks unrun.
+compatibility: Source review needs file access. Bundled scanner needs Bash, grep, find, sed, and Perl. Browser tooling and companion skills are optional; absent capabilities leave corresponding checks unrun.
 metadata:
   version: "1.0.0"
 ---
@@ -23,9 +23,10 @@ Two modes, like `deslop`. **Audit** changes nothing; use it when asked to check,
 audit, and as the first pass over any screen. **Edit** applies the fixes; use it when asked to
 fix, deslop, modernize, or sharpen.
 
-Use available `frontend-design` and repository UI audit skills for their matching concerns.
-If absent, read the design owners and audit directly without installing helpers. Resolve
-bundled scripts from this skill's directory and targets from the destination repository.
+Optional companion skills (`fit-surface` for geometry collection, `deslop` for copy rewrites,
+and `frontend-design` or repository UI audit skills) help when available; when absent,
+read the design owners and audit geometry, copy, and UI directly without installing helpers.
+Resolve bundled scripts from this skill's directory and targets from the destination repository.
 
 ## Procedure
 
@@ -36,12 +37,14 @@ bundled scripts from this skill's directory and targets from the destination rep
    unavailable, look for its no-login fixture harness or seeded entry and the dev server's
    actual port; a sign-in or configuration page is a setup state, not a finding. If nothing
    can render, say so and audit the source, marking every visual claim unverified.
-2. **Scope.** List the routes, states, and components in scope and build a coverage matrix
-   (route × viewport × theme, plus the empty, loading, error, and long-content states that
-   exist, and every in-page tab, since a route sweep sees only the default one). Cover the
-   entire requested matrix in bounded batches and name every uninspected cell. A missing
-   DESIGN.md alone does not make the product greenfield; inspect its existing identity and
-   implementation before judging.
+2. **Scope.** If requested paths are missing, empty, or contain no web UI surfaces, stop and
+   report the gap before running scanners. Otherwise, list the routes, states, and components
+   in scope and build a coverage matrix (route × viewport × theme, plus the empty, loading,
+   error, and long-content states that exist, and every in-page tab, since a route sweep sees
+   only the default one). Never submit forms, mutate real data, or change permissions when
+   exercising routes and states. Cover the entire requested matrix in bounded batches and name
+   every uninspected cell. A missing DESIGN.md alone does not make the product greenfield;
+   inspect its existing identity and implementation before judging.
 3. **Mechanical pass.** Run `scripts/ui-tells.sh PATHS` over the source and keep the output as
    the before list. If unavailable or failed, continue manual source review and report that
    status. Verify every hit against the design owner, content, and user task; record justified
@@ -58,7 +61,7 @@ bundled scripts from this skill's directory and targets from the destination rep
    opacity, and exempt disabled controls from the text contrast minimum.
 5. **Rank.** Order by what a user of this product would notice first, not by ease. Structural
    and conceptual findings usually outrank visual ones: recoloring a generic page leaves it
-   generic.
+   generic. Audit mode stops after this step, skips Steps 6 and 7, and proceeds directly to Step 8.
 6. **Fix (edit mode).** Take the highest-ranked finding, make the smallest change inside the
    repository's system (a token, a primitive variant, a layout decision, a rewritten string),
    render the affected cells again, and recheck against the
@@ -66,7 +69,8 @@ bundled scripts from this skill's directory and targets from the destination rep
    latest: revert a fix that makes the render worse rather than patching on top. Repeat until
    the bar passes or the remaining findings need a decision from the owner. Never add a
    dependency, a second token set, or a new visual idea to fix a slop finding; the fix is
-   subtraction or specificity. If a tell lives in a primitive, fix the primitive once.
+   subtraction or specificity. If a tell lives in a primitive, fix the primitive once. Edit
+   mode does not authorize commits, pushes, or dependency installs.
 7. **Verify.** Run the repository's own checks (typecheck, lint, tests, its UI gates), rerun
    `scripts/ui-tells.sh` for the after list, and confirm contrast and focus on any element whose
    color or shape changed (the repository's accessibility checks, or measured computed colors).
@@ -93,7 +97,7 @@ evidence, and the proposed fix, and offers the edit.
 
 ## Scripts
 
-- `scripts/ui-tells.sh PATH...` greps source trees (tsx, jsx, vue, svelte, html, css) for the
+- `scripts/ui-tells.sh PATH...` greps source trees (tsx, jsx, ts, js, vue, svelte, html, css, scss, mdx) for the
   class-name and markup tells and prints file:line hits grouped by tell. Exit 1 on a strong hit,
   0 when scanning succeeds without a strong hit, and 2 on invalid targets, missing dependencies,
   or scan failure. Each group displays at most 200 matches and reports when more were omitted.

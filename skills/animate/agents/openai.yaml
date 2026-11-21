@@ -1,3 +1,5 @@
 interface:
   display_name: "Animate"
   short_description: "Build gated UI motion from project tokens, then get it reviewed"
+policy:
+  allow_implicit_invocation: true

@@ -138,6 +138,60 @@ class CompareTests(unittest.TestCase):
             mutate(plan)
             self.assertEqual(self.run_cli("freeze", plan=plan)[0], 2)
 
+    def test_mixed_sign_discovery_confirmation_and_duplicate_json_keys(self):
+        plan = copy.deepcopy(self.plan)
+        plan["rounds"]["discovery"] = ["d1", "d2", "d3"]
+        plan["rounds"]["confirmation"] = ["c1", "c2", "c3"]
+        self.plan = plan
+        self.freeze()
+
+        def make_pair(round_id, run_prefix, control_val, cand_val):
+            base = copy.deepcopy(self.samples[0])
+            ctrl = plan["control"]
+            return [
+                {**base, "round": round_id, "arm": ctrl, "run_id": f"{run_prefix}-ctrl",
+                 "revision": plan["arms"][ctrl], "value": control_val},
+                {**base, "round": round_id, "arm": "candidate", "run_id": f"{run_prefix}-cand",
+                 "revision": plan["arms"]["candidate"], "value": cand_val},
+            ]
+
+        aa = [r for r in self.samples if r["round"].startswith("a")]
+        disc_inc = aa + make_pair("d1", "d1", 100, 85) + make_pair("d2", "d2", 100, 85) + make_pair("d3", "d3", 100, 101)
+        code, report = self.run_cli("analyze", disc_inc)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report["arms"]["candidate"]["verdict"], "INCONCLUSIVE")
+
+        disc_fail = aa + make_pair("d1", "d1", 100, 85) + make_pair("d2", "d2", 100, 101) + make_pair("d3", "d3", 100, 102)
+        code, report = self.run_cli("analyze", disc_fail)
+        self.assertEqual(code, 0, report)
+        self.assertEqual(report["arms"]["candidate"]["verdict"], "DOES_NOT_MEET_BAR")
+
+        disc_ok = aa + make_pair("d1", "d1", 100, 85) + make_pair("d2", "d2", 100, 85) + make_pair("d3", "d3", 100, 85)
+        code, selection = self.run_cli("select", disc_ok, arm="candidate")
+        self.assertEqual(code, 0, selection)
+        conf_inc = disc_ok + make_pair("c1", "c1", 100, 85) + make_pair("c2", "c2", 100, 85) + make_pair("c3", "c3", 100, 101)
+        code, final = self.run_cli("analyze", conf_inc, selection=selection)
+        self.assertEqual(code, 0, final)
+        self.assertEqual(final["confirmation"]["verdict"], "INCONCLUSIVE")
+
+        conf_fail = disc_ok + make_pair("c1", "c1", 100, 85) + make_pair("c2", "c2", 100, 101) + make_pair("c3", "c3", 100, 102)
+        code, final_fail = self.run_cli("analyze", conf_fail, selection=selection)
+        self.assertEqual(code, 0, final_fail)
+        self.assertEqual(final_fail["confirmation"]["verdict"], "DOES_NOT_MEET_BAR")
+
+        dup_plan = self.root / "dup_plan.json"
+        dup_plan.write_text('{"schema_version": 1, "schema_version": 1}')
+        proc = subprocess.run([sys.executable, "-B", str(SCRIPT), "freeze", str(dup_plan)],
+                              capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 2)
+        dup_samples = self.root / "dup_samples.json"
+        dup_samples.write_text('[{"round": "a1", "round": "a2"}]')
+        self.root.joinpath("plan.json").write_text(json.dumps(self.plan))
+        proc2 = subprocess.run([sys.executable, "-B", str(SCRIPT), "analyze",
+                                str(self.root / "plan.json"), str(dup_samples), "--plan-sha", self.digest],
+                               capture_output=True, text=True)
+        self.assertEqual(proc2.returncode, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

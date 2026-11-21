@@ -12,9 +12,13 @@ existing workflow. These are outside the graph renderer's current capabilities.
 
 ## Author and generate
 
-Use [the example](../examples/diagram-pipeline.json) for the complete input shape, not facts
-to copy. Paths in these commands are relative to the working directory; replace `<skill>`
-with this installed skill's directory. Create the destination directory first.
+Use [the example](../examples/diagram-pipeline.json) and
+[the before-snapshot example](../examples/diagram-pipeline.before.json) for the complete
+input and comparison shapes, not facts to copy. When continuing from `graph-engineering`,
+translate its verified nodes, edges, revision, and coverage limits into this schema rather
+than passing `evidence-graph.mjs` snapshots directly. Paths in these commands are relative
+to the working directory; replace `<skill>` with this installed skill's directory. Create
+the destination directory first.
 
 ```bash
 node <skill>/scripts/draw-graph.mjs graph.json system-map.html

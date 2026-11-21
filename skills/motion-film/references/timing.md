@@ -66,10 +66,10 @@ corrects them. Use it once per beat that matters, not on every step.
 Cut a move at its fastest frame. Match axis, direction, and speed on both sides: mirror the
 ease (ease-in out of the outgoing shot, ease-out into the incoming one). On a zoom, the scale
 must change in the same direction on both sides. A change of direction needs a visible cause.
-Check the result with the consecutive-frame strip in [capture and export review](render-review.md#frames-and-handoffs).
+Check the result with the consecutive-frame strip in `references/render-review.md`.
 
 ## Narration sets the clock
 
 When a scene is narrated, its duration comes from the measured take, and the picture reveals
 each part on the word that names it. The script budget and that reveal rule live in
-[narration](narration.md#write-the-script). Trim words before stretching motion.
+`references/narration.md` (Write the script). Trim words before stretching motion.

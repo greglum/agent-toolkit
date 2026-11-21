@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Aggregate candidate correction signals from explicit native JSONL exports."""
+"""Aggregate candidate correction signals from native JSONL sessions: explicit files or --repo discovery."""
 
 import argparse
 from collections import Counter, defaultdict
@@ -7,10 +7,12 @@ import hashlib
 import json
 import re
 import sys
+import time
 
-from history_records import native_messages, read_export
+from session_records import discover, native_messages, read_export
 
-# ponytail: fixed English cues are candidates, not semantic correction detection.
+MAX_EXPLICIT_INPUTS, MAX_REPO_INPUTS = 128, 2000
+
 CUES = {
     'repeated_request': re.compile(r'\b(?:i (?:already|previously) (?:asked|told)|still (?:broken|wrong|failing)|once again)\b', re.I),
     'scope_correction': re.compile(r'\b(?:not what i asked|i asked (?:you )?(?:for|to)|you (?:missed|ignored)|out of scope)\b', re.I),
@@ -20,15 +22,17 @@ CUES = {
 ENVELOPES = ('# AGENTS.md instructions', '<environment_context>', '<INSTRUCTIONS>',
              '<skill>', '<system-reminder>', '<developer', '<user_instructions>',
              '<subagent', 'Message Type:', 'You are a newly spawned',
-             'You are an agent in a team')
+             'You are an agent in a team', '<command-name>', '<command-message>',
+             '<local-command-', '<bash-input>', '<bash-stdout>', '<task-notification>',
+             'Caveat: The messages below', '[Request interrupted')
 
 
 class PrivateArgumentParser(argparse.ArgumentParser):
     def error(self, message):
-        self.exit(2, 'Invalid arguments. Use --help for the accepted form.\n')
+        self.exit(1, 'Invalid arguments. Use --help for the accepted form.\n')
 
 
-def aggregate(paths):
+def aggregate(paths, skip_oversized=False):
     totals = Counter()
     inputs = []
     file_digests = set()
@@ -37,7 +41,7 @@ def aggregate(paths):
     categories = Counter()
     category_sessions = defaultdict(set)
     for number, path in enumerate(paths, 1):
-        records, counts, digest, issue = read_export(path)
+        records, counts, digest, issue = read_export(path, skip_oversized)
         summary = {'input': number}
         if digest is not None and digest in file_digests:
             summary['status'] = 'duplicate_export'
@@ -51,7 +55,8 @@ def aggregate(paths):
         if issue is None:
             identity, messages, issue = native_messages(records, counts)
         summary['status'] = issue or ('partial' if counts['malformed_records'] or
-                                     counts['unsupported_records'] else 'parsed')
+                                     counts['unsupported_records'] or
+                                     counts['oversized_records'] else 'parsed')
         summary['coverage'] = dict(sorted(counts.items()))
         inputs.append(summary)
         totals.update(counts)
@@ -59,7 +64,7 @@ def aggregate(paths):
             totals['unparsed_or_excluded_inputs'] += 1
             continue
         for event_id, text in messages:
-            key = (identity, str(event_id))
+            key = (identity[0], event_id) if identity[0] == 'claude' else (identity, str(event_id))
             version = hashlib.sha256(text.encode('utf-8', 'surrogatepass')).digest()
             if key in event_versions:
                 if event_versions[key] != version:
@@ -74,7 +79,6 @@ def aggregate(paths):
                 continue
             totals['eligible_messages'] += 1
             sessions.add(identity)
-            # Exclude quoted/code lines from cue matching, retaining no snippets.
             prose = []
             fenced = False
             for line in text.splitlines():
@@ -108,11 +112,33 @@ def aggregate(paths):
 
 def main():
     parser = PrivateArgumentParser(description=__doc__)
-    parser.add_argument('exports', nargs='+', help='Explicit UTF-8 JSONL files; no directory discovery.')
+    parser.add_argument('exports', nargs='*', help='Explicit UTF-8 JSONL files; omit with --repo.')
+    parser.add_argument('--repo', help="Discover this repository's Claude Code and Codex sessions.")
+    parser.add_argument('--days', type=int, default=30, help='With --repo: sessions active in this many days.')
     args = parser.parse_args()
-    if len(args.exports) > 128:
+    if bool(args.exports) == bool(args.repo) or args.days < 1:
+        parser.error('input_mode')
+    discovery = None
+    if args.repo:
+        sessions, discovery = discover(args.repo, time.time() - args.days * 86400, include_subagents=False)
+        discovery['sessions_found'] = len(sessions)
+        discovery['sessions_capped'] = max(0, len(sessions) - MAX_REPO_INPUTS)
+        paths = [s['path'] for s in reversed(sessions[-MAX_REPO_INPUTS:])]
+    elif len(args.exports) > MAX_EXPLICIT_INPUTS:
         parser.error('input_limit')
-    report, incomplete = aggregate(args.exports)
+    else:
+        paths = args.exports
+    report, incomplete = aggregate(paths, skip_oversized=bool(args.repo))
+    if discovery is not None:
+        report['discovery'] = discovery
+        incomplete = (
+            incomplete
+            or discovery['sessions_capped'] > 0
+            or bool(discovery['blocked'])
+            or any(h.get('unreadable', 0) > 0 for h in discovery['harnesses'].values())
+            or bool(discovery['uncovered_stores'].get('antigravity_store_unreadable'))
+        )
+        report['status'] = 'partial' if incomplete else report['status']
     print(json.dumps(report, indent=2, sort_keys=True))
     return 2 if incomplete else 0
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Delete Comment"
+  short_description: "Audit, clean, and ratchet code comments"
+  default_prompt: "Use $delete-comment to audit comments, extract ADRs, draft excuse issues, and install a comment-ban ratchet."
+policy:
+  allow_implicit_invocation: false

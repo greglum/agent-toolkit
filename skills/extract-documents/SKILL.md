@@ -1,6 +1,6 @@
 ---
 name: extract-documents
-description: Extract a mixed document corpus into text or Markdown with a per-source manifest of provenance, verified locators, and content loss. Use for preparing sources for comparison or search, not document authoring, browser automation, or vector ingestion.
+description: Extract a mixed document corpus into text or Markdown with a per-source manifest of provenance, verified locators, and content loss. Use to prepare sources for comparison or search. Not for domain primers (learn-domain), tabular/database profiling (map-data-source), document authoring, browser automation, or vector ingestion.
 compatibility: Use installed readers/converters and authorized local files or streams. The optional manifest checker needs Python 3.10+ and its standard library. OCR/external conversion require suitable tools and approved data scope. Without a reader, record the unsupported input; do not install packages or require MarkItDown.
 ---
 
@@ -11,7 +11,9 @@ conversion could not read. A successful converter exit is not proof of completen
 
 ## 1. Inventory and bind the sources
 
-Resolve the requested corpus and destination using the existing project workflow. Create
+Resolve the requested corpus and destination using the existing project workflow. If the
+requested corpus resolves to zero authorized inputs or an unreadable root directory, stop and
+report the missing or out-of-scope target without writing an empty bundle. Create
 one manifest entry per source, including unsupported files, nested documents in scope, and
 conversion failures. Record a stable source ID, original path or authorized URI, available
 revision or content hash, and media type. Preserve originals unchanged; retain accessible
@@ -65,9 +67,11 @@ verified locator mapping, and known loss or errors. Record absent fields as unkn
 than inventing provenance. Include provider destinations when used; omit credentials.
 
 Reconcile input counts with manifest entries, check that output references resolve, and
-inspect the recorded failures before reporting completion. Summarize which sources are fit
-for the requested use and which need another pass. Stop at extraction; publication, model
-upload, embeddings, and ingestion require their own task scope.
+inspect the recorded failures before reporting completion. Report verification check
+receipts (including the `check_manifest.py` command and exit status, plus manual fidelity
+sampling) separated into **passed**, **failed**, **unavailable**, and **not run**. Summarize
+which sources are fit for the requested use and which need another pass. Stop at extraction;
+publication, model upload, embeddings, and ingestion require their own task scope.
 
 For a prepared local bundle, use the optional [manifest check](references/manifest-check.md)
 to compare independently requested inputs, declared statuses and source/output hashes. A

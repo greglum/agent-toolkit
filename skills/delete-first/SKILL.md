@@ -1,19 +1,16 @@
 ---
 name: delete-first
-description: Find and remove dead code or overbuilt layers, with independent refutation before any edit. Use when asked to clean up, delete from, or simplify a module, directory, PR, or repository. Reports proposals unless changes were requested. For behavior-preserving cleanup use simplify-code; for defects use review-source.
+description: Remove dead code or overbuilt layers via blind refutation in a requested module, PR, or repo; propose only unless edits are asked. Never run during normal feature/bug work. Not for refactors (simplify-code), bugs (review-source), AI diffs (audit-ai-code), standards (global-code-review), tests (tune-tests), or git cleanup (repository-cleanup).
 compatibility: Needs Git, source access and the repository's own checks. Independent read-only subagents are needed to clear cuts; without them the audit still runs, but refutation is reported as unavailable and nothing is applied. Removing live-code tests, features, contracts, security checks, data or migrations needs explicit approval. `simplify-code` and a harness advisor are optional; without `simplify-code`, the lead does the post-cut pass by hand.
 ---
 
 # Delete first
 
-Scope the pass to match how it was triggered:
-
-- **Touched scope (automatic):** When the user asks to clean up, delete from, or simplify a
-  module, directory, or PR, work only there, without fanning out across the whole repository.
-  Do not start this pass during ordinary feature or bug work.
-- **Whole-repo sweep (explicit or scheduled):** Run full repository partitioning and parallel
-  finder fan-out only when explicitly requested for a whole repository or named subtree, or on
-  an approved scheduled sweep.
+Scope the pass strictly to the target the user named (a module, directory, PR, or whole
+repository). Never run this pass during ordinary feature or bug work. When the requested scope
+is a small module, directory, or PR, keep it single-partition without fanning out across the
+rest of the repository; partition and fan out only when the requested target spans a whole
+repository or large subtree.
 
 Ask what the product would need if it were built today, then find the rest. Work down the ladder:
 **delete**, then **simplify what remains**, then **simplify what should have been simple from the
@@ -39,6 +36,10 @@ candidate as Decide.
 If the user did not ask for changes, run no project script or check unless it is known not to
 write, report the rest as not run, and keep the ledger outside the checkout.
 
+0. Verify the named target path exists and matches in-scope files; if not, report the gap and
+   stop. If the directory has no Git metadata or history, record `non-Git directory` instead of
+   HEAD, branch, and status, skip Git-history checks, and inspect the filesystem directly while
+   keeping refutation and proof rules intact.
 1. Record the HEAD SHA, branch and `git status --short`. Exclude dirty paths you did not create,
    and paths that active branches or other sessions are changing.
 2. Read the repository's agent instructions, product and architecture docs, test policy and
@@ -56,13 +57,17 @@ write, report the rest as not run, and keep the ledger outside the checkout.
 
 ## 2. Partition and brief
 
-Inventory tracked files once. Map every tracked path to exactly one partition, and keep the
-totals so the report can show nothing was missed. Size large non-code trees (docs, evidence,
-generated output, vendored code) before deciding how to cover them. Give each partition one
-status: reviewed, skimmed, excluded because it is out of scope, not run, or blocked.
+For a small touched scope (one module, directory, or PR), use a single partition and skip
+multi-partition fan-out. Otherwise, inventory tracked files once, map every tracked path to
+exactly one partition, and keep totals so the report shows nothing was missed. Size large
+non-code trees (docs, evidence, generated output, vendored code) before deciding how to cover
+them. Give each partition one status: reviewed, skimmed, excluded because it is out of scope,
+not run, or blocked.
 
-Before spawning, write the shared brief that every finder receives verbatim. Use
-[the brief and record shape](references/briefs.md).
+Before spawning finders, write the shared brief verbatim using
+[the brief and record shape](references/briefs.md). If independent read-only subagents are
+unavailable, inspect the scoped partition as Lead instead (refutation will be unavailable at
+step 4).
 
 ## 3. Find
 
@@ -80,7 +85,9 @@ split its partition and run the parts.
 
 ## 4. Refute
 
-Send every candidate that could be applied to a refuter. It searches for dynamic references,
+If independent read-only subagents are unavailable, report refutation as unavailable, classify
+every candidate as `Decide`, and apply nothing. Otherwise, send every candidate that could be
+applied to a refuter. It searches for dynamic references,
 external consumers, and the tests or incidents that explain the code. It reads the closest
 regression tests, failure paths and state transitions, including leaving and returning to a prior
 state. It also lists every edit the change really needs, because a finder's path list is usually
@@ -97,7 +104,9 @@ short. Classify each candidate once:
 These are always Decide:
 
 - user-visible behavior, or a public, wire, URL or command contract
-- a test file, case or assertion covering still-live code, or a fixture still-live tests depend on (deleting dead production code together with tests or fixtures that exclusively exercise that dead code is eligible for Cut once refuted, provided every assertion covering still-live code is preserved and repository policy does not require approval for test removal)
+- an edit that deletes or rewrites a test, assertion or fixture covering still-live code. Tests and
+  fixtures that only exercise the dead code may go with it, unless repository policy requires
+  approval to remove tests.
 - a security check or other guardrail
 - data, a migration, or retained records and evidence
 - a surface shared with another repository, a template or published components
@@ -114,18 +123,22 @@ Apply cuts only if the user asked for changes. Otherwise stop here and report Cu
 proposals whose proofs have not run.
 
 Apply Cut items smallest blast radius first, one coherent change per commit-sized group, working
-from the refuter's edit list. Order dependent cuts. Edit canonical sources, not generated copies,
-and regenerate them. Hold cuts in files that other active work is changing until it lands. If a
-repository gate blocks a correct cut, do not bypass it: keep the patch and report the cut as deferred.
+from the refuter's edit list. Order dependent cuts. Before a parallel apply, intersect the cuts'
+`required_edits` file sets and give each file one owner. Edit canonical sources, not generated
+copies; regenerate them with their script, again after merging the base, and never hand-merge
+them. Hold cuts in files that other active work is changing until it lands. Never bypass a gate
+that blocks a correct cut. If a size gate blocks an already oversized file, a move-only split in
+its own commit may go first; otherwise keep the patch and report the cut as deferred.
 
 For each group of deletions, show its check can fail: leave or add one reference to a deleted name,
 see the check fail on that reference, remove the reference and see that failure clear. If this
 cannot be shown, revert the group and mark it Decide.
 
-If HEAD moved after refutation, re-run each cut's search and proof at the new HEAD before applying
-it. When the user has approved retiring a command that callers may still use, leave a short message
-that exits nonzero, so an old invocation cannot appear to succeed. Do not commit, push or open a PR
-unless the user asked.
+If HEAD moved after refutation, re-run each cut's search and proof at the new HEAD and record it
+as already applied (name the commit), still dead or now live. Apply only still-dead cuts; report
+the rest as Drop with that reason. When the user has approved retiring a command that callers may
+still use, leave a short message that exits nonzero, so an old invocation cannot appear to
+succeed. Do not commit, push or open a PR unless the user asked.
 
 ## 6. Simplify what remains
 

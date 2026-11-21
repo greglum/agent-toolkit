@@ -1,10 +1,13 @@
 # Pattern catalog
 
 Named patterns, grouped by layer. Each names the tell, why it reads as generated, and the
-decision that replaces it. Sources: the Fountain Institute's seven tells (Humble), SmoothUI's
-"AI design slop" and its closed-loop argument, the design-anti-slop three-layer catalog
-(Agrawal), and GenDesigns' fifteen mistakes, read 2026-09-25; Anthropic's frontend-design
-skill (`41bbe19`), read 2026-10-07; the rest is practice.
+decision that replaces it.
+
+Sources and provenance:
+- Anthropic's [frontend-design](https://github.com/anthropics/skills/blob/ca45fc496a3436251f191354091d557da31c15b5/skills/frontend-design/SKILL.md) skill (`ca45fc496a3436251f191354091d557da31c15b5`), Apache-2.0, observed 2026-10-28 (earlier local read `41bbe19` on 2026-10-07).
+- Conceptual framing and tell categories informed by the Fountain Institute's seven tells (Humble), SmoothUI's "AI design slop" notes, Agrawal's design-anti-slop three-layer catalog, and GenDesigns' fifteen mistakes (read 2026-09-25; original URLs and licenses were not recorded at initial capture, and no upstream text is bundled).
+- Local departures: all pattern tables and acceptance checks are original catalog prose; preserves the target repository's design system and tokens, rejects universal aesthetic bans, and treats justified brand choices as kept.
+- Recheck trigger: recheck upstream `frontend-design` or re-verify public catalog sources if updating pattern classes or adding new automated scanner rules.
 
 A page pops through hierarchy, one confident accent, real numbers, and purposeful space; it
 looks generated through decoration.

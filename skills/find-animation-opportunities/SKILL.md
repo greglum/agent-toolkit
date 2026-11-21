@@ -1,10 +1,10 @@
 ---
 name: find-animation-opportunities
 description: >-
-  Find where a web interface should gain motion and where it should not. Read-only sweep that
-  returns a gated, ranked ledger with file:line evidence and rejected candidates. Use for
-  "what should animate here?" or "make this feel alive". To build motion use animate; to
-  grade existing motion use review-animations.
+  Find where a web interface should gain motion and where it should not. Read-only sweep
+  returning a ranked ledger with file:line evidence and rejections. Use for "what should
+  animate?" or "make this feel alive". Build: animate; grade: review-animations; fix
+  stutter: ui-motion; full loop: polish-animations; AI UI slop: deslop-ui.
 ---
 
 # Find animation opportunities
@@ -22,11 +22,15 @@ not followed.
 ## Procedure
 
 1. **Bind scope and read the owners.** Scope is what the user named; otherwise the app's
-   interactive UI. Read the repository instructions, `DESIGN.md` or motion policy, motion
-   tokens (duration, easing, spring), UI primitives, installed motion runtimes and their
-   versions, and the reduced-motion contract. Note the product's character: a dense work tool
-   earns less and subtler motion than a consumer or marketing surface. Done when you can name
-   the token source (or "none"), each motion runtime, and the reduced-motion policy.
+   interactive UI. If the named scope does not exist, is empty, or contains no interactive
+   web UI files (for example, a CLI or backend-only repository), stop and report the searched
+   paths instead of forcing a ledger (route React Native/Expo build requests to `animate` and
+   timeline films to `motion-film`). Otherwise read the repository instructions, `DESIGN.md`
+   or motion policy, motion tokens (duration, easing, spring), UI primitives, installed
+   motion runtimes and their versions, and the reduced-motion contract. Note the product's
+   character: a dense work tool earns less and subtler motion than a consumer or marketing
+   surface. Done when you can name the token source (or "none"), each motion runtime, and the
+   reduced-motion policy.
 2. **Map frequency.** For every surface you will judge, estimate how often a typical user
    triggers it and whether it is keyboard-initiated. Label each tier as an estimate unless
    analytics or a usage note establish it.
@@ -59,8 +63,8 @@ not followed.
    the least change. Keep at most 7 rows for an app and 3 for a single view. Done when every
    row has all ledger fields.
 6. **Report** in the ledger format below. Existing motion that fails the gate, or looks
-   defective, is listed once under rejected candidates with a pointer to `review-animations`;
-   this skill does not grade it.
+   defective, is listed once under rejected candidates with `file:line`, `current motion`,
+   and `suspected defect` for handoff to `review-animations`; this skill does not grade it.
 
 ## Hunt list
 
@@ -84,6 +88,14 @@ handlers, empty and success components, router outlets. Search `transition`, `@k
 
 ## Ledger format
 
+**Inventory and coverage:**
+
+- **Scope:** searched paths and product character.
+- **Token source:** file path (or `none`).
+- **Runtimes:** installed motion libraries and versions (or `none`).
+- **Reduced-motion policy:** contract location (or `none`).
+- **Cleared hunt classes:** each empty seam class and the searches run to clear it.
+
 **Opportunities**, ordered by leverage:
 
 | ID | Location | Today | Purpose | Tier | Proposal | Owner | Confidence |
@@ -94,9 +106,11 @@ A proposal names the trigger, what moves, the properties, origin or path, the ti
 (or a band when the project has none; `animate` picks the exact value), interruption
 behavior, and the reduced-motion variant. Owner is the component or primitive to change.
 
-**Rejected candidates:** location, what was considered, and the gate that rejected it.
-Report the actual rejections without a minimum count. If none were found, say so and name
-the searched surfaces; do not invent candidates to fill the ledger.
+**Rejected candidates:** location (`file:line`), what was considered, and the gate that
+rejected it. For defective existing motion, include `file:line`, `current motion`, and
+`suspected defect` so `review-animations` can inspect it directly. Report the actual
+rejections without a minimum count. If none were found, say so and name the searched
+surfaces; do not invent candidates to fill the ledger.
 
 **Non-motion fixes:** geometry or state defects found during the sweep.
 

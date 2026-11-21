@@ -1,6 +1,6 @@
 # Report format
 
-Load from Step 6 when writing the review output.
+Load from [Freshness and output](../SKILL.md#step-6-freshness-and-output) when writing the review output.
 
 ## Terminal output (default)
 

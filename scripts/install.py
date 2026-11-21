@@ -15,6 +15,10 @@ left alone and reported: copy its edits into the catalog first.
 A link into this clone's skills/ for a skill no longer in the catalog, or a Claude or Antigravity
 link for a Codex-only skill, is reported as stale. Nothing is deleted unless --prune-stale or --prune-only
 is given, which remove only those links; --prune-only also installs nothing.
+
+--pack names groups from packs.json and combines with --only; --list-packs shows them. When a
+selected skill has companions (packs.json) that are neither selected nor installed, the run
+warns and names them. It never installs a companion on its own.
 """
 
 import argparse
@@ -28,6 +32,59 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SKILLS = REPO / "skills"
+PACKS = REPO / "packs.json"
+
+
+def load_packs() -> dict:
+    """packs.json as a dict; an empty one when the file is absent. Raises ValueError when unreadable."""
+    if not PACKS.is_file():
+        return {}
+    try:
+        data = json.loads(PACKS.read_text())
+    except json.JSONDecodeError as error:
+        raise ValueError(f"packs.json is not valid JSON: {error}") from error
+    if not isinstance(data, dict) or not all(isinstance(data.get(k, {}), dict) for k in ("packs", "companions")):
+        raise ValueError("packs.json needs 'packs' and 'companions' objects; run scripts/check.py")
+    return data
+
+
+def split_names(value: str) -> list[str] | None:
+    """Comma-separated names, trimmed; None when any is empty."""
+    names = [name.strip() for name in value.split(",")]
+    return names if all(names) else None
+
+
+def list_packs(packs: dict) -> int:
+    if not packs.get("packs"):
+        print("No packs: packs.json is missing or empty.", file=sys.stderr)
+        return 2
+    for name, skills in packs["packs"].items():
+        print(f"{name:<20} {len(skills):>3} skills  {', '.join(skills)}")
+    return 0
+
+
+def missing_companions(names: list[str], packs: dict, home: Path, harness: str, codex_only: set[str]) -> dict:
+    """Companions of the selected skills that this run neither installs nor finds installed."""
+    roots = []
+    if harness in ("both", "codex", "all"):
+        roots.append(".agents/skills")
+    if harness in ("both", "claude", "all"):
+        roots.append(".claude/skills")
+    if harness in ("antigravity", "all"):
+        roots.append(".gemini/config/skills")
+    selected, missing = set(names), {}
+    for name in names:
+        needed = [
+            c for c in packs.get("companions", {}).get(name, [])
+            if c not in selected and any(
+                not os.path.lexists(home / root / c)
+                for root in roots
+                if not (root != ".agents/skills" and (name in codex_only or c in codex_only))
+            )
+        ]
+        if needed:
+            missing[name] = needed
+    return missing
 
 
 def same_tree(a: Path, b: Path) -> bool:
@@ -43,7 +100,7 @@ def same_tree(a: Path, b: Path) -> bool:
 def same_link(dest: Path, source: Path) -> bool:
     try:
         return dest.resolve() == source.resolve()
-    except (OSError, RuntimeError):  # A link loop, which Python 3.10 reports by raising.
+    except (OSError, RuntimeError):
         return False
 
 
@@ -63,7 +120,6 @@ def link_agents(name: str, home: Path, archive: Path, dry: bool) -> str:
             try:
                 dest.symlink_to(source)
             except OSError:
-                # A failed link must not leave a working installed copy missing.
                 shutil.move(str(archive / name), str(dest))
                 raise
         return f"linked (archived the identical copy to {archive / name})"
@@ -101,7 +157,6 @@ def stale_links(home: Path, codex_only: set[str]) -> list[tuple[Path, str]]:
     found, seen = [], set()
     for root in (".agents/skills", ".claude/skills", ".gemini/config/skills"):
         directory = home / root
-        # One folder can serve multiple harnesses through a directory link; count its links once.
         if not directory.is_dir() or directory.resolve() in seen:
             continue
         seen.add(directory.resolve())
@@ -125,7 +180,7 @@ def report_unknown(unknown: list[str], stale: list[tuple[Path, str]]) -> int:
     """Refuse the selection and change nothing, but still show the links a pull left stale."""
     for link, reason in stale:
         print(f"stale: {link} links to {link.readlink()} ({reason}); kept")
-    sys.stdout.flush()  # Stale links first, even when both streams share a pipe.
+    sys.stdout.flush()
     removed = sorted({link.name for link, _ in stale} & set(unknown))
     print(f"unknown skills: {', '.join(unknown)}. docs/catalog.md lists every current name.", file=sys.stderr)
     if removed:
@@ -156,14 +211,36 @@ def run(a: argparse.Namespace) -> int:
     home = Path(a.home)
     names = sorted(p.name for p in SKILLS.iterdir() if (p / "SKILL.md").is_file())
     codex_only = set(json.loads((REPO / "harnesses.json").read_text())["codex_only"])
+    try:
+        packs = load_packs()
+    except ValueError as error:
+        if a.pack is not None or a.list_packs:
+            print(f"Stopped: {error}", file=sys.stderr)
+            return 2
+        packs = {}
+    if a.list_packs:
+        return list_packs(packs)
     if a.prune_only:
         names = []
-    elif a.only is not None:
-        wanted = [name.strip() for name in a.only.split(",")]
-        if not all(wanted):
-            print("--only needs comma-separated skill names, with none empty; leave it out for the whole catalog.",
-                  file=sys.stderr)
-            return 2
+    elif a.only is not None or a.pack is not None:
+        wanted = []
+        if a.only is not None:
+            wanted = split_names(a.only)
+            if wanted is None:
+                print("--only needs comma-separated skill names, with none empty; leave it out for the whole catalog.",
+                      file=sys.stderr)
+                return 2
+        if a.pack is not None:
+            chosen, valid = split_names(a.pack), packs.get("packs", {})
+            if chosen is None:
+                print("--pack needs comma-separated pack names, with none empty.", file=sys.stderr)
+                return 2
+            bad = sorted(set(chosen) - set(valid))
+            if bad:
+                print(f"unknown packs: {', '.join(bad)}. Valid packs: {', '.join(valid) or 'none (no packs.json)'}. "
+                      "--list-packs shows them.", file=sys.stderr)
+                return 2
+            wanted += [skill for pack in chosen for skill in valid[pack]]
         unknown = sorted(set(wanted) - set(names))
         if unknown:
             return report_unknown(unknown, stale_links(home, codex_only))
@@ -176,7 +253,6 @@ def run(a: argparse.Namespace) -> int:
     archive = home / ".agents/skills-archive" / f"pre-catalog-{time.strftime('%Y%m%dT%H%M%S')}-{time.time_ns()}"
     conflicts = 0
     for name in names:
-        # Single-harness Claude/Antigravity installs link directly to the catalog without creating Codex paths.
         if a.harness == "claude":
             agents = "not selected"
             claude = "codex only" if name in codex_only else link_claude(name, home, a.dry_run, shared=False)
@@ -222,6 +298,13 @@ def run(a: argparse.Namespace) -> int:
         print(f"stale: {link} links to {target} ({reason}); {action}")
     print(f"\n{len(names)} skills, {conflicts} conflicts, {len(stale)} stale links"
           f"{' (dry run, nothing changed)' if a.dry_run else ''}")
+    missing = missing_companions(names, packs, home, a.harness, codex_only)
+    for name, needed in missing.items():
+        print(f"warning: {name} works with {', '.join(needed)}; not selected and not installed.")
+    if missing:
+        extra = sorted({c for needed in missing.values() for c in needed})
+        harness = f" --harness {a.harness}" if a.harness != "both" else ""
+        print(f"To add them: python3 scripts/install.py{harness} --only {','.join(extra)}")
     return 1 if conflicts else 0
 
 
@@ -229,6 +312,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true", help="print the plan and change nothing")
     ap.add_argument("--only", help="comma-separated skill names")
+    ap.add_argument("--pack", help="comma-separated pack names from packs.json; combines with --only")
+    ap.add_argument("--list-packs", action="store_true", help="print each pack and its skills, then exit")
     ap.add_argument("--harness", choices=["both", "codex", "claude", "antigravity", "all"], default="both",
                     help="install for Codex and Claude Code (both, default), Codex, Claude Code, Antigravity, or all three")
     ap.add_argument("--prune-stale", action="store_true",
@@ -237,11 +322,11 @@ def main() -> int:
                     help="remove stale links into this catalog and install nothing")
     ap.add_argument("--home", default=str(Path.home()), help=argparse.SUPPRESS)
     a = ap.parse_args()
-    if a.prune_only and (a.only is not None or a.prune_stale):
-        ap.error("--prune-only takes no --only or --prune-stale")
+    if a.prune_only and (a.only is not None or a.pack is not None or a.prune_stale):
+        ap.error("--prune-only takes no --only, --pack or --prune-stale")
     try:
         return run(a)
-    except OSError as error:  # For example, a file where a skills folder belongs.
+    except OSError as error:
         print(f"Stopped: {error.strerror or error}: {error.filename2 or error.filename}. Fix that path and rerun; "
               "any links already made stay in place.", file=sys.stderr)
         return 2

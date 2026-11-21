@@ -18,6 +18,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 from statistics import median
+from urllib.parse import urlsplit
 
 COLUMNS = ["account", "platform", "format", "post_id", "url", "published_at", "observed_at", "age_window", "metric",
            "value", "status", "source"]
@@ -57,7 +58,19 @@ def parse_row(n, raw):
     for key in ("platform", "format"):
         if row[key] != row[key].lower():
             raise ValueError(f"{label}: {key} must be lowercase")
-    if not row["url"].startswith("https://"):
+    if any(c.isspace() or ord(c) < 32 for c in row["url"]):
+        raise ValueError(f"{label}: url must not contain whitespace")
+    try:
+        parsed_url = urlsplit(row["url"])
+    except ValueError:
+        raise ValueError(f"{label}: url must be a public https locator") from None
+    if (
+        parsed_url.scheme != "https"
+        or not parsed_url.netloc
+        or not parsed_url.hostname
+        or parsed_url.username
+        or parsed_url.password
+    ):
         raise ValueError(f"{label}: url must be a public https locator")
     times = {}
     for key in ("published_at", "observed_at"):
@@ -78,7 +91,6 @@ def parse_row(n, raw):
         raise ValueError(f"{label}: source must be export, api or page")
     if row["status"] == "complete":
         try:
-            # A date-only publication time could be as late as the end of that day.
             late = timedelta(days=0 if "T" in row["published_at"] else 1)
             end = times["published_at"] + late + timedelta(hours=hours)
         except OverflowError:

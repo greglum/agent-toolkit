@@ -74,7 +74,6 @@ class InspectSkillTests(unittest.TestCase):
                     link.unlink()
                     if relative == "SKILL.md":
                         (skill / "SKILL.md").write_text("---\nname: valid-skill\ndescription: Valid.\n---\nBody\n")
-            # The root link is an intended harness install, unlike internal links.
             installed = root / "installed" / "valid-skill"
             installed.parent.mkdir()
             installed.symlink_to(skill, target_is_directory=True)
@@ -271,6 +270,30 @@ disable-model-invocation: true
             )
             report = INSPECTOR.inspect(skill)
             self.assertIn("link-broken", codes(report, "error"))
+
+    def test_escaping_relative_link_to_existing_file_is_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "outside.md").write_text("Outside\n", encoding="utf-8")
+            skill = write_skill(
+                root,
+                "escaping-link",
+                "name: escaping-link\ndescription: Reject links outside the bundle.",
+                "# Escaping\n\nRead [outside](../outside.md).\n",
+            )
+            report = INSPECTOR.inspect(skill)
+            self.assertIn("link-escape", codes(report, "error"))
+
+    def test_links_inside_fenced_code_blocks_are_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            skill = write_skill(
+                Path(temp),
+                "fenced-link",
+                "name: fenced-link\ndescription: Ignore example links inside fenced code.",
+                "# Fenced\n\n```markdown\nRead [example](references/example-only.md).\n```\n",
+            )
+            report = INSPECTOR.inspect(skill)
+            self.assertEqual(report["summary"]["errors"], 0)
 
     def test_oversized_skill_is_warning_not_structural_error(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

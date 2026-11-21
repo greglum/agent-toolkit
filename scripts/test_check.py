@@ -1,11 +1,13 @@
 """Regression checks for portable bundles and matching invocation controls."""
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from check import check_catalog, check_private_names, check_reader_links, check_skill, only_leftovers
+from check import (check_catalog, check_packs, check_private_names, check_reader_links, check_skill,
+                   check_workflows, only_leftovers)
 
 
 class BundleChecks(unittest.TestCase):
@@ -141,6 +143,28 @@ class BundleChecks(unittest.TestCase):
         self.assertTrue(any("email address" in e for e in errors))
         self.assertTrue(any("temporary path" in e for e in errors))
 
+    def test_python_tests_allow_rfc2606_and_example_ssh_only(self):
+        self.write_skill()
+        scripts_dir = self.skill / "scripts"
+        scripts_dir.mkdir()
+        (scripts_dir / "test_fixtures.py").write_text(
+            "A = 'jane.doe@example.org'\n"
+            "B = 'bob@corp.example'\n"
+            "C = 'https://alice:pw@git.example.com/x'\n"
+            "D = 'ssh://git@github.com/example/repo.git'\n"
+        )
+        self.assertEqual(check_skill(self.skill), [])
+
+        (scripts_dir / "test_fixtures.py").write_text("BAD = 'alice@realcorp.io'\n")
+        self.assertTrue(any("email address" in e for e in check_skill(self.skill)))
+
+        (scripts_dir / "test_fixtures.py").write_text("BAD = 'ssh://git@github.com/myorg/repo.git'\n")
+        self.assertTrue(any("email address" in e for e in check_skill(self.skill)))
+
+        (scripts_dir / "test_fixtures.py").unlink()
+        (scripts_dir / "helper.py").write_text("A = 'jane.doe@example.org'\n")
+        self.assertTrue(any("email address" in e for e in check_skill(self.skill)))
+
     def test_catalog_table_and_skills_folder_agree(self):
         (self.root / "docs").mkdir()
         head = "| Skill | Runs |\n| --- | --- |\n"
@@ -172,6 +196,42 @@ class BundleChecks(unittest.TestCase):
         (self.root / "docs/catalog.md").write_text("No table\n")
         self.assertIn("no skill table", check_catalog(self.root, {"kept"})[0])
 
+    def test_packs_name_catalog_skills_and_cover_them(self):
+        good = {"packs": {"core": ["kept", "real"]}, "companions": {"kept": ["real"]}}
+        cases = {
+            "valid": (good, set()),
+            "unknown key": ({**good, "profiles": {}}, {"unknown key 'profiles'"}),
+            "wrong shape": ({"packs": {"core": "kept"}}, {"'packs' must map"}),
+            "empty companions": ({**good, "companions": {"kept": []}}, {"'companions' must map"}),
+            "bad pack name": ({"packs": {"Core": ["kept", "real"]}}, {"lowercase hyphen-case"}),
+            "duplicate": ({"packs": {"core": ["kept", "kept", "real"]}}, {"more than once"}),
+            "unknown skill": ({"packs": {"core": ["kept", "real", "ghost"]}}, {"'ghost', which is not"}),
+            "uncovered skill": ({"packs": {"core": ["kept"]}}, {"'real' is in no pack"}),
+            "no packs": ({"packs": {}}, {"'kept' is in no pack"}),
+            "unknown companion": ({**good, "companions": {"ghost": ["real"]}}, {"companions name 'ghost'"}),
+            "companion outside pack": ({"packs": {"a": ["kept"], "b": ["real"]}, "companions": {"kept": ["real"]}},
+                                       {"not its companion 'real'"}),
+        }
+        for label, (data, expected) in cases.items():
+            with self.subTest(label):
+                (self.root / "packs.json").write_text(json.dumps(data))
+                errors = check_packs(self.root, {"kept", "real"})
+                self.assertEqual(not errors, not expected, errors)
+                for words in expected:
+                    self.assertTrue(any(words in error for error in errors), errors)
+        (self.root / "packs.json").write_text("{")
+        self.assertIn("invalid JSON", check_packs(self.root, {"kept"})[0])
+        (self.root / "packs.json").unlink()
+        self.assertEqual(check_packs(self.root, {"kept"}), [])
+
+    def test_workflows_link_every_skill(self):
+        (self.root / "docs").mkdir()
+        (self.root / "docs/workflows.md").write_text("[`kept`](../skills/kept/SKILL.md) and `real`\n")
+        self.assertEqual(check_workflows(self.root, {"kept"}), [])
+        errors = check_workflows(self.root, {"kept", "real"})
+        self.assertEqual(len(errors), 1)
+        self.assertIn("no link to ../skills/real/SKILL.md", errors[0])
+
     def test_folder_with_only_python_caches_is_not_a_skill(self):
         (self.skill / "scripts/__pycache__").mkdir(parents=True)
         (self.skill / "scripts/__pycache__/tool.pyc").write_bytes(b"x")
@@ -197,6 +257,13 @@ class BundleChecks(unittest.TestCase):
                 errors = check_reader_links(self.root)
                 self.assertEqual(len(errors), 1)
                 self.assertIn(message, errors[0])
+        guide.write_text("# Start\n")
+        maintainers = docs / "maintainers"
+        maintainers.mkdir()
+        (maintainers / "guide.md").write_text("[Gone](retired.md)\n")
+        errors = check_reader_links(self.root)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("broken relative link 'retired.md'", errors[0])
 
 
 if __name__ == "__main__":

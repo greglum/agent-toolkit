@@ -1,0 +1,20 @@
+{
+  "claims": [
+    {"id": "order-lines-grain", "type": "unique", "table": "order_lines", "columns": ["order_id", "line_no"],
+     "evidence": "keys: unique, no null rows, 16 rows on 2026-03-03 drop"},
+    {"id": "order-id-present", "type": "not_null", "table": "order_lines", "column": "order_id",
+     "evidence": "survey: 0 null, 0 empty"},
+    {"id": "sku-in-products", "type": "relationship", "table": "order_lines", "column": "sku",
+     "to_table": "products", "to_column": "sku", "min_containment": 1.0,
+     "evidence": "joins: containment 1.0, 0 orphans, parent unique, fan-out 1.0"},
+    {"id": "channel-codes", "type": "accepted_values", "table": "order_lines", "column": "channel",
+     "values": ["web", "store"], "evidence": "survey: 2 distinct values; meaning inferred"},
+    {"id": "quantity-range", "type": "range", "table": "order_lines", "column": "quantity", "min": 0, "max": 50,
+     "evidence": "survey: min 0.5, max 5"},
+    {"id": "ordered-at-window", "type": "range", "table": "order_lines", "column": "ordered_at",
+     "min": "2026-03-01T00:00:00Z", "max": "2026-03-31T23:59:59Z", "evidence": "survey: time min and max"},
+    {"id": "order-lines-rows", "type": "row_count", "table": "order_lines", "min": 10, "max": 100000},
+    {"id": "products-grain", "type": "unique", "table": "products", "columns": ["sku"],
+     "evidence": "keys: unique, no null rows"}
+  ]
+}

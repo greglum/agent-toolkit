@@ -1,20 +1,24 @@
 ---
 name: loop-engineering
-description: Design or run a bounded engineering feedback loop with a fixed objective, observable acceptance, independent checks, and stop conditions. Use for repeated improve-review-verify work; skill-specific evaluation belongs to harden-skill.
+description: Run a bounded improve-review-verify loop for iterative code, benchmark, or prompt/tool harness optimization with fixed acceptance and stop rules. Not for scored codebase quality baselines (codebase-metrics) or auditing and behavior-testing skills (harden-skill).
 compatibility: Uses the repository's existing measurement and check tools. Independent reviewers are optional unless the repository requires them. Without execution access, return the loop contract and mark iterations and measured acceptance unrun. Installs no scheduler, framework or service.
 ---
 
 # Loop engineering
 
 Make each iteration earn the next. Reuse the repository's task record, checks and review
-workflow; an improvement loop does not need another scheduler or agent framework.
+workflow; an improvement loop does not need another scheduler or agent framework. For a
+frozen eight-dimension quality baseline or scored workshop, route to `codebase-metrics`; for
+auditing and behavior-testing a catalog or local skill, direct the user to `harden-skill`.
 
 ## Freeze the contract
 
 Read the repository's instructions, current evidence and authorized action boundary.
-Name the result, baseline revision and dirty diff, acceptance conditions, preservation
-checks, iteration or time budget, and stop conditions before editing. Honor stronger
-repository bounds. A single correction with a decisive check needs only one pass.
+Name the result, baseline revision and dirty diff, observable acceptance conditions,
+preservation checks, iteration or time budget, and stop conditions before editing. If the
+requested objective lacks any observable acceptance condition or measurable baseline, stop
+and obtain user agreement on one before starting iterations. Honor stronger repository
+bounds. A single correction with a decisive check needs only one pass.
 
 Separate deterministic checks from judgment. A rubric needs observable evidence for each
 dimension and a fixed threshold. Unknown or unrun evidence stays unknown; an average or
@@ -33,12 +37,13 @@ When improving prompts, skills, tools or coordination around an agent, use
 [contrastive harness trials](references/harness-trials.md) to separate candidate effects,
 confirm their composition and bound transfer claims.
 
-**Ready:** another reader can decide pass, fail or unknown from the contract and artifacts.
-
 Before executing, identify the existing collector and command runner for each check, including
 its input/output artifacts, side effects and failure status. Reuse the task record and native
 runner; this procedure does not supply an executor. Leave an unavailable collector or runner
 explicit rather than add a scheduler or fabricate an observation.
+
+**Ready:** another reader can decide pass, fail or unknown from the contract and artifacts,
+and every check has an identified collector or explicit unavailable status.
 
 ## Run a whole iteration
 
@@ -53,7 +58,8 @@ explicit rather than add a scheduler or fabricate an observation.
 6. Record the diff identity, result, check exit statuses, reviewer findings and next decision
    in the existing task record. Feedback becomes evidence only after source or runtime
    verification. Store accepted corrections with their owner and recheck trigger; generated
-   answers fed back into a graph remain attributed claims until independently verified.
+   answers fed back into the loop or task record remain attributed claims until independently
+   verified.
 
 **Ready:** the iteration has an inspectable result and evidence tied to its exact content.
 
@@ -72,4 +78,5 @@ Deliver baseline versus final evidence, completed iterations, remaining failures
 and action state. Claims about this skill's added value require a blind run and a no-skill control.
 A successful project run proves only that run.
 
-Source scope and intentional departures: [provenance](references/sources.md).
+Read [provenance](references/sources.md) only when checking source scope, licenses, or
+intentional departures.

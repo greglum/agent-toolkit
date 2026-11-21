@@ -228,7 +228,8 @@ def link_target(raw_target: str) -> str:
 
 
 def check_links(directory: Path, findings: list[Finding]) -> None:
-    """Report broken relative Markdown links throughout the skill."""
+    """Report broken or escaping relative Markdown links throughout the skill."""
+    bundle_root = directory.resolve()
     for source in sorted(directory.rglob("*.md")):
         if not source.is_file():
             continue
@@ -237,7 +238,13 @@ def check_links(directory: Path, findings: list[Finding]) -> None:
         except UnicodeDecodeError:
             add(findings, "error", "encoding", "Markdown file is not valid UTF-8", source)
             continue
+        fenced = False
         for line_number, line in enumerate(text.splitlines(), 1):
+            if line.lstrip().startswith(("```", "~~~")):
+                fenced = not fenced
+                continue
+            if fenced:
+                continue
             for match in LINK_RE.finditer(line):
                 target = unquote(link_target(match.group(1)))
                 path_part = target.split("#", 1)[0]
@@ -247,8 +254,17 @@ def check_links(directory: Path, findings: list[Finding]) -> None:
                     or SCHEME_RE.match(path_part)
                 ):
                     continue
-                resolved = source.parent / path_part
-                if not resolved.exists():
+                resolved = (source.parent / path_part).resolve()
+                if not resolved.is_relative_to(bundle_root):
+                    add(
+                        findings,
+                        "error",
+                        "link-escape",
+                        f"relative link target leaves skill bundle: {target}",
+                        source,
+                        line_number,
+                    )
+                elif not resolved.exists():
                     add(
                         findings,
                         "error",

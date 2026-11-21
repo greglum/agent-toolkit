@@ -1,0 +1,47 @@
+{
+  "status": "confirmed",
+  "source": "Synthetic example contract for the bundled fixtures",
+  "time": {
+    "sensor": "t_sensor",
+    "ingest": "t_ingest",
+    "unit": "s",
+    "min_lag_s": 0,
+    "max_lag_s": 2.0,
+    "gap_factor": 3,
+    "rate_tolerance": 0.05
+  },
+  "channels": [
+    {
+      "name": "brake_pressure_front",
+      "unit": "kPa",
+      "expected_rate_hz": 10,
+      "min": 0,
+      "max": 20000,
+      "typical_min": 500,
+      "typical_max": 15000,
+      "saturation": [20000],
+      "max_missing_fraction": 0.01,
+      "note": "Zero means no braking. typical_* covers braking samples only."
+    },
+    {
+      "name": "coolant_temp",
+      "unit": "degC",
+      "expected_rate_hz": 10,
+      "min": -20,
+      "max": 140,
+      "typical_min": 60,
+      "typical_max": 120,
+      "saturation": [-40, 150],
+      "max_missing_fraction": 0.05
+    },
+    {
+      "name": "wheel_speed_fl",
+      "unit": "km/h",
+      "expected_rate_hz": 10,
+      "min": 0,
+      "max": 400,
+      "saturation": [],
+      "max_missing_fraction": 0.01
+    }
+  ]
+}

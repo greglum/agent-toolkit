@@ -155,8 +155,16 @@ def plan_exports(selection, plan, transcript, source, source_hash):
         x, y, width, height = crop
         if x < 0 or y < 0 or width <= 0 or height <= 0 or x + width > source['video']['width'] or y + height > source['video']['height']:
             raise ValueError(f'{cid}: crop must fit inside the source frame')
-        sar = source['video'].get('sample_aspect_ratio', '1:1')
-        sar = Fraction(sar.replace(':', '/'))
+        raw_sar = source['video'].get('sample_aspect_ratio')
+        if not raw_sar or raw_sar in ('N/A', '0:1', '0/1', '0:0'):
+            sar = Fraction(1, 1)
+        else:
+            try:
+                sar = Fraction(str(raw_sar).replace(':', '/'))
+            except (ValueError, ZeroDivisionError):
+                raise ValueError(f'{cid}: invalid sample_aspect_ratio {raw_sar!r}') from None
+            if sar <= 0:
+                raise ValueError(f'{cid}: invalid sample_aspect_ratio {raw_sar!r}')
         if width * sar * size[1] != height * size[0]:
             raise ValueError(f'{cid}: crop display aspect must match output_size; do not stretch the subject')
         if crops[cid].get('context_verdict') not in ['pass', 'extended']:
@@ -258,7 +266,7 @@ def export(source_path, selection_path, transcript_path, plan_path, output):
                                    'loudness, listening and normal playback', 'destination/account requirements'])
         (output / 'edit-list.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
         return receipt
-    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+    except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired) as error:
         (output / 'failure.json').write_text(json.dumps({'status': 'FAILED', 'error': str(error)}) + '\n')
         raise
 

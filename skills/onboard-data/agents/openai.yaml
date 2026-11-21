@@ -1,0 +1,6 @@
+interface:
+  display_name: "Onboard Data"
+  short_description: "Learn a new domain and map its data in one sequence"
+  default_prompt: "Use $onboard-data to learn the domain from these documents, map the data at this location, and give me one ranked list of SME questions."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Synthetic curl credential-redaction fixture in retro-agent-friction unit tests"
+condition = "AND"
+paths = ['''(?:^|/)skills/retro-agent-friction/scripts/(?:__pycache__/)?test_friction_counts(?:\.[^/]+)?\.pyc?$''']
+regexTarget = "line"
+regexes = ['''curl -u admin:hunter2x https://h''']

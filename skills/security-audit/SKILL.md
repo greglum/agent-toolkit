@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Audit security boundaries, build or update a source-grounded threat model, and verify suspected vulnerabilities; remediate confirmed findings when requested. Use for whole-system security reviews and audit follow-up, rather than routine diff review or variants of one known bug.
+description: Audit security boundaries, model threats, triage SARIF scanner reports, and verify or remediate exploitable vulnerabilities on request. Not general source/AI review (review-source, audit-ai-code), state-machine races alone (state-machine-audit), or known-bug variants (find-bug-variants).
 compatibility: Source and shell access support the audit. Bundled local SARIF interpretation uses Python 3.10+ without dependencies. Scanners and independent workers are optional; missing execution or coverage remains explicit.
 ---
 
@@ -13,7 +13,10 @@ and shell access; independent agents and scanners are optional. Disclose missing
 
 ## 1. Bind scope and authority
 
-Read `AGENTS.md` and the project's security, architecture, deployment, and check instructions.
+If no readable repository or supplied SARIF artifact is available, stop and report that
+missing input instead of inferring findings.
+
+Read the repository's agent instructions and the project's security, architecture, deployment, and check instructions.
 Record the repository, base revision, working-tree state, requested surfaces, exclusions,
 and whether the task is audit-only or also permits remediation and delivery. Preserve
 unrelated changes with a clean task-owned checkout. Record authorized live targets and
@@ -45,7 +48,9 @@ historical reports and archived probes as carried evidence or leads requiring a 
 Repeated reports are not independent corroboration.
 A scan supplements this map. Successful scans cover their tested rules and paths only.
 For existing local SARIF reports, use the bundled [SARIF evidence reader](references/sarif-ledger.md)
-to retain candidates, source identity and scanner execution gaps without starting a scan.
+(inspect [the synthetic SARIF example](examples/scanner-report.sarif) only when checking the
+supported input shape or testing the reader) to retain candidates, source identity and scanner
+execution gaps without starting a scan.
 For material controls, distinguish documentation claims, proposed designs, observed
 implementation, and tested enforcement. Link each to its evidence and affected paths; a
 passing parser or configuration check does not prove effectiveness. Record assumptions

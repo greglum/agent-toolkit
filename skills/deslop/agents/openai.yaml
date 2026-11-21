@@ -2,3 +2,6 @@ interface:
   display_name: "Deslop"
   short_description: "Humanize, simplify, and de-slop docs, prose, and UI copy"
   default_prompt: "Use $deslop on this file: remove AI writing tells and simplify it, keeping every fact, command, link, placeholder, and required phrase."
+
+policy:
+  allow_implicit_invocation: true

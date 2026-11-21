@@ -5,7 +5,7 @@ for people who want to use them; development happens elsewhere, so pull requests
 not merged here.
 
 Open an issue for a bug, a broken install, an unclear instruction, or a skill you would
-find useful. Include the skill name, your agent (Claude Code or Codex) and its version,
+find useful. Include the skill name, your agent (Claude Code, Codex, or Antigravity) and its version,
 what you asked for, and what happened. Run `sh scripts/verify.sh` first and include its
 output if it fails.
 

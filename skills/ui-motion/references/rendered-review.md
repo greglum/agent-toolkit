@@ -12,19 +12,13 @@ Use this for the running application after reading its own verification contract
    content where they exist. Repeat or reverse it before the transition completes. Inspect the
    actual handoff, including outgoing content; endpoint screenshots cannot expose a blank
    intermediate state, delayed action, or stranded layer.
-   For gestures, exercise the relevant pointer/touch input and cancellation path. Check the
-   declared threshold and snap behavior, page scrolling, drag-versus-tap cancellation, and
-   equivalent actions without dragging. A deliberate position-only snap needs no inertia.
-   For a custom settle, release inside and past an elastic bound where supported. Check
-   for an unintended rebound or a second snap from the primitive.
-   If a backdrop or another effect follows a drag, check its alignment at an intermediate
-   position during tracking, during release, and after grabbing the moving element again.
-   Record the input and engine used; viewport emulation alone is not touch or physical-device proof.
-   Leave and return to the owning surface during motion where its lifecycle can change.
-   Check that callbacks and handlers do not duplicate or commit a stale result after return.
-   For continuous effects, hide and restore the surface, then unmount it. Verify suspended
-   visual work resumes once and teardown releases its resources; underlying operations must
-   still complete independently of visual visibility.
+   For gestures, exercise the pointer/touch input, cancellation, snap/inertia policy, scroll
+   arbitration, drag-versus-tap cancellation, and linked-visual tracking defined in
+   [reference to interaction](reference-to-motion.md). Record the input and engine used;
+   viewport emulation alone is not touch or physical-device proof.
+   Leave and return to the owning surface during motion where its lifecycle can change, and
+   for continuous effects exercise hide, restore, and unmount against the suspension and
+   teardown rules in [performance diagnosis](performance.md).
 3. Measure relevant element bounds before and after the action. Check scroll anchoring,
    trigger origin, clipping, layout shifts, and whether the settled content fits its pending
    space. Use computed styles to confirm that the intended token and reduced-motion rule won

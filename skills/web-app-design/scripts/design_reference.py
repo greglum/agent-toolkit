@@ -132,7 +132,6 @@ def terms(value):
 def search(data, query, limit):
     query_terms = terms(query)
     results = []
-    # Shared instructions, rationale and accessibility prose do not affect relevance.
     documents = [(r, terms(' '.join([r['id'], r['title'], *r['tags']]))) for r in data['recipes']]
     for recipe, words in documents:
         matched = sorted(words & query_terms)
@@ -187,7 +186,6 @@ def markdown(result, draft):
 
 def emit(content, output):
     if output:
-        # Exclusive creation also preserves a concurrent writer's accepted output.
         with Path(output).open('x', encoding='utf-8') as handle:
             handle.write(content)
     else:

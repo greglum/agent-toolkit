@@ -49,9 +49,9 @@ production readiness.
 
 ## Tested in real harnesses
 
-Run on November 4, 2026, on macOS, against the skills as they stood just before the release this
-table ships in (52 skills). Of the four skills below, only `fit-surface` changed after the runs, by
-the sandbox note its table row describes. Later edits to a skill are not covered until it is rerun.
+Run on November 4, 2026, on macOS, against the 52-skill November 4 snapshot (`fit-surface` also includes
+the sandbox note its table row describes); later edits and skills added since then are not covered
+until rerun.
 Claude Code 2.1.312 ran with `--model sonnet` (`claude-sonnet-5-5`), `acceptEdits` and a 22-entry tool
 allowlist that included `python3` and `node`. Codex 0.165.0 ran `codex exec --sandbox workspace-write`; its session logs name `gpt-6.1-sol`.
 Each run's request named one installed skill (`/name` or `$name`) on a small synthetic sample
@@ -73,7 +73,7 @@ These are the limits of that record:
   that run's page afterward. Treat rendered measurement in that sandbox as unproven. Other Codex
   sandbox settings and Linux were not tried.
 - `/name` and `$name` both ran the installed skill. In one trial each, both harnesses chose
-  `guided-review` from its description alone and did not use the by-name `docs-sync` when it was
+  `guided-review` from its description alone and did not use `docs-sync` (explicit-only in that snapshot) when it was
   not named. One trial does not establish how reliably an agent selects a skill.
 - Codex read skills from an isolated `~/.agents/skills`. Claude Code could not log in under a
   temporary home on macOS, so its runs loaded the installed links through the sample project's

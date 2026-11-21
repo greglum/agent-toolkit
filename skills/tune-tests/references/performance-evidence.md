@@ -1,11 +1,15 @@
 # Performance evidence
 
-State the claim and read what the measurement script times, counts, and omits. Keep the
-existing interleaved run protocol; extra runs need unresolved variance or a changed input.
+State the claim and read what the measurement script times, counts, and omits. Interleave
+baseline and candidate runs (`A, B, A, B`) on the same machine under the same load, with at
+least three runs per side; extra runs need unresolved variance or a changed input. A gain that
+depends on test order or a warm cache does not count, and a parent suite's logged time is not
+its last child's time.
 
 - Confirm useful work happened inside the timed region. Record failures, retries, skipped
   cases, discovery counts, and completed assertions or outputs. Equal test counts alone do
-  not establish equal work when a helper early-returns or a mock removes the behavior.
+  not establish equal work when a helper early-returns or a mock removes the behavior, and the
+  faster run must execute the same number of tests as the baseline.
 - Compare the same versions, build mode, data, cache state, concurrency, and relevant settings.
   Label an intentional out-of-box comparison; do not silently tune away the user's question.
 - Locate the limiting resource or code path in a separate profiling run so profiling overhead

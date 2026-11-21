@@ -210,12 +210,14 @@ def analyze(plan, samples, selection=None):
         require(all(row["arm"] in (arm, plan["control"]) for row in confirmation),
                 "confirmation contains an unselected treatment")
         check = summarize(plan, samples, "confirmation", arm)
-        if check["issues"]:
+        if aa["issues"] or check["issues"]:
             check["verdict"] = "INCONCLUSIVE"
-        elif check["median_improvement"] >= plan["minimum_improvement"] and check["median_improvement"] > noise and check["positive_pairs"] == check["complete_pairs"]:
-            check["verdict"] = "CONFIRMED_OBSERVATION"
-        else:
+        elif check["median_improvement"] < plan["minimum_improvement"] or check["median_improvement"] <= noise:
             check["verdict"] = "DOES_NOT_MEET_BAR"
+        elif check["positive_pairs"] != check["complete_pairs"]:
+            check["verdict"] = "INCONCLUSIVE"
+        else:
+            check["verdict"] = "CONFIRMED_OBSERVATION"
         result["confirmation"] = {"arm": arm, **check}
     return result
 

@@ -9,7 +9,6 @@ const [playwrightPath, axePath, destination] = process.argv.slice(2);
 if (!playwrightPath || !axePath || !destination) {
   throw new Error('Usage: node check-variant-browser.mjs playwright/index.mjs axe.min.js new-output-folder');
 }
-// Reject installed Chrome and aliases before creating evidence or launching anything.
 const configured = process.env.CHROME_PATH || undefined;
 let executablePath;
 if (configured) {
@@ -28,7 +27,7 @@ if (configured) {
 const { chromium } = await import(pathToFileURL(resolve(playwrightPath)).href);
 const axe = await readFile(resolve(axePath), 'utf8');
 const output = resolve(destination);
-await mkdir(output); // Existing evidence is never silently replaced.
+await mkdir(output);
 const script = join(dirname(fileURLToPath(import.meta.url)), 'review_variants.py');
 const manifest = {
   version: 1, title: 'Synthetic project-list comparison', question: 'Which layout makes the next action easier to find?',
@@ -60,7 +59,6 @@ try {
   await page.goto(url);
   await page.locator('#download:not([disabled])').waitFor();
   assert.equal(await page.locator('img').evaluateAll(images => images.every(image => image.naturalWidth === 640)), true);
-  // Start at the first native control and traverse with only keyboard input.
   await page.keyboard.press('Tab');
   assert.equal(await page.locator('input[value="reportValidity"]').evaluate(element => document.activeElement === element), true);
   await page.keyboard.press('ArrowRight');
@@ -68,8 +66,8 @@ try {
   await page.keyboard.press('Tab');
   await page.keyboard.type('Keep the next action visible.');
   assert.equal(await page.locator('#notes-elements').inputValue(), 'Keep the next action visible.');
-  await page.keyboard.press('Tab'); // image-identity summary
-  await page.keyboard.press('Tab'); // export
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
   assert.equal(await page.locator('#download').evaluate(element => document.activeElement === element), true);
   const waiting = page.waitForEvent('download');
   await page.keyboard.press('Enter');
@@ -128,7 +126,6 @@ try {
   await writeFile(join(output, 'broken.json'), JSON.stringify(broken));
   build('broken.json', 'broken.html');
   page.on('dialog', dialog => dialog.dismiss());
-  // A new page avoids an unsaved-input warning masking the image-failure result.
   const mismatch = structuredClone(manifest);
   mismatch.variants[0].image_size.width = 639;
   await writeFile(join(output, 'mismatch.json'), JSON.stringify(mismatch));

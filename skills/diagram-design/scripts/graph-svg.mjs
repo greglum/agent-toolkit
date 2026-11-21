@@ -51,7 +51,6 @@ function edgePoints(edge, nodes) {
 }
 
 function crossesBox(a, b, box) {
-  // Clip the segment against the open rectangle, including diagonal authored routes.
   let low = 0, high = 1;
   for (const [start, delta, min, max] of [[a[0], b[0] - a[0], box.x + 1, box.x + box.w - 1],
     [a[1], b[1] - a[1], box.y + 1, box.y + box.h - 1]]) {
@@ -110,7 +109,7 @@ export function renderSvg(graph, prefix, diff = null) {
     edge.from === graph.mainPath[index - 1] && edge.to === id)).map(edge => edge.id));
   const headerLines = lines(graph.summary, 110);
   if (lines(graph.title, 65).length > 1 || headerLines.length > 2) throw new Error('Shorten the title or summary so the diagram heading stays readable');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${canvasLeft} ${canvasTop} ${viewWidth} ${viewHeight}" width="${canvasWidth}" height="${canvasHeight}" role="group" aria-labelledby="${prefix}-title ${prefix}-desc" data-graph="${prefix}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${canvasLeft} ${canvasTop} ${viewWidth} ${viewHeight}" width="${viewWidth}" height="${viewHeight}" role="group" aria-labelledby="${prefix}-title ${prefix}-desc" data-graph="${prefix}">
 <title id="${prefix}-title">${escapeText(graph.title)}</title><desc id="${prefix}-desc">${escapeText(graph.summary)} Connections describe authored topology, not measured execution.</desc>
 <style>
 text{font-family:Arial,Helvetica,sans-serif;fill:#183344}.heading{font-size:28px;font-weight:700}.subtitle{font-size:16px}.state{font-size:14px;fill:#354f60}.node rect{fill:#fff;stroke:#607787;stroke-width:2}.node text{pointer-events:none}.node-label{font-size:18px;font-weight:600}.kind{font-size:13px;fill:#354f60}.edge path{fill:none;stroke:#55717f;stroke-width:2}.edge-label{font-size:14px;text-anchor:middle}.label-bg{fill:#f5f8fa}.primary path{stroke:#11676a;stroke-width:3}.node.active rect{stroke:#084f56;stroke-width:4;fill:#e3f4f3}.edge.active path{stroke:#084f56;stroke-width:4}.node.matched rect{stroke-dasharray:6 3}.node:focus-visible rect{stroke:#7d3c98;stroke-width:4}.change{font-size:12px;font-weight:600;fill:#673b00}.node[data-change] rect{stroke-dasharray:8 3}.edge[data-change] path{stroke-dasharray:7 4}

@@ -25,7 +25,7 @@ correctly does not establish that it can render arbitrary film frames.
    forward and backward seeks. Include a callback boundary, selected segment boundary, loop
    wrap or final hold when used. For differing frame rates, check a cue near the start and
    another near the end for speed drift. Verify the same content in the encoded result using
-   [capture and export review](render-review.md).
+   `references/render-review.md`.
 
 Done when requested times produce the intended state independently of seek history, required
 assets are present, and the requested export passes its checks. This is integration guidance,

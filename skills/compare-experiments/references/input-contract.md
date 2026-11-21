@@ -89,7 +89,8 @@ Each arm reports planned/complete pairs, missing/status/guard counts, each paire
 its median/range, positive-pair count, issues and a verdict:
 
 - `INCONCLUSIVE`: incomplete data, unverified guards or unstable unchanged controls. Mixed-sign
-  candidate results are also inconclusive when the median clears the bar; otherwise they fail it.
+  candidate results (in either discovery or confirmation) are also inconclusive when the median
+  clears the bar and unchanged-control spread; otherwise they fail it.
 - `DOES_NOT_MEET_BAR`: usable observations fail the frozen practical/spread rule.
 - `NEEDS_CONFIRMATION`: discovery meets the rule; a fresh selected-candidate check is pending.
 - `CONFIRMED_OBSERVATION`: a selected candidate's fresh supplied identities meet the same rule.

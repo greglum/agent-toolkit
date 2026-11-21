@@ -18,7 +18,6 @@ def words(start, text, step=0.5):
             for i, w in enumerate(text.split())]
 
 
-# Sentences: A 0.0-3.95, B 4.0-7.95, C 8.0-11.95, D 12.0-15.95 (eight words each).
 SEGMENTS = (words(0, "Alpha one two three four five six done.")
             + words(4, "Beta one two three four five six done.")
             + words(8, "But gamma two three four five six done.")

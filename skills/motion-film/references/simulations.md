@@ -12,7 +12,7 @@ Reuse the project's simulation and renderer. Drive the effect from film time dur
    measured replay cost warrants them; replay the same ordered steps after a checkpoint.
    A checkpoint must include solver, random-generator and effect history needed to resume;
    visible positions alone may be insufficient. Bind baked states and checkpoints to the
-   [source and cache identity](production.md#preserve-reproducible-revisions).
+   source and cache identity (`references/production.md`).
 3. Give render workers independent state. Repeated requests for one time must not advance it,
    and backward seeks must restore or reconstruct it. Keep collision callbacks from emitting
    duplicate external actions or audio during replay; record collision cues in simulation

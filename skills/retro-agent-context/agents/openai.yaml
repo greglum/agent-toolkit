@@ -1,0 +1,6 @@
+interface:
+  display_name: "Retro: Agent Context"
+  short_description: "Find instruction files, skills and docs that mislead agents, cost too much or go stale"
+  default_prompt: "Use $retro-agent-context on this repository in report mode, using the last processed commit or the last 30 days."
+policy:
+  allow_implicit_invocation: true

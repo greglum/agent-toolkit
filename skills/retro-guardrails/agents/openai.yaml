@@ -1,0 +1,6 @@
+interface:
+  display_name: "Retro: Guardrails"
+  short_description: "Turn recent repository history into proven, durable controls"
+  default_prompt: "Use $retro-guardrails on this repository in report mode, using the last processed commit or the last 30 days."
+policy:
+  allow_implicit_invocation: true

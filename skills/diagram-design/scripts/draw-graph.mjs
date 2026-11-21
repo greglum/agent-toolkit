@@ -1,3 +1,4 @@
+import { realpathSync } from 'node:fs';
 import { readFile, writeFile, rename, unlink, realpath } from 'node:fs/promises';
 import { resolve, dirname, basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,6 +76,6 @@ async function main(args) {
     validation: 'input and standalone generation passed; browser and export checks still required' }));
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main(process.argv.slice(2)).catch(error => { console.error(error.message); process.exitCode = 1; });
 }

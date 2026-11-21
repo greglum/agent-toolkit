@@ -16,6 +16,10 @@ Checks, per skills/<name>/SKILL.md:
 - the first table headed `Skill` in docs/catalog.md has exactly one row per catalog skill, each
   linking its name to that skill's SKILL.md. A row starts with a pipe, indented at most three
   spaces. Later tables, fences and HTML comments are not read.
+- docs/workflows.md links every catalog skill as ../skills/<name>/SKILL.md;
+- packs.json, when present, has a `packs` object of non-empty name lists and an optional
+  `companions` object; every name in it is a catalog skill, every catalog skill is in a pack,
+  and each pack holds the companions of its members.
 Explicit-only skills must carry both Claude and Codex invocation controls.
 Reader guides in the repository root, docs/, and docs/examples/ must also have
 working local links and heading anchors. Dated internal research is not a reader guide.
@@ -35,12 +39,12 @@ from collections import Counter
 from pathlib import Path
 from urllib.parse import unquote
 
-if sys.version_info < (3, 10):  # Fail before importing code that requires the supported Python version.
+if sys.version_info < (3, 10):
     sys.exit(f"Python 3.10 or later is required; this python3 is {sys.version.split()[0]}.")
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "skills/harden-skill/scripts"))
-from inspect_skill import (  # Reuse the catalog's existing dependency-free YAML reader.
+from inspect_skill import (
     CLAUDE_FIELDS,
     LINK_RE,
     STANDARD_FIELDS,
@@ -58,6 +62,8 @@ AUTO_BUDGET, EXPLICIT_BUDGET = 360, 600
 EM_DASH = "\u2014"
 HEADING_RE = re.compile(r"^ {0,3}#{1,6}[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$")
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
+EXAMPLE_DOMAIN_RE = re.compile(r"(?:^|\.)(?:example|example\.(?:com|org|net))$", re.IGNORECASE)
+EXAMPLE_GIT_SSH_RE = re.compile(r"git@github\.com[:/]example/", re.IGNORECASE)
 TEMP_RE = re.compile(r"/private/tmp\b")
 LEAK_ROOTS = ("README.md", "THIRD_PARTY_NOTICES.md", "docs")
 TEXT_SUFFIXES = {".md", ".mjs", ".js", ".py", ".sh", ".yaml", ".yml", ".json", ".txt", ".toml", ".ini", ""}
@@ -66,12 +72,22 @@ CATALOG_CELL_RE = re.compile(r"^\[`?([^`\]]+)`?\]\(\.\./skills/([^/)]+)/SKILL\.m
 HOME_RE = re.compile(r"(?<![A-Za-z0-9._~:/-])(?:/(?:Users|home)/[A-Za-z0-9._-]+/|[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s]+[\\/])")
 
 
+def is_allowed_test_email(path: Path, line: str, match: re.Match[str]) -> bool:
+    """Allow RFC 2606 example domains and synthetic github.com/example/ SSH URLs in Python tests."""
+    if not (path.name.startswith("test_") and path.suffix == ".py"):
+        return False
+    domain = match.group(0).rsplit("@", 1)[1]
+    if EXAMPLE_DOMAIN_RE.search(domain):
+        return True
+    return EXAMPLE_GIT_SSH_RE.match(line, match.start()) is not None
+
+
 def leak_errors(path: Path, line: str, n: int) -> list[str]:
     """Machine-specific or personal details that must not ship."""
     found = []
     if HOME_RE.search(line):
         found.append(f"{path}:{n}: machine-specific home path; use ~")
-    if EMAIL_RE.search(line):
+    if any(not is_allowed_test_email(path, line, m) for m in EMAIL_RE.finditer(line)):
         found.append(f"{path}:{n}: email address")
     if TEMP_RE.search(line):
         found.append(f"{path}:{n}: local temporary path")
@@ -124,6 +140,24 @@ def frontmatter(text: str) -> dict[str, Field] | None:
     if any(f.severity == "error" for f in findings):
         return None
     return fields
+
+
+def check_links(path: Path, body: str, boundary: Path, scope: str) -> list[str]:
+    """Validate relative Markdown links and heading anchors against boundary."""
+    errors = []
+    resolved_boundary = boundary.resolve()
+    for raw_target in LINK_RE.findall(body):
+        target, _, fragment = unquote(link_target(raw_target)).partition("#")
+        if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target) or target.startswith("~"):
+            continue
+        resolved = (path.parent / target if target else path).resolve()
+        if not resolved.is_relative_to(resolved_boundary):
+            errors.append(f"{path}: link leaves {scope} '{target}'")
+        elif not resolved.exists():
+            errors.append(f"{path}: broken relative link '{target}'")
+        elif fragment and resolved.suffix == ".md" and resolved.is_file() and fragment not in heading_anchors(resolved):
+            errors.append(f"{path}: broken heading anchor '{target}#{fragment}'")
+    return errors
 
 
 def check_skill(skill: Path) -> list[str]:
@@ -180,37 +214,19 @@ def check_skill(skill: Path) -> list[str]:
                     fenced = not fenced
                 elif not fenced and EM_DASH in line:
                     errors.append(f"{f}:{n}: em dash in prose; use plain punctuation")
-            for raw_target in LINK_RE.findall(body):
-                target, _, fragment = unquote(link_target(raw_target)).partition("#")
-                if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target) or target.startswith("~"):
-                    continue
-                resolved = (f.parent / target if target else f).resolve()
-                if not resolved.is_relative_to(skill.resolve()):
-                    errors.append(f"{f}: link leaves its skill bundle '{target}'")
-                elif not resolved.exists():
-                    errors.append(f"{f}: broken relative link '{target}'")
-                elif fragment and resolved.suffix == ".md" and resolved.is_file() and fragment not in heading_anchors(resolved):
-                    errors.append(f"{f}: broken heading anchor '{target}#{fragment}'")
+            errors += check_links(f, body, skill, "its skill bundle")
     return errors
 
 
 def check_reader_links(root: Path = REPO) -> list[str]:
-    """Check the public entry points, including in an extracted source archive."""
+    """Check the public entry points, including in an extracted source archive, plus maintainer docs when present."""
     paths = sorted(root.glob("*.md")) + sorted((root / "docs").glob("*.md"))
     paths += sorted((root / "docs/examples").rglob("*.md"))
+    if (root / "docs/maintainers").is_dir():
+        paths += sorted((root / "docs/maintainers").rglob("*.md"))
     errors = []
     for path in paths:
-        for raw_target in LINK_RE.findall(path.read_text()):
-            target, _, fragment = unquote(link_target(raw_target)).partition("#")
-            if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target) or target.startswith("~"):
-                continue
-            resolved = (path.parent / target if target else path).resolve()
-            if not resolved.is_relative_to(root.resolve()):
-                errors.append(f"{path}: link leaves the repository '{target}'")
-            elif not resolved.exists():
-                errors.append(f"{path}: broken relative link '{target}'")
-            elif fragment and resolved.suffix == ".md" and resolved.is_file() and fragment not in heading_anchors(resolved):
-                errors.append(f"{path}: broken heading anchor '{target}#{fragment}'")
+        errors += check_links(path, path.read_text(errors="replace"), root, "the repository")
     return errors
 
 
@@ -256,6 +272,51 @@ def check_catalog(root: Path, names: set[str]) -> list[str]:
     return errors + [f"{path}: row for '{n}', which is not a catalog skill" for n in sorted(rows.keys() - names)]
 
 
+def check_workflows(root: Path, names: set[str]) -> list[str]:
+    """Readers browse by workflow, so every skill needs a link there."""
+    path = root / "docs/workflows.md"
+    linked = set(re.findall(r"\.\./skills/([^/)#\s]+)/SKILL\.md", path.read_text())) if path.is_file() else set()
+    return [f"{path}: no link to ../skills/{n}/SKILL.md" for n in sorted(names - linked)]
+
+
+def check_packs(root: Path, names: set[str]) -> list[str]:
+    """packs.json drives install.py --pack and its companion warnings."""
+    path = root / "packs.json"
+    if not path.is_file():
+        return []
+    try:
+        data = json.loads(path.read_text())
+    except json.JSONDecodeError as error:
+        return [f"{path}: invalid JSON: {error}"]
+    if not isinstance(data, dict):
+        return [f"{path}: top level must be an object"]
+    errors = [f"{path}: unknown key '{k}'" for k in sorted(data.keys() - {"note", "packs", "companions"})]
+    groups = {}
+    for key in ("packs", "companions"):
+        value = data.get(key, {} if key == "companions" else None)
+        ok = isinstance(value, dict) and all(
+            isinstance(v, list) and v and all(isinstance(s, str) for s in v) for v in value.values())
+        if not ok:
+            errors.append(f"{path}: '{key}' must map names to non-empty lists of skill names")
+            value = {}
+        groups[key] = value
+    packs, companions = groups["packs"], groups["companions"]
+    for pack, skills in packs.items():
+        if not NAME_RE.match(pack):
+            errors.append(f"{path}: pack name '{pack}' must be lowercase hyphen-case")
+        errors += [f"{path}: pack '{pack}' lists '{s}' more than once" for s, c in sorted(Counter(skills).items()) if c > 1]
+        errors += [f"{path}: pack '{pack}' lists '{s}', which is not a catalog skill" for s in sorted(set(skills) - names)]
+        for skill in sorted(set(skills) & companions.keys()):
+            errors += [f"{path}: pack '{pack}' has '{skill}' but not its companion '{c}'"
+                       for c in companions[skill] if c not in skills]
+    for skill, needed in sorted(companions.items()):
+        errors += [f"{path}: companions name '{s}', which is not a catalog skill"
+                   for s in [skill, *needed] if s not in names]
+    if "packs" in data and isinstance(data["packs"], dict):
+        errors += [f"{path}: '{n}' is in no pack" for n in sorted(names - set().union(set(), *packs.values()))]
+    return errors
+
+
 def only_leftovers(path: Path) -> bool:
     """A folder a pull emptied of tracked files: nothing left but caches, Finder files or empty folders."""
     return all("__pycache__" in f.relative_to(path).parts or f.name == ".DS_Store"
@@ -264,7 +325,9 @@ def only_leftovers(path: Path) -> bool:
 
 def main() -> int:
     skills = sorted(p for p in (REPO / "skills").iterdir() if p.is_dir() and not only_leftovers(p))
-    errors = check_reader_links() + check_catalog(REPO, {p.name for p in skills})
+    catalog = {p.name for p in skills}
+    errors = check_reader_links() + check_catalog(REPO, catalog)
+    errors += check_workflows(REPO, catalog) + check_packs(REPO, catalog)
     for skill in skills:
         if not (skill / "SKILL.md").is_file():
             errors.append(f"{skill}: no SKILL.md")
@@ -279,7 +342,7 @@ def main() -> int:
     errors += private
     if notice:
         print(notice)
-    if (REPO / "vendor.json").is_file():  # Optional local list of third-party skills used alongside.
+    if (REPO / "vendor.json").is_file():
         vendor = json.loads((REPO / "vendor.json").read_text())
         clash = {s["name"] for s in vendor["skills"]} & {p.name for p in skills}
         errors += [f"vendor.json: '{n}' is also a catalog skill" for n in sorted(clash)]

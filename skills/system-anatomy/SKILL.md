@@ -1,7 +1,7 @@
 ---
 name: system-anatomy
-description: Create a source-grounded interactive anatomy, cutaway, or isometric explainer of a system or mechanism. Use when parts, layers, and user-controlled state changes teach how it works. For ordinary architecture graphs use diagram-design; for timeline videos use motion-film.
-compatibility: The optional offline slider-crank example builder needs Node.js 18+. Without Node, author the figure using the project's existing tools; the mechanism guidance does not require the bundled example or a graphics library.
+description: Create or audit a source-grounded interactive anatomy, cutaway, or isometric explainer of a system or mechanism. Use when parts, layers, and user-controlled state changes teach how it works. For ordinary architecture graphs use diagram-design; for timeline videos use motion-film.
+compatibility: The optional offline slider-crank example builder needs Node.js 18+. Without Node, author the figure using the project's existing tools; the mechanism guidance does not require the bundled example or a graphics library. Optional companions (deslop, deslop-ui, ui-motion) are skipped with manual review when absent.
 ---
 
 # System anatomy
@@ -17,7 +17,9 @@ Identify the audience, the question they should be able to answer, and the outpu
 Inspect the current figure before changing it. Preserve unrelated edits. For an audit, report
 findings and proposed fixes without editing the deliverables.
 
-Trace the relevant implementation or supplied model before drawing. Record source revision,
+Trace the relevant implementation or supplied model before drawing. If the cited source
+implementation or supplied model cannot be read and no authoritative geometry or evidence
+exists, stop and report the missing evidence rather than inventing structure. Record source revision,
 material claims, owning paths/symbols, unknowns, and intentional simplifications beside the
 artifact. Keep implementation, proposal, simulation and observed runtime evidence distinct.
 Never obtain private records or call live systems merely to make the illustration realistic.
@@ -82,7 +84,8 @@ The default standalone page works offline, without remote fonts, analytics or ru
 Use local, reviewed code for its controls; keep untrusted labels inert through textContent or
 proper escaping, never executable HTML. Do not turn documentation controls into live actions.
 
-For substantial animation, load `ui-motion` when available. Motion expresses a transition;
+When `ui-motion` is installed, load it for substantial animation; otherwise keep transitions
+minimal, report the skipped companion check, and do not install it. Motion expresses a transition;
 reduce it to immediate state changes under reduced motion. Make tours opt-in and pausable,
 and stop loops when settled, hidden or offscreen. Use one time-based loop if a loop is needed.
 Avoid frame-by-frame component rerenders. Use WebGL or true 3D only when the mechanism needs
@@ -92,11 +95,12 @@ it and the output scope supports it; retain a useful non-WebGL view.
 
 ## 4. Finish and prove the artifact
 
-Load and apply `deslop` to the language and `deslop-ui` to the actual rendered figure and
-surrounding page, one skill invocation at a time. Keep the review limited to the requested
-figure, states and sizes. Use available scanners on supported inputs; extract SVG text for
-prose scans when necessary. A scanner skipping SVG proves nothing about its appearance.
-If a skill/helper is unavailable, perform direct review and name that missing check.
+When installed, load and apply `deslop` to the language and `deslop-ui` to the actual
+rendered figure and surrounding page, one skill invocation at a time. Keep the review
+limited to the requested figure, states and sizes. Use available scanners on supported
+inputs; extract SVG text for prose scans when necessary. A scanner skipping SVG proves
+nothing about its appearance. If an optional companion skill or helper is unavailable, do not
+install it; perform direct review and report the missing check.
 
 Use `diagram-design` for any separate static architecture diagrams or presentation exports;
 its source-fidelity and export rules apply to those artifacts, not as a ban on this figure's
@@ -122,9 +126,10 @@ state; it cannot silently lose essential explanation that was only in a tooltip.
 source ledger, documentation links and actual verification record together. Run required
 repository gates; no test suite or renderer migration is implied by this documentation work.
 
-**Done:** deliver artifact links, meaningful design choices, source scope, and passed, failed,
-unavailable and unrun checks. Report incomplete rendering or exports as incomplete. Local
-creation does not authorize publication, deployment or live data access.
+**Done:** deliver artifact links, meaningful design choices, source scope, exact verification
+commands with exit codes, and separate passed, failed, unavailable, and unrun checks. Report
+incomplete rendering or exports as incomplete. Local creation does not authorize publication,
+deployment or live data access.
 
 ## Source
 

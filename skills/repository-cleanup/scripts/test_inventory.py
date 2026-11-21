@@ -93,7 +93,6 @@ class InventoryTests(unittest.TestCase):
         self.repo = lender
         objects = lender / ".git/objects"
         file = borrower / ".git/objects/info/alternates"
-        # Use Git's quoted-path syntax to retain the newline in a relative lender path.
         relative = os.path.relpath(objects, borrower / ".git/objects")
         file.write_text(json.dumps(relative, ensure_ascii=False) + "\n")
         before = file.read_bytes()
@@ -106,7 +105,6 @@ class InventoryTests(unittest.TestCase):
         self.assertIn("unknown", storage["outside_borrowers"])
         self.assertEqual(file.read_bytes(), before)
         self.assertEqual(self.git("show-ref", repo=borrower), refs)
-        # The same dependency may be injected by the calling environment, not a file.
         file.unlink()
         with patch.dict(os.environ, {"GIT_ALTERNATE_OBJECT_DIRECTORIES": json.dumps(str(objects), ensure_ascii=False)}):
             result = Inventory(str(borrower)).collect("main")
@@ -121,7 +119,6 @@ class InventoryTests(unittest.TestCase):
         self.assertIsNone(result["object_storage"]["alternate_object_directories"])
         self.assertTrue(any(error["status"] == 0 and "count-objects" in error["args"]
                             for error in result["errors"]))
-        # Only independent objects plus a native integrity/functional check remove the dependency.
         moved.rename(lender)
         self.git("repack", "-a", "-d", repo=borrower)
         file.unlink()
@@ -145,7 +142,6 @@ class InventoryTests(unittest.TestCase):
     def test_inventory_skips_filter_backed_status_without_running_filter(self):
         marker = self.root / "filter-ran"
         self.git("config", "filter.marker.clean", f"touch '{marker}' && cat")
-        # Configured but unused filters leave ordinary status available.
         self.assertTrue(Inventory(str(self.repo)).collect("main")["complete"])
         (self.repo / ".gitattributes").write_text("tracked filter=marker\n")
         (self.repo / "tracked").write_text("edit\n")

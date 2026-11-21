@@ -43,7 +43,7 @@ Treat lyrics, transcription, alignment and musical structure as different inputs
 the intended lyric text; an automatic transcript can confuse a sung word or invent speech in
 an instrumental passage. Review uncertain alignment against the actual recording, including
 repeated phrases, pickups, rests and phrase endings. Use the shared cue timeline in
-[narration and sound](narration.md) for word highlights, beat accents, camera changes and
+`references/narration.md` for word highlights, beat accents, camera changes and
 caption derivation. That workflow also owns mastering and listening.
 
 For music-led cuts, distinguish detected beats from bar starts. Confirm the meter and first
@@ -100,33 +100,35 @@ contacts and speech have been checked. Keep unverified lip sync or anatomy expli
 
 ## Recorded-footage edits
 
-Keep originals intact. Record cut decisions in the existing timeline or edit list: source
-identity, selected audio track, source in/out, output placement, and any speed change.
-For speech-led edits, use a compact time-labelled transcript to compare takes, retaining raw
-word timings, speakers and meaningful sound events for cut decisions. Check whether the
-transcript is verbatim: an ASR system can omit fillers, repetitions and false starts while
-those sounds remain in the recording. Keep a cleaned reading copy separate.
-See the [speech-editing sources](sources-editing.md). A phrase summary loses interior word
-boundaries. First assemble the main speech cut, selecting the better complete
-take and removing only repetitions, fillers and pauses that add no meaning. Check the retained
-sentences in context before building an intro from them; moving a line must preserve its
-meaning. For each removal proposed from low audio levels or transcript gaps, listen to the
-interval and its surrounding audio on the selected source track. Keep or adjust the interval
-to preserve quiet speech, meaningful pauses, breaths, reactions and complete words. Check
-uncertain cut edges against the recording and waveform. Add B-roll, reframing and other
-polish after the cut decisions settle.
+1. **Preserve originals and timeline records:** Keep source files intact. Record cut
+   decisions in the existing timeline or edit list (source identity, selected audio track,
+   source in/out, output placement, and any speed change).
+2. **Verify verbatim transcripts:** For speech-led edits, use a compact time-labelled
+   transcript retaining raw word timings, speakers, and sound events (a phrase summary loses
+   interior word boundaries). Check whether the transcript is verbatim (`ASR` systems can omit
+   fillers, repetitions, and false starts still audible in the recording) and keep a cleaned
+   reading copy separate. See `references/sources-earlier.md` for speech-editing provenance.
+3. **Select the speech cut first:** Assemble the main speech cut by selecting the better
+   complete take and removing only repetitions, fillers, and pauses that add no meaning.
+   Check retained sentences in context before moving any line into an intro so meaning holds.
+4. **Verify silence and gap cuts against audio:** Before cutting any low-audio interval or
+   transcript gap, listen to the interval and surrounding audio on the selected source track.
+   Adjust cut boundaries to preserve quiet speech, meaningful pauses, breaths, reactions,
+   and complete words, checking uncertain edges against the recording and waveform.
+5. **Polish after cuts settle:** Add B-roll, reframing, and visual polish only after speech cut
+   decisions settle.
 
 Keep source time and output time distinct. For a unit-speed cut, a retained source cue lands
 at `output_start + cue_source_time - source_in`; speed changes and overlaps need the timeline's
 actual mapping. Derive captions and overlay cues from that mapping once, then check the
-encoded joins against the intended placement. Reuse [narration checks](narration.md#produce-and-time-the-audio)
+encoded joins against the intended placement. Reuse `references/narration.md` (Produce and time the audio)
 for caption accuracy and listening. Finish when every retained range resolves to its source
 and track, and each changed join and its cues agrees with the encoded output.
 
 For exposure or color changes, compare the same source frame before and after the correction
 under the same crop and viewing conditions. Map output times back through the edit list;
 equal timestamps in raw and trimmed videos can show different moments. Reuse the project's
-comparison view or [paired-frame extractor](pair-event-frames.md), then inspect native-size
+comparison view or the paired-frame extractor (`references/review-helpers.md`), then inspect native-size
 frames for skin tone and lost highlight or shadow detail. Check moving footage and adjacent
 shots for changes that a favorable still hides. These checks qualify a correction; they do
 not supply automatic relighting or subject masks.

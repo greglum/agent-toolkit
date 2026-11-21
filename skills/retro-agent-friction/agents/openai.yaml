@@ -1,0 +1,6 @@
+interface:
+  display_name: "Retro: Agent Friction"
+  short_description: "Find recurring agent friction in this repository's sessions"
+  default_prompt: "Use $retro-agent-friction on this repository in report mode, using the last processed session time or the last 7 days."
+policy:
+  allow_implicit_invocation: true

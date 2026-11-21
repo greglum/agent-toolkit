@@ -18,15 +18,17 @@
 
 ## Select evidence
 
-Use the repository's profile when it exists. When defining one, sample normal entry points
-and recent changes. Separate facts from judgment.
+Use the repository's profile when it exists. When defining one, turn each sampled area below
+into explicit frozen obligations under the chosen eight-dimension profile (`codebase` default or
+`task-harness`) in [the score contract](scoring.md) so `scripts/score.py` tracks them under
+one schema rather than a separate rubric. Separate facts from judgment.
 
-| Area | Evidence to sample |
-| --- | --- |
-| Simplicity and abstraction | Trace callers through a real change. Identify the rule or independent implementations each abstraction owns. Preserve boundaries that enforce an invariant or support an exercised replacement. Flag pass-through layers and shared code whose callers change for different reasons. Use file size, dependency depth, and complexity as review leads. |
-| Test economy | Map a sample of tests to the failure each catches. Check for a distinct, consequential regression that other tests or gates miss. A case count alone gives no evidence of maintenance value. Preserve required gates and follow local approval rules for removing tests. |
-| Documentation and context | Follow the instructions for a representative task. Check whether links resolve, commands match current entry points, and one document owns each rule. Measure always-loaded instruction bytes and relevant tool output separately. For measured token use, use comparable completed tasks and record model, input, cache, output, and correctness. |
-| Modularity and local checks | Find the contract and normal check for each sampled component. Verify that independently edited stages can run at the documented boundary and that outputs needed downstream remain reproducible. |
+| Area | Profile mapping | Evidence to sample |
+| --- | --- | --- |
+| Simplicity and abstraction | `maintainability` (plus `functional` when behavior seams change) | Trace callers through a real change. Identify the rule or independent implementations each abstraction owns. Preserve boundaries that enforce an invariant or support an exercised replacement. Flag pass-through layers and shared code whose callers change for different reasons. Use file size, dependency depth, and complexity as review leads. |
+| Test economy | `tests` (or `task-checks` in `task-harness`) | Map a sample of tests to the failure each catches. Check for a distinct, consequential regression that other tests or gates miss. A case count alone gives no evidence of maintenance value. Preserve required gates and follow local approval rules for removing tests. |
+| Documentation and context | `reproducibility` (or `task-contract` / `harness-evidence` in `task-harness`) | Follow the instructions for a representative task. Check whether links resolve, commands match current entry points, and one document owns each rule. Measure always-loaded instruction bytes and relevant tool output separately. For measured token use, use comparable completed tasks and record model, input, cache, output, and correctness. |
+| Modularity and local checks | `functional` and `reproducibility` (or `harness-isolation` / `harness-reproducibility` in `task-harness`) | Find the contract and normal check for each sampled component. Verify that independently edited stages can run at the documented boundary and that outputs needed downstream remain reproducible. |
 
 ## Run and report
 

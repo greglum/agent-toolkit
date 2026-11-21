@@ -146,7 +146,7 @@ class LiftTests(unittest.TestCase):
         self.assertIn("| export |", (self.root / "out" / "lift.md").read_text())
 
     def test_quoted_cell_with_newline_parses(self):
-        rows = [row("a\nb", 10), row("c", 10), row("d", 10), row("e", 10)]
+        rows = [row("a\nb", 10, url="https://example.com/ab"), row("c", 10), row("d", 10), row("e", 10)]
         result, data = self.run_cli(rows)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(data["input_rows"], 4)
@@ -161,6 +161,31 @@ class LiftTests(unittest.TestCase):
             with self.subTest(text):
                 with self.assertRaises(ValueError):
                     lift.parse_time(text)
+
+    def test_empty_csv_top_zero_malformed_urls_and_nonfinite_values(self):
+        empty_res, empty_data = self.run_cli([], out="empty")
+        self.assertEqual(empty_res.returncode, 0, empty_res.stderr)
+        self.assertEqual(empty_data["input_rows"], 0)
+        self.assertEqual(empty_data["cohorts"], [])
+        self.assertIn("No rows. Insufficient evidence.", (self.root / "empty" / "lift.md").read_text())
+
+        top_zero, _ = self.run_cli([row("a", 10)], "--top", "0", out="topzero")
+        self.assertEqual(top_zero.returncode, 2)
+        self.assertFalse((self.root / "topzero").exists())
+
+        bad_cases = {
+            "empty host": [row("a", 10, url="https://")],
+            "whitespace url": [row("a", 10, url="https://example.com/a b")],
+            "userinfo url": [row("a", 10, url="https://user:pass@localhost/a")],
+            "nan": [row("a", "NaN")],
+            "inf": [row("a", "inf")],
+            "-inf": [row("a", "-inf")],
+        }
+        for idx, (label, rows) in enumerate(bad_cases.items()):
+            with self.subTest(case=label):
+                res, _ = self.run_cli(rows, out=f"edge{idx}")
+                self.assertEqual(res.returncode, 1)
+                self.assertFalse((self.root / f"edge{idx}").exists())
 
 
 if __name__ == "__main__":

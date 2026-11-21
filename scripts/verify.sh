@@ -1,5 +1,4 @@
 #!/bin/sh
-# Same checks for local work, CI and the optional repository hook. No installs or remote calls.
 set -eu
 repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 
@@ -7,6 +6,7 @@ command -v python3 >/dev/null 2>&1 || { echo 'Python 3.10+ is required.' >&2; ex
 command -v node >/dev/null 2>&1 || { echo 'Node.js 18+ is required.' >&2; exit 1; }
 
 python3 "$repo_dir/scripts/check.py"
+python3 "$repo_dir/scripts/check_comments.py"
 python3 -m unittest discover -q -s "$repo_dir/scripts" -p 'test_*.py'
 if [ -d "$repo_dir/docs/maintainers" ]; then
   python3 -m unittest discover -q -s "$repo_dir/docs/maintainers" -p 'test_*.py'

@@ -139,6 +139,38 @@ class CampaignTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual((out / "brief.md").read_bytes(), original)
 
+    def test_blocks_invalid_shorts_related_video_and_rejects_sensitive_query_params(self):
+        for bad_url in ("https://example.com/not-youtube", "https://www.youtube.com/@handle"):
+            with self.subTest(related_video_url=bad_url):
+                plan = copy.deepcopy(self.plan)
+                plan["items"][1].update(format="short", placement="related_video", destination_url=bad_url)
+                result, out = self.run_cli(plan, output=f"rel-bad-{bad_url.rsplit('/', 1)[-1]}")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                item = json.loads((out / "campaign.json").read_text())["items"][1]
+                self.assertEqual(item["status"], "blocked")
+                self.assertTrue(any("actual YouTube watch URL" in b for b in item["blockers"]))
+        non_short = copy.deepcopy(self.plan)
+        non_short["items"][1].update(
+            format="video", placement="related_video", destination_url="https://youtu.be/abcdefghijk"
+        )
+        result, out = self.run_cli(non_short, output="rel-non-short")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads((out / "campaign.json").read_text())["items"][1]["status"], "blocked")
+        for param in ("token", "email", "api_key"):
+            with self.subTest(sensitive_param=param):
+                plan = copy.deepcopy(self.plan)
+                plan["items"][0]["destination_url"] = f"https://example.com/page?{param}=redacted"
+                result, out = self.run_cli(plan, output=f"sens-dest-{param}")
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("sensitive query fields", result.stderr)
+                self.assertFalse(out.exists())
+
+                claim_plan = copy.deepcopy(self.plan)
+                claim_plan["claims"][0]["source_url"] = f"https://example.com/src?{param}=redacted"
+                result, out = self.run_cli(claim_plan, output=f"sens-src-{param}")
+                self.assertEqual(result.returncode, 1)
+                self.assertFalse(out.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

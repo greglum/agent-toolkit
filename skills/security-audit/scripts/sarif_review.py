@@ -98,7 +98,6 @@ def rule_for(result, tool, at):
     component_ref = obj(ref.pop("toolComponent", {}), at + ".rule.toolComponent")
     component = tool["driver"]
     if component_ref:
-        # The default component is the driver; explicit indexes address extensions.
         if "index" in component_ref:
             component = referenced(tool.get("extensions", []), component_ref, at + ".component")
         elif "guid" in component_ref:
@@ -108,7 +107,6 @@ def rule_for(result, tool, at):
     rules = array(component.get("rules", []), at + ".rules")
     for i, rule in enumerate(rules):
         obj(rule, f"{at}.rules[{i}]")
-    # An id-only reference may describe a rule with no embedded descriptor.
     if not ref:
         return component, None, None
     if set(ref) == {"id"} and not any(id_matches(r.get("id"), ref["id"]) for r in rules):

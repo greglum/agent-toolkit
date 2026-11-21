@@ -1,6 +1,6 @@
 # Measuring fit
 
-Read this at step 3. A screenshot suggests; a measurement decides. A break predicted from
+Read this during the **Measure the matrix** step. A screenshot suggests; a measurement decides. A break predicted from
 source is a lead until it renders.
 
 ## Method

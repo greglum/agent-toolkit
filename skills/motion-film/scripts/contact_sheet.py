@@ -39,12 +39,10 @@ def main():
         print(json.dumps(dict(status="UNAVAILABLE", error=str(error))))
         return 2
 
-    # Select actual decoded frames, retaining their time relative to the first
-    # decoded frame. Unlike fps resampling, this does not invent sample times.
     filters = (
         "setpts=PTS-STARTPTS,"
         f"select='isnan(prev_selected_t)+gte(t-prev_selected_t,{args.every})',"
-        "showinfo=checksum=0,scale=360:trunc(360/dar/2)*2,setsar=1,"
+        "showinfo=checksum=0,scale=360:'max(2,trunc(360/dar/2)*2)',setsar=1,"
         "tile=4x4:padding=4:margin=4"
     )
     command = [

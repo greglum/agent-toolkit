@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from install import REPO, link_agents, same_tree
+from install import REPO, link_agents, load_packs, same_tree
 
 
 class InstallChecks(unittest.TestCase):
@@ -83,6 +83,50 @@ class InstallChecks(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("to-spec", result.stdout)
 
+    def test_packs_expand_combine_and_list(self):
+        packs = load_packs()["packs"]
+        listed = self.run_install("--list-packs")
+        self.assertEqual(listed.returncode, 0, listed.stderr)
+        for name, skills in packs.items():
+            self.assertIn(f"{len(skills):>3} skills", next(l for l in listed.stdout.splitlines() if l.startswith(name)))
+        result = self.run_install("--dry-run", "--pack", "data", "--only", "find-docs")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"\n{len(packs['data']) + 1} skills,", result.stdout)
+        for skill in [*packs["data"], "find-docs"]:
+            self.assertIn(f"{skill} ", result.stdout)
+        self.assertEqual(list(self.home.iterdir()), [])
+
+    def test_unknown_or_empty_pack_changes_nothing(self):
+        for value, message in (("data,no-such-pack", "Valid packs: "), ("data,", "none empty")):
+            with self.subTest(value=value):
+                result = self.run_install("--pack", value)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn(message, result.stderr)
+                self.assertEqual(list(self.home.iterdir()), [])
+
+    def test_missing_companions_warn_without_installing(self):
+        result = self.run_install("--only", "retro,retro-guardrails")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("warning: retro works with retro-verification, retro-agent-context, retro-agent-friction", result.stdout)
+        self.assertIn("--only retro-agent-context,retro-agent-friction,retro-verification", result.stdout)
+        self.assertFalse((self.home / ".agents/skills/retro-verification").exists())
+        later = self.run_install("--only", "retro-agent-context,retro-agent-friction,retro-verification")
+        self.assertNotIn("warning:", later.stdout)
+        again = self.run_install("--only", "retro")
+        self.assertNotIn("warning:", again.stdout)
+
+    def test_missing_companions_checks_every_selected_harness(self):
+        codex_only_install = self.run_install(
+            "--harness", "codex", "--only", "retro-agent-context,retro-agent-friction,retro-verification"
+        )
+        self.assertEqual(codex_only_install.returncode, 0, codex_only_install.stderr)
+        for harness in ("both", "all"):
+            with self.subTest(harness=harness):
+                res = self.run_install("--harness", harness, "--only", "retro", "--dry-run")
+                self.assertEqual(res.returncode, 0, res.stderr)
+                self.assertIn("warning: retro works with", res.stdout)
+                self.assertIn("retro-verification", res.stdout)
+
     def test_prune_only_installs_nothing(self):
         agents = self.home / ".agents/skills"
         agents.mkdir(parents=True)
@@ -94,6 +138,7 @@ class InstallChecks(unittest.TestCase):
         self.assertEqual(self.run_install("--prune-only").returncode, 0)
         self.assertEqual(list(agents.iterdir()), [])
         self.assertEqual(self.run_install("--prune-only", "--only", "find-docs").returncode, 2)
+        self.assertEqual(self.run_install("--prune-only", "--pack", "data").returncode, 2)
 
     def test_same_tree_needs_matching_kinds_but_ignores_caches(self):
         source = REPO / "skills/fit-surface"
@@ -122,14 +167,14 @@ class InstallChecks(unittest.TestCase):
         self.home.joinpath(".agents/skills").mkdir()
         self.home.joinpath(".claude").mkdir()
         self.home.joinpath(".claude/skills").write_text("a file\n")
-        self.assertEqual(self.run_install("--only", "review-pr").returncode, 0)  # Codex-only: needs no Claude folder.
+        self.assertEqual(self.run_install("--only", "review-pr").returncode, 0)
         self.home.joinpath(".claude/skills").unlink()
         self.home.joinpath(".agents/skills/review-pr").unlink()
         self.home.joinpath(".agents/skills").chmod(0o555)
         self.addCleanup(self.home.joinpath(".agents/skills").chmod, 0o755)
         result = self.run_install("--only", "find-docs")
         self.assertEqual(result.returncode, 2)
-        self.assertIn(str(self.home / ".agents/skills/find-docs"), result.stderr)  # The link, not its target.
+        self.assertIn(str(self.home / ".agents/skills/find-docs"), result.stderr)
         self.home.joinpath(".agents/skills").chmod(0o755)
         loop = self.home / ".agents/skills/find-docs"
         loop.symlink_to(loop)
@@ -174,8 +219,6 @@ class InstallChecks(unittest.TestCase):
         self.assertTrue((claude / "personal").is_dir())
 
     def test_failed_link_restores_identical_installed_copy(self):
-        import shutil
-
         dest = self.home / ".agents/skills/find-docs"
         shutil.copytree(REPO / "skills/find-docs", dest)
         original = (dest / "SKILL.md").read_bytes()
@@ -189,7 +232,6 @@ class InstallChecks(unittest.TestCase):
 
 
     def test_antigravity_and_all_harnesses(self):
-        # Single-harness antigravity links directly to the catalog without creating .agents or .claude.
         dry = self.run_install("--harness", "antigravity", "--only", "find-docs,acp", "--dry-run")
         self.assertEqual(dry.returncode, 0, dry.stderr)
         self.assertEqual(list(self.home.iterdir()), [])
@@ -208,7 +250,6 @@ class InstallChecks(unittest.TestCase):
         self.assertEqual(second.returncode, 0, second.stderr)
         self.assertEqual((self.home / ".gemini/config/skills/find-docs").lstat().st_mtime_ns, stamp)
 
-        # --harness all installs Codex, plus Claude and Antigravity except codex_only, via ~/.agents/skills.
         with tempfile.TemporaryDirectory() as directory:
             self.home = Path(directory)
             result = self.run_install("--harness", "all", "--only", "find-docs,acp")
@@ -223,7 +264,6 @@ class InstallChecks(unittest.TestCase):
             )
             self.assertFalse((self.home / ".gemini/config/skills/acp").exists())
             self.assertEqual((self.home / ".gemini/config/skills/find-docs").resolve(), REPO / "skills/find-docs")
-            # Default --harness both does not create .gemini.
         with tempfile.TemporaryDirectory() as directory:
             self.home = Path(directory)
             both = self.run_install("--harness", "both", "--only", "find-docs")
@@ -262,7 +302,6 @@ class InstallChecks(unittest.TestCase):
         self.assertTrue(foreign.is_symlink())
         self.assertTrue((gemini / "personal").is_dir())
 
-        # Blocked paths under .gemini, .gemini/config, and .gemini/config/skills stop cleanly.
         for blocker in (".gemini", ".gemini/config", ".gemini/config/skills"):
             with self.subTest(blocker=blocker), tempfile.TemporaryDirectory() as directory:
                 self.home = Path(directory)

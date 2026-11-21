@@ -13,8 +13,7 @@ Choose per film, then per shot. Record the choice and its reason in the brief.
   page, stay sharp at any zoom, or ship inside a host that serves one small page.
 - Render to video when the look depends on light transport: real reflections, refraction,
   depth of field, motion blur. A drawn or shaded imitation of those reads as illustration.
-  Follow [material and mechanism shots](material-3d.md) and prove one hero still before
-  committing a film to a 3D scene.
+  Follow `references/material-3d.md` and prove one hero still before committing a film to a 3D scene.
 - A rendered film needs a host that serves media, a poster, and a plan for the seam where
   video meets the live page. Check the destination's size and request limits first.
 
@@ -30,8 +29,7 @@ One number, film time, sets the whole picture. Read it from a monotonic clock in
   those values.
 - Hiding the page pauses the clock. Returning resumes from the same film time.
 - Skip, replay and resize set the time or rebuild the tracks. They never patch state.
-- Effects with history follow [seekable simulations](simulations.md): write position as a
-  closed form of age with a fixed seed.
+- Effects with history follow `references/simulations.md`: write position as a closed form of age with a fixed seed.
 - Keep the capture hook in the same code path as playback: set the time, draw, read the frame.
 
 Done when a frame drawn after a backward seek matches the same time reached by playing.
@@ -116,13 +114,11 @@ the tap. Run both.
 2. Boundary screencast. Record the screen in real time across the tap and each cut. Map each
    recorded frame to film time from the page's own log. Inspect the frames on both sides of
    every boundary for a blank, a half-moved layer, a double exposure or a late caption.
-   Log every control's opacity on each frame across each hand-off. In one production a
-   frozen-clock sweep missed an end-card control that faded in, vanished and faded in again;
-   only the per-frame log in real time showed it.
+   Log every control's opacity on each frame across each hand-off; frozen-clock sweeps can
+   miss controls that briefly vanish and reappear.
 3. Projected travel. Time a 3D turn by its geometry on screen, such as the free edge's
-   position, which moves with the cosine of the angle, not by the rotation angle. A lid whose
-   rotation eased over 800 ms still read as a 200 to 300 ms snap, because most of its visible
-   travel happened in a short span of angle.
+   position, which moves with the cosine of the angle, not by the rotation angle alone, since
+   easing over rotation angle can compress visible travel into a brief snap.
 4. Response time. Measure pointer event to first changed frame.
 5. Repeat cycles. Replay several times, skip from every shot, rotate, hide and return. The
    end state matches and one loop is running.

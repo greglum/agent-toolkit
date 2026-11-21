@@ -8,7 +8,6 @@ import { validateGraph } from './graph-model.mjs';
 
 const [playwrightPath, destination, axePath] = process.argv.slice(2);
 if (!playwrightPath || !destination) throw new Error('Usage: node check-browser.mjs playwright/index.mjs output-folder [axe.min.js]');
-// Keep each collector independently installable. Preflight explicit browsers before creating evidence.
 const configured = process.env.CHROME_PATH || undefined;
 let executablePath;
 if (configured) {
@@ -19,7 +18,6 @@ if (configured) {
   } catch (cause) {
     throw new Error('CHROME_PATH must name an executable headless browser; use a headless shell or Chrome for Testing', { cause });
   }
-  // Installed Chrome grows the macOS keychain on every launch (Chromium issue 577651758).
   const installedChrome = /(?:^|[/\\])(?:Google Chrome(?: (?:Beta|Canary|Dev))?\.app|google-chrome(?:-stable|-beta|-unstable)?)(?:[/\\]|$)|^\/opt\/google\/chrome(?:-beta|-unstable)?(?:\/|$)/i;
   if ([configured, executablePath].some(path => installedChrome.test(path))) {
     throw new Error('CHROME_PATH must not use installed Google Chrome; use a headless shell or Chrome for Testing');
@@ -98,7 +96,8 @@ try {
   const textBounds = await page.locator('[data-graph]').evaluateAll(svgs => svgs.flatMap(svg => {
     const bounds = svg.viewBox.baseVal;
     return [...svg.querySelectorAll('text')].filter(text => {
-      const b = text.getBBox(); return b.x < 0 || b.y < 0 || b.x + b.width > bounds.width || b.y + b.height > bounds.height;
+      const b = text.getBBox();
+      return b.x < bounds.x || b.y < bounds.y || b.x + b.width > bounds.x + bounds.width || b.y + b.height > bounds.y + bounds.height;
     }).map(text => text.textContent);
   }));
   assert.deepEqual(textBounds, []);
@@ -194,7 +193,7 @@ try {
   await page.locator('#route').click();
   assert.equal(await page.locator('[data-view-state]').evaluate(text => {
     const bounds = text.getBBox(), view = text.ownerSVGElement.viewBox.baseVal;
-    return bounds.x >= 0 && bounds.x + bounds.width <= view.width && bounds.y + bounds.height < 160;
+    return bounds.x >= view.x && bounds.x + bounds.width <= view.x + view.width && bounds.y >= view.y && bounds.y + bounds.height < 160;
   }), true);
   const longDownload = page.waitForEvent('download');
   await page.locator('#svg-export').click();
@@ -203,7 +202,7 @@ try {
   await page.goto(pathToFileURL(join(output, 'long-labels.svg')).href);
   assert.equal(await page.locator('[data-view-state]').evaluate(text => {
     const bounds = text.getBBox(), view = text.ownerSVGElement.viewBox.baseVal;
-    return bounds.x >= 0 && bounds.x + bounds.width <= view.width && bounds.y + bounds.height < 160;
+    return bounds.x >= view.x && bounds.x + bounds.width <= view.x + view.width && bounds.y >= view.y && bounds.y + bounds.height < 160;
   }), true);
   checks.reviewRegressions = 'PASS visible mobile keyboard focus and complete wrapped route captions in viewer/export';
   assert.deepEqual(requests, []); assert.deepEqual(errors, []);

@@ -1,8 +1,6 @@
 # Guide format
 
-Use this shape for a significant diff. Omit empty sections and shorten small changes.
-The artifact is finished when its reading path, exact snapshot, coverage, and limits
-are complete. A human can then perform the review.
+Omit empty sections and shorten small changes; delivery and freshness rules stay in `SKILL.md`.
 
 ## Opening
 
@@ -30,33 +28,38 @@ review durations, or a confidence percentage for an explanation.
 
 ## Chapter
 
-**Purpose:** What this chapter explains and why the reader should care.
+**Purpose:** The trigger, owning layer, and why the reader should care. Distinguish behavior
+changes from mechanical moves and intended preservation.
 
 | Before | After |
 |---|---|
 | Source-backed old flow or result | Source-backed new flow or result |
 
-**Read in order:** Owner, callers, related test assertions. Link exact snapshots/lines.
-Explain the connections between those anchors; a file list alone is not a walkthrough.
+**Read in order:** Owner, callers, related test assertions. Use base links for deleted or
+replaced behavior, head links for new behavior, and cite unchanged context separately.
+Prefer commit-pinned permalinks with verified paths and line numbers; for local-only
+history, give the SHA, path, symbol, and a native read command rather than a link to the
+mutable checkout. Escape unusual filenames and validate link hosts. Explain the connections
+between those anchors; a file list alone is not a walkthrough.
 
-**Checkpoint:** A specific question the human should settle. Name the evidence that
-answers it and any evidence still needed. Confirmed defects go visibly beside it and
-retain the applicable defect-review workflow's finding identifiers.
+**Checkpoint:** A specific question about an invariant, failure path, or design choice, plus
+the source or check that answers it and any evidence still needed. Distinguish a proven
+defect from an open question, avoid invented bugs or urgency, and retain the applicable
+defect-review workflow's finding identifiers for confirmed defects.
 
 **Evidence/limits:** Source examined; checks actually run with revision and result;
-author-reported results; unrun, failed, or unavailable checks. Label illustrative
-examples or diagrams that are not observed runtime behavior.
+author-reported results; unrun, failed, or unavailable checks. Tests present in a diff did
+not thereby run. Label illustrative examples or diagrams that are not observed runtime behavior.
 
 ## Coverage and handoff
 
 | Changed path or hunk | Chapter | Disposition |
 |---|---|---|
-| Exact path; old → new for a rename | Owning chapter | Explained / inventory only / unresolved with reason |
+| Exact path; old -> new for a rename | Owning chapter | Explained / inventory only / unresolved with reason |
 
 Keep this complete even when an appendix is needed. For a file in several chapters,
 identify its hunk ranges. Separate relevant unchanged context from changed coverage.
 Totals must reconcile with the original diff, not with a renderer's normalized output.
 
-Close with remaining questions and the next review action. If human completion tracking
-is useful, offer unchecked chapter boxes tied to the full head SHA. Never label these
-as an approval, automatically check them, or carry them silently to a changed head.
+Close with remaining questions, the next review action, and optional unchecked chapter boxes
+tied to the full head SHA per `SKILL.md`.

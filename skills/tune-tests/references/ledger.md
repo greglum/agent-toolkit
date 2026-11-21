@@ -84,7 +84,6 @@ duplicate formatter tests but keep the date ones" maps to T-03 and T-04; T-05 ex
 
 ## Timing record
 
-For each measured change: command, runs per side, interleaving order, machine, concurrent
-load, wall range, and CPU range before and after. A gain that depends on test order or a warm cache
-does not count, and a parent suite's logged time is not its last child's time. Name the remaining cost when it is the real
-behavior the test exists to exercise.
+Record each measured change per [performance evidence](performance-evidence.md): command,
+runs per side, interleaving order, machine, concurrent load, wall range, CPU range before and
+after, and remaining irreducible cost when it reflects the real behavior under test.

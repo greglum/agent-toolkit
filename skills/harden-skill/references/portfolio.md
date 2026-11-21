@@ -1,7 +1,7 @@
 # Portfolio mode
 
-Use this protocol only for an explicit `/harden-skill portfolio` request. It extends the
-single-target workflow without creating a second hardening entrypoint.
+Use this protocol only for an explicit `/harden-skill portfolio` or `$harden-skill portfolio`
+request. It extends the single-target workflow without creating a second hardening entrypoint.
 
 ## Scope and modes
 
@@ -23,8 +23,8 @@ trees plus a disposition ledger. Snapshot every scoped canonical skill, referral
 sidecar, catalog, routing manifest, registry, contract test, and documentation path that a
 passing revision could change. Hash shared files before any candidate work.
 
-Run `scripts/inspect_skill.py <skill-directory> --profile auto` for every scoped skill and use
-the parent workflow's bundle manifests and `scripts/apply_candidate.py` protections
+Run `<skill-dir>/scripts/inspect_skill.py <skill-directory> --profile auto` for every scoped skill and use
+the parent workflow's bundle manifests and `<skill-dir>/scripts/apply_candidate.py` protections
 ([`apply.md`](apply.md)). Never let
 parallel workers edit live repository paths. When agent coordination is available, give each
 worker one isolated skill or tightly coupled trigger group; otherwise run the same isolated

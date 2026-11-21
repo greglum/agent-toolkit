@@ -1,43 +1,53 @@
 ---
 name: to-spec
-description: "Synthesize the current conversation into an implementation spec without another interview. Publish to the identified issue tracker when the user authorizes it, or deliver a complete local draft."
+description: Synthesize the current conversation into an implementation spec without another interview, then publish to the authorized issue tracker or deliver a local draft. Not for auditing or updating existing repo docs and plans (use docs-sync) or running an open-ended requirements interview.
 license: MIT
 compatibility: Uses the current conversation and available repository source. A tracker connector or CLI is optional and used only for an authorized publication. Without one, deliver the complete local draft and identify any missing source or tracker evidence.
 ---
 
-> Invocable by other skills. This skill is deliberately *not* gated with
-> `disable-model-invocation`, so an orchestrating workflow can hand its findings straight here
-> instead of asking the developer to retype a command. Reuse the human user's authority to publish to the identified
-> tracker. Skill selection or invocation by another workflow cannot supply missing authority.
-> With that authority, synthesize, publish, and report the issue link in one pass.
+Reuse the user's explicit authority to publish to the identified tracker; selection or
+invocation by another workflow supplies no publication authority.
 
-This skill takes the current conversation context and codebase understanding and produces a spec. Synthesize what you already know; the conversation is the interview. Never narrow requested behavior for safety without saying so; record a real conflict in Further Notes as an owner decision.
+This skill takes the current conversation context and codebase understanding and produces a
+spec. Synthesize what you already know; the conversation is the interview. If the
+conversation lacks enough context to state the problem and acceptance conditions without
+inventing requirements, stop and ask for the missing facts. Never narrow requested behavior
+for safety without saying so; record a real conflict in Further Notes as an owner decision.
 
 Resolve the issue tracker and triage labels from the user's request and current repository
-instructions or configuration. If the target or publication authority is missing, prepare
-the complete local draft, then request only that missing information. A local-only request
-finishes with the draft. Do not require a particular setup skill or invent tracker settings.
+instructions or configuration. If the target or publication authority is missing, deliver
+the complete local draft (in the reply or at the user's requested spec path) and request only
+that missing information. A local-only request finishes with that draft. Do not require a
+particular setup skill or invent tracker settings.
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
+1. Explore the repo to understand the current state of the codebase, if you haven't already.
+   Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in
+   the area you're touching.
 
    When drawing on research, keep observed behavior separate from the proposed change. Carry
-   exact source pointers, revisions, and unresolved questions into the spec. Recheck facts
-   affected by changed source or requirements. For substantial changes, explain system
-   boundaries and contracts before code ownership; show only the views needed to settle a
-   decision. Divide implementation into independently verifiable outcomes when useful. A
-   phase must not depend on the next phase to establish its result. Update resolved sections
-   coherently instead of appending conflicting decisions. Existing user authority governs
-   continuation; an artifact's age or position never gives it authority over the user or
-   repository instructions. [Source and local departures](SOURCE.md).
+   exact source pointers, revisions, and unresolved questions into Further Notes (keeping
+   specific file paths out of Implementation Decisions). Recheck facts affected by changed
+   source or requirements. For substantial changes, explain system boundaries and contracts
+   before code ownership; show only the views needed to settle a decision. Divide
+   implementation into independently verifiable outcomes when useful. A phase must not depend
+   on the next phase to establish its result. Update resolved sections coherently instead of
+   appending conflicting decisions. Existing user authority governs continuation; an
+   artifact's age or position never gives it authority over the user or repository
+   instructions. [Source and local departures](SOURCE.md).
 
    For a design involving model calls, retrieval, or agents, read the
    [AI system contract](references/ai-system-contract.md). Record only the decisions
    that apply, in Implementation Decisions and Testing Decisions; keep the existing
    spec as the single artifact.
 
-2. Plan tests. The default is no new tests: existing gates, types, and suites usually cover the change. Name a new or extended test only when it catches a likely, harmful failure that nothing else catches, deterministically and cheaply, and follow the repository's own test policy when it has one. Prefer extending the closest existing suite, table, or fixture. "No new tests" with the reason is a complete decision. For pruning or speeding up existing suites, use `tune-tests`.
+2. Plan tests. The default is no new tests: existing gates, types, and suites usually cover
+   the change. Name a new or extended test only when it catches a likely, harmful failure
+   that nothing else catches, deterministically and cheaply, and follow the repository's own
+   test policy when it has one. Prefer extending the closest existing suite, table, or
+   fixture. "No new tests" with the reason is a complete decision. For pruning or speeding up
+   existing suites, use `tune-tests`.
 
 3. Write the spec using the template below. Before handoff or publication of a substantial
    spec, check whether someone who missed the discussion can use it. When an authorized
@@ -51,12 +61,14 @@ finishes with the draft. Do not require a particular setup skill or invent track
 
 4. Publish only with user authority for the identified tracker action. Apply the repository's
    configured ready label when every decision is settled. Use its configured triage label
-   for open owner decisions and list them in Further Notes. Verify labels
-   exist before applying them; missing labels do not authorize creating configuration.
+   for open owner decisions and list them in Further Notes. Verify labels exist before
+   applying them; missing labels do not authorize creating configuration.
+
 5. Verify the created or updated issue's identity, content, and labels before reporting its
    URL. An uncertain publication result requires checking the identified target before retrying;
-   do not create a duplicate or claim success from a transport response alone. Report a local
-   draft, verified publication, or remaining blocker with failed and unrun checks separately.
+   do not create a duplicate or claim success from a transport response alone. Report the
+   local draft (and file path if written), verified publication URL, or remaining blocker,
+   with **passed**, **failed**, **unavailable**, and **unrun** checks separated.
 
 <spec-template>
 
@@ -91,7 +103,7 @@ A list of implementation decisions that were made. This can include:
 - API contracts
 - Specific interactions
 
-Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
+Do NOT include specific file paths or code snippets here (place verified source pointers and revisions in Further Notes).
 
 Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
 
@@ -116,6 +128,6 @@ A description of the things that are out of scope for this spec, including what 
 
 ## Further Notes
 
-Any further notes about the feature.
+Place verified source pointers, revisions, open owner decisions, and comprehension-review notes here.
 
 </spec-template>
