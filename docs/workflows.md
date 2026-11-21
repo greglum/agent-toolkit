@@ -11,6 +11,7 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Assess codebase quality | [codebase-metrics](../skills/codebase-metrics/SKILL.md) | Implement the selected improvement in its owner | Scores against a fixed codebase or task/harness profile, with source evidence and comparable measurements |
 | Understand and review a change | [guided-review](../skills/guided-review/SKILL.md) | [global-code-review](../skills/global-code-review/SKILL.md), or an explicit specialized review | A reading order tied to the exact revision, and findings checked independently |
 | Model threats, review a model change, audit security or interpret existing SARIF | [security-audit](../skills/security-audit/SKILL.md) | Repository remediation workflow when requested | A reproduction or specific proof in the source, with open limits stated |
+| Audit recurring cloud alerts, spend, or migration cost bounds | [cloud-ops-audit](../skills/cloud-ops-audit/SKILL.md) | Explicit [iac-teardown](../skills/iac-teardown/SKILL.md) for stack retirement, [security-audit](../skills/security-audit/SKILL.md), and [docs-sync](../skills/docs-sync/SKILL.md) | Alerts traced to source, untagged or cliff spend reconciled, and migration parity checked |
 | Diagnose database behavior | [postgres-investigate](../skills/postgres-investigate/SKILL.md) | [reconcile-metric](../skills/reconcile-metric/SKILL.md) for disputed aggregates | Plans, locks, or source rows that explain the symptom |
 | Find related confirmed bugs | [find-bug-variants](../skills/find-bug-variants/SKILL.md) | Fix each confirmed owner | A search with set limits, each candidate classified and existing behavior kept |
 | Audit a whole repository for what can be removed | [delete-first](../skills/delete-first/SKILL.md) | The repository's own checks | Refuted candidates, verified cuts applied when requested, and owner decisions listed with evidence |
@@ -64,6 +65,7 @@ Codex; respect the catalog's harness restrictions.
 | --- | --- |
 | Vet linked sources and harvest lessons, or research the whole catalog | [skill-research](../skills/skill-research/SKILL.md), with URLs for a focused assessment |
 | Audit and behavior-test an existing skill | [harden-skill](../skills/harden-skill/SKILL.md) |
+| Preflight and run a safe IaC stack teardown | [iac-teardown](../skills/iac-teardown/SKILL.md) |
 | Review client/API integration | [review-integration](../skills/review-integration/SKILL.md) |
 | Clean out code comments, extract ADRs, draft excuse issues, and install a comment-ban ratchet | [delete-comment](../skills/delete-comment/SKILL.md) |
 | Run the full delegated animation loop | [polish-animations](../skills/polish-animations/SKILL.md) |

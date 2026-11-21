@@ -1,7 +1,7 @@
 ---
 name: retro-agent-friction
-description: "Retro on session friction in repo Claude/Codex logs: sandbox denials, hook blocks, shell errors, slow gates, compactions. Report-only; code fixes go to encode-correction. Not for general retros (retro), human feedback (analyze-agent-history), context limits (retro-agent-context), commit defects (retro-guardrails), or test escapes (retro-verification)."
-compatibility: Needs Python 3.10+ and git. Reads ~/.claude/projects and ~/.codex/sessions; Antigravity's SQLite store is reported as a coverage gap, not parsed. Tracked runs need write access to the state folder; if it is denied, report that and leave the marker unchanged. Installs nothing and calls no model or network service.
+description: "Retro on session friction in repo Claude, Codex, or Antigravity logs: sandbox denials, hook blocks, shell errors, slow gates, compactions. Report-only; code fixes go to encode-correction. Not for retros (retro), human feedback (analyze-agent-history), context limits (retro-agent-context), commit defects (retro-guardrails), or escapes (retro-verification)."
+compatibility: Needs Python 3.10+ and git. Reads ~/.claude/projects, ~/.codex/sessions, and ~/.gemini/antigravity/brain JSONL via read-only conversation_summaries.db; unparsed legacy conversations/*.db stay in uncovered_stores. Tracked runs need write access to the state folder. Installs nothing and calls no model or network service.
 ---
 
 # Agent friction retrospective
@@ -56,8 +56,8 @@ dir or the origin URL, so linked and deleted worktrees and other clones count an
 folders do not. It prints categories,
 counts and short hashes only.
 
-Read `coverage` first. Report `gaps`, `limits`, `uncovered_stores` (Antigravity) and the
-`unresolved_cwd` counts as coverage limits. A `blocked` store or `unreadable_cwd` count means this
+Read `coverage` first. Report `gaps`, `limits`, `uncovered_stores` (any unparsed legacy `.db`
+files) and the `unresolved_cwd` counts as coverage limits. A `blocked` store or `unreadable_cwd` count means this
 run could not read it, not that nothing happened there; name the read access that would measure it.
 Exit 2 means a gap. An empty window is a result: run
 step 3, skip to step 7 and report it.

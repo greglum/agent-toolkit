@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -213,6 +214,84 @@ class RepoDiscoveryTests(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertEqual(report['status'], 'partial')
             self.assertTrue(report['discovery']['uncovered_stores']['antigravity_store_unreadable'])
+
+    def test_antigravity_brain_discovery_matches_worktrees_and_skips_subagents(self):
+        secret = 'PRIVATE_SENTINEL_never_emit'
+        with tempfile.TemporaryDirectory() as home:
+            home = Path(home).resolve()
+            git = self.git_env()
+            repo, linked, other = home / 'repo', home / 'linked', home / 'other'
+            for folder in (repo, other):
+                self.init_repo(folder, commit=True)
+            subprocess.run(['git', '-C', str(repo), 'worktree', 'add', '-q', str(linked)], check=True, env=git)
+
+            ag = home / '.gemini' / 'antigravity'
+            (ag / 'brain').mkdir(parents=True)
+            (ag / 'conversations').mkdir(parents=True)
+            db = ag / 'conversation_summaries.db'
+            conn = sqlite3.connect(db)
+            conn.execute(
+                'CREATE TABLE conversation_summaries ('
+                'conversation_id TEXT PRIMARY KEY, workspace_uris TEXT, '
+                'parent_conversation_id TEXT, nesting_depth INTEGER)'
+            )
+            rows = [
+                ('cid-main', json.dumps([repo.as_uri()]), '', 0),
+                ('cid-sub', json.dumps([linked.as_uri()]), 'cid-main', 1),
+                ('cid-other', json.dumps([other.as_uri()]), '', 0),
+                ('cid-mixed', json.dumps([other.as_uri(), str(home / 'locked_ws' / 'work')]), '', 0),
+            ]
+            conn.executemany('INSERT INTO conversation_summaries VALUES (?, ?, ?, ?)', rows)
+            conn.commit()
+            conn.close()
+
+            (home / 'locked_ws' / 'work').mkdir(parents=True)
+            self.write_nested(ag / 'brain/cid-main/.system_generated/logs/transcript.jsonl', [
+                {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:00:00Z',
+                 'content': f'<USER_REQUEST>I already asked {secret}</USER_REQUEST>\n<ADDITIONAL_METADATA>Preserve</ADDITIONAL_METADATA>'},
+            ])
+            self.write_nested(ag / 'brain/cid-sub/.system_generated/logs/transcript.jsonl', [
+                {'step_index': 0, 'source': 'SYSTEM', 'type': 'SYSTEM_MESSAGE', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:01:00Z', 'content': 'You have just started. Your assignment'},
+            ])
+            self.write_nested(ag / 'brain/cid-other/.system_generated/logs/transcript.jsonl', [
+                {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:02:00Z', 'content': 'I already asked'},
+            ])
+            self.write_nested(ag / 'brain/cid-mixed/.system_generated/logs/transcript.jsonl', [
+                {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:03:00Z', 'content': 'Mixed'},
+            ])
+            (ag / 'conversations/cid-main.db').write_bytes(b'')
+            (ag / 'conversations/legacy-only.db').write_bytes(b'')
+
+            (home / 'locked_ws').chmod(0)
+            try:
+                result = self.run_repo(linked, home)
+            finally:
+                (home / 'locked_ws').chmod(0o755)
+            self.assertEqual((result.returncode, result.stderr), (0, ''))
+            report = json.loads(result.stdout)
+            ag_cov = report['discovery']['harnesses']['antigravity']
+            self.assertEqual(ag_cov['matched'], 1)
+            self.assertEqual(ag_cov['other_repository'], 1)
+            self.assertEqual(ag_cov['unreadable_cwd'], 1)
+            self.assertEqual(ag_cov['subagent_transcripts_skipped'], 1)
+            self.assertEqual(report['discovery']['uncovered_stores']['antigravity_sqlite_not_parsed'], 1)
+            self.assertEqual(report['totals']['eligible_messages'], 1)
+            self.assertNotIn(secret, result.stdout)
+            self.assertNotIn(str(home), result.stdout)
+
+            if os.geteuid() != 0:
+                db.chmod(0)
+                try:
+                    blocked = self.run_repo(linked, home)
+                finally:
+                    db.chmod(0o644)
+                self.assertEqual(blocked.returncode, 2)
+                b_report = json.loads(blocked.stdout)
+                self.assertIn('antigravity session store', b_report['discovery']['blocked'])
 
 
 if __name__ == '__main__':

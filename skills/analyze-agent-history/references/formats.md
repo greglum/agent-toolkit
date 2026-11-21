@@ -8,9 +8,12 @@ may still contribute to a partial ledger. Errors identify input ordinals, not pa
 
 ## Repository discovery
 
-`--repo <path> --days <n>` lists `~/.claude/projects/*/*.jsonl` and
-`~/.codex/sessions/YYYY/MM/DD/*.jsonl`, skips files not modified in the window, and reads the
-first recorded `cwd` (Claude records, Codex `session_meta.payload.cwd`). That directory is
+`--repo <path> --days <n>` lists `~/.claude/projects/*/*.jsonl`,
+`~/.codex/sessions/YYYY/MM/DD/*.jsonl`, and
+`~/.gemini/antigravity/brain/*/.system_generated/logs/transcript.jsonl`, skips files not
+modified in the window, and reads the first recorded `cwd` (Claude records, Codex
+`session_meta.payload.cwd`) or, for Antigravity, decodes `workspace_uris` from read-only
+`~/.gemini/antigravity/conversation_summaries.db`. That directory is
 resolved with `git rev-parse --git-common-dir` and must equal the repository's common dir or
 belong to another clone with the same normalized origin URL (`matched_other_clone`), so linked
 worktrees and clones of one remote match and a lookalike folder slug does not. A folder the run
@@ -21,11 +24,13 @@ resolves nowhere is `unresolved_cwd`. Folder names are never matched.
 When more than 2000 sessions match, the newest 2000 are kept and read newest first; the excess
 count is reported in `discovery.sessions_capped`. In this mode a
 record over 1 MiB is skipped and counted instead of excluding the file. Claude subagent
-transcripts are skipped as delegated. Antigravity conversations are SQLite: recent files are
-counted under `uncovered_stores` and never opened. Copilot stores are not discovered.
+transcripts and Antigravity child sessions (`parent_conversation_id` set or `nesting_depth > 0`)
+are skipped as delegated when `include_subagents=False`. Legacy Antigravity
+`conversations/*.db` files lacking a brain transcript are counted under
+`uncovered_stores.antigravity_sqlite_not_parsed` and never opened. Copilot stores are not discovered.
 
-The reader, `scripts/session_records.py`, is shared: `retro-agent-friction` carries a
-byte-identical copy. Change it here, then copy it there.
+The readers, `scripts/session_records.py` and `scripts/antigravity_records.py`, are shared:
+`retro-agent-friction` carries byte-identical copies. Change them here, then copy them there.
 
 ## Codex rollout JSONL
 
@@ -73,6 +78,18 @@ output, peer and handback messages, task notifications and scheduled turns. Abse
 in older CLI transcripts, cannot prove human authorship. Text blocks are joined; slash-command
 and local-command wrappers are excluded as envelopes. Message identity is the global `uuid`,
 so a forked or resumed copy counts once. All other record types are non-message records.
+
+## Antigravity transcript JSONL
+
+A file is Antigravity when its first record carries integer `step_index`, string `created_at`,
+and a `type` in `USER_INPUT`, `PLANNER_RESPONSE`, `GENERIC`, `SYSTEM_MESSAGE`, or
+`CHECKPOINT`. Transcripts that begin with `SYSTEM_MESSAGE` swarm/subagent prompts or contain no
+`USER_EXPLICIT` `USER_INPUT` are excluded as delegated. Only `USER_INPUT` records with
+`source: USER_EXPLICIT`, string `content`, integer `step_index`, and non-empty `created_at`
+contribute; `<USER_REQUEST>...</USER_REQUEST>` wrappers are unwrapped so `<ADDITIONAL_METADATA>`
+and `<USER_SETTINGS_CHANGE>` tags cannot generate false cue matches. Other step types count as
+non-message records. Message identity pairs a deterministic session seed with `step_index` and
+`created_at`.
 
 ## Text-free candidates
 

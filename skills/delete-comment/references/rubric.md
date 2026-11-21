@@ -92,6 +92,9 @@ as `Tautology` (or `Stale` if it drifted) instead of `Decision Record`.
   (`///`, `//!`) use comment syntax and appear in inventory: classify redundant internal blocks as
   `Tautology`, and classify verified public API contracts read by tooling or external callers as
   retained `Decision Record` contracts.
+- **Structured config, IaC, and SQL files:** Keep inline tool directives (`yamllint`, `checkov:`,
+  `tfsec:`, `trivy:`, `tflint-ignore:`, `sqlfluff:`, `noqa`) exempted. Move non-obvious schema,
+  security, or infrastructure constraints into `docs/adr/` or sibling docs before deleting comments.
 
 ## Lightweight ADR template
 

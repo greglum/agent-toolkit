@@ -45,13 +45,16 @@ confirm one mechanism and keep it out of the report. Call-side events, such as
 ## Coverage notes
 
 - Claude Code sessions are `~/.claude/projects/*/*.jsonl` and subagent transcripts
-  `*/<session>/subagents/*.jsonl`; Codex rollouts are `~/.codex/sessions/YYYY/MM/DD/*.jsonl`.
-- A session matches when its first recorded `cwd` resolves to the repository's git common dir, or
-  to another clone with the same normalized origin URL (`matched_other_clone`). A
-  deleted worktree resolves through its nearest existing parent and is counted as
-  `matched_via_deleted_worktree`. A cwd that resolves nowhere is `unresolved_cwd`.
+  `*/<session>/subagents/*.jsonl`; Codex rollouts are `~/.codex/sessions/YYYY/MM/DD/*.jsonl`;
+  Antigravity transcripts are `~/.gemini/antigravity/brain/*/.system_generated/logs/transcript.jsonl`
+  matched via read-only `~/.gemini/antigravity/conversation_summaries.db` `workspace_uris`
+  (including delegated swarm/subagent transcripts).
+- A session matches when its first recorded `cwd` (or decoded `workspace_uris` entry) resolves to
+  the repository's git common dir, or to another clone with the same normalized origin URL
+  (`matched_other_clone`). A deleted worktree resolves through its nearest existing parent and is
+  counted as `matched_via_deleted_worktree`. A cwd that resolves nowhere is `unresolved_cwd`.
 - Files older than the window are skipped by modification time; events are then windowed by
   record timestamp. Records over 1 MiB are skipped and counted under `limits`.
 - Records are deduplicated by native ID across files, so forks and resumes count once.
-- Antigravity conversations are SQLite; the script counts recent files in `uncovered_stores` and
-  parses none. Copilot sessions are not discovered.
+- Antigravity `conversations/*.db` files lacking a brain JSONL transcript are counted in
+  `uncovered_stores` and never opened. Copilot sessions are not discovered.

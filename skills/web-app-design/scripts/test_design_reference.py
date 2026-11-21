@@ -82,6 +82,47 @@ class DesignReferenceCLI(unittest.TestCase):
         for unsupported in ('#1234', '#ffffff80', 'red', 'color(display-p3 1 0 0)'):
             self.assertEqual(self.run_cli('contrast', unsupported, '#fff').returncode, 2)
 
+    def test_composited_contrast_catches_translucent_tint_failures(self):
+        opaque = self.run_cli('contrast', '#c42b1c', '#f5f1ea')
+        self.assertEqual(opaque.returncode, 0, opaque.stderr)
+        opaque_data = json.loads(opaque.stdout)
+        self.assertTrue(opaque_data['passes'])
+        self.assertNotIn('effective_background', opaque_data)
+
+        cases = [
+            (['#c42b1c', '#c42b1c', '--bg-alpha', '0.14', '--backdrop', '#f5f1ea'],
+             1, False, 4.062378353056, 'effective_background', '#eed5cd'),
+            (['#ad2012', '#ad2012', '--bg-alpha', '0.14', '--backdrop', '#f5f1ea'],
+             0, True, 4.943124476036, 'effective_background', '#ebd4cc'),
+            (['#ad2012', '#ad2012', '--bg-alpha', '0.24', '--backdrop', '#ede7dc'],
+             1, False, 3.836593661169, 'effective_background', '#deb7ac'),
+            (['#111111', '#ffffff', '--fg-alpha', '0.5'],
+             1, False, 3.544886215299, 'effective_foreground', '#888888'),
+        ]
+        for args, status, passes, expected_ratio, key, expected_hex in cases:
+            with self.subTest(args=args):
+                result = self.run_cli('contrast', *args)
+                self.assertEqual(result.returncode, status, result.stderr)
+                data = json.loads(result.stdout)
+                self.assertEqual(data['passes'], passes)
+                self.assertAlmostEqual(data['ratio'], expected_ratio, places=12)
+                self.assertEqual(data[key], expected_hex)
+
+        invalid_cases = [
+            ['#c42b1c', '#c42b1c', '--bg-alpha', '0.14'],
+            ['#c42b1c', '#c42b1c', '--backdrop', '#f5f1ea'],
+            ['#c42b1c', '#c42b1c', '--bg-alpha', '1.5', '--backdrop', '#fff'],
+            ['#c42b1c', '#c42b1c', '--bg-alpha', '-0.1', '--backdrop', '#fff'],
+            ['#c42b1c', '#c42b1c', '--bg-alpha', 'nan', '--backdrop', '#fff'],
+            ['#111111', '#ffffff', '--fg-alpha', 'inf'],
+            ['#c42b1c', '#c42b1c', '--bg-alpha', '0.2', '--backdrop', 'red'],
+        ]
+        for args in invalid_cases:
+            with self.subTest(invalid=args):
+                result = self.run_cli('contrast', *args)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn('design-reference:', result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()

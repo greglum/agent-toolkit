@@ -21,7 +21,10 @@ SHARED = {
         "scripts/retro_state.py",
         "references/ledger.md",
     ),
-    ("analyze-agent-history", "retro-*"): ("scripts/session_records.py",),
+    ("analyze-agent-history", "retro-*"): (
+        "scripts/session_records.py",
+        "scripts/antigravity_records.py",
+    ),
     ("repository-cleanup", "refresh-worktrees"): (
         "scripts/inventory.py",
         "scripts/test_inventory.py",

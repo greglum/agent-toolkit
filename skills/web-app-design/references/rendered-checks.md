@@ -11,9 +11,9 @@ kind of surface needs beyond a tidy screenshot.
   such rather than claiming user-tested comprehension.
 - **Geometry.** Measure wrapping, overflow, alignment, and sticky/overlay geometry from the
   DOM. Exercise long labels, realistic row counts, and narrow widths where supported.
-- **Accessibility.** Measure the composited contrast of each surface and text pair in use, in
-  every theme, and report any pair under 4.5:1 for body text, even one the design contract
-  specifies. Check visible focus. Run axe-core through the existing UI test setup or available
+- **Accessibility.** Measure the composited contrast of each surface and text pair in use
+  (including translucent tinted badges and banners) across both light and dark themes, and report
+  any pair under 4.5:1 for body text, even one the design contract specifies. Check visible focus. Run axe-core through the existing UI test setup or available
   browser tooling. Exercise keyboard navigation, overlay dismissal and focus return, forms, and
   primary actions; automated accessibility checks do not prove usability.
 - **Pinned states.** To review hover, focus, active, disabled, loading, and invalid states side

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Count agent friction in this repository's Claude Code and Codex sessions.
+"""Count agent friction in this repository's Claude Code, Codex, and Antigravity sessions.
 
 Read-only. Prints categories, counts and short hashes; never message text, commands, paths or
 tool output. --locate is the one exception, for verifying a candidate: it prints a bounded view of
@@ -22,7 +22,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from retro_state import repo_key  # noqa: E402
-from record_view import block_text, numbered_records, view  # noqa: E402
+from record_view import block_text, feed_antigravity, numbered_records, view  # noqa: E402
 from session_records import discover, parse_time, read_export  # noqa: E402
 
 SLOW_SECONDS, SLOW_HOOK_MS = 120, 10_000
@@ -30,12 +30,12 @@ DENIALS = {'automode-unavailable': 'classifier_no_verdict', 'automode-blocked': 
            'permission-rule': 'permission_rule_denied'}
 TEXT_RULES = [(name, re.compile(pattern, re.I)) for name, pattern in (
     ('hook_blocked', r'hook error|blocked by (?:a )?hook|(?:PreToolUse|PostToolUse):'),
-    ('tls_failure', r'x509|certificate verify|ssl|tls handshake|\btls:'),
+    ('tls_failure', r'\bx509\b|certificate verify|\bssl\b|ssl_connect|ssl_error|err_ssl|\btls handshake|\btls:'),
     ('sandbox_denied', r'operation not permitted|sandbox|read-only file system|\beperm\b'),
-    ('network_failure', r'could not resolve host|enotfound|getaddrinfo|connection refused|econnrefused'),
-    ('shell_alias_or_syntax', r'command not found|aliased to|shell function|zsh: (?:parse error|bad pattern|no matches)|bad substitution'),
+    ('network_failure', r'could not resolve host|\benotfound\b|\bgetaddrinfo\b|connection refused|\beconnrefused\b'),
+    ('shell_alias_or_syntax', r'command not found|aliased to|shell function|zsh:(?:\d+: )?(?:parse error|bad pattern|no matches|no such file or directory)|bad substitution'),
     ('timeout', r'timed out|timeout'),
-    ('tool_input_error', r'inputvalidationerror|has not been read yet|string to replace not found|<tool_use_error>|modified since'),
+    ('tool_input_error', r'inputvalidationerror|has not been read yet|string to replace not found|target content not found|<tool_use_error>|modified since'),
 )]
 LARGE = re.compile(r'output too large|exceeds maximum allowed|too large to', re.I)
 BYPASS = re.compile(r'--no-verify|\bSKIP=|--skip-(?:checks|hooks)')
@@ -45,7 +45,8 @@ FAMILIES = [(name, re.compile(pattern)) for name, pattern in (
     ('install', r'\b(?:install|add|sync)\b'),
     ('gh', r'^\s*gh\b'), ('git', r'^\s*git\b'))]
 PROGRAMS = set('git gh curl npm pnpm npx node python3 python uv pip make rtk rm mkdir cp mv cd ls cat sed '
-               'grep rg find docker java mvn psql jq bash sh zsh sleep open codegraph'.split())
+               'grep rg find docker java mvn psql jq bash sh zsh sleep open codegraph '
+               'terraform aws gcloud pytest ruff sqlite3'.split())
 STRUCTURAL = set('classifier_no_verdict classifier_blocked permission_rule_denied permission_denied_other '
                  'hook_blocking_error hook_non_blocking_error hook_cancelled slow_hook compaction api_error '
                  'interrupted rerun_without_sandbox repeated_failing_call rewrite_then_failed slow_call '
@@ -80,6 +81,7 @@ class Session:
         self.harness, self.seen = harness, seen
         self.pending, self.rewritten = {}, set()
         self.failures, self.message_ids = Counter(), set()
+        self.agy_queue, self.agy_bg, self.agy_seed = [], {}, None
         self.ts, self.events, self.output_tokens = None, [], 0
 
     def emit(self, category, line, signature='', tokens=0, **extra):
@@ -125,8 +127,9 @@ class Session:
         return True
 
     def feed(self, record, line):
-        self.ts = parse_time(record.get('timestamp')) or self.ts
-        (self.claude if self.harness == 'claude' else self.codex)(record, line)
+        self.ts = parse_time(record.get('timestamp') or record.get('created_at')) or self.ts
+        handler = {'claude': self.claude, 'codex': self.codex, 'antigravity': self.antigravity}[self.harness]
+        handler(record, line)
 
     def claude(self, r, line):
         kind = r.get('type')
@@ -198,6 +201,9 @@ class Session:
             self.result(line, line, failed, text, duration=seconds)
         elif itype == 'McpToolCall' and item.get('status') not in (None, 'completed'):
             self.emit('tool_failed', line, f"mcp\0{item.get('server')}\0{item.get('tool')}")
+
+    def antigravity(self, r, line):
+        feed_antigravity(self, r, line, BYPASS, program, short_hash)
 
 
 def iso(epoch):

@@ -113,7 +113,7 @@ def aggregate(paths, skip_oversized=False):
 def main():
     parser = PrivateArgumentParser(description=__doc__)
     parser.add_argument('exports', nargs='*', help='Explicit UTF-8 JSONL files; omit with --repo.')
-    parser.add_argument('--repo', help="Discover this repository's Claude Code and Codex sessions.")
+    parser.add_argument('--repo', help="Discover this repository's Claude Code, Codex, and Antigravity sessions.")
     parser.add_argument('--days', type=int, default=30, help='With --repo: sessions active in this many days.')
     args = parser.parse_args()
     if bool(args.exports) == bool(args.repo) or args.days < 1:

@@ -110,6 +110,10 @@ These are always Decide:
 - a security check or other guardrail
 - data, a migration, or retained records and evidence
 - a surface shared with another repository, a template or published components
+- live cloud or Infrastructure-as-Code resource definitions (`*.tf`, DNS records, storage buckets,
+  queues, databases, IAM or email policies): static repo call-graph refutation cannot prove a cloud
+  resource has no live external consumer; route to live-state ownership checks (and `iac-teardown`
+  when retiring IaC)
 
 Before cutting, the lead checks each Cut's claim, paths and every required edit against this list.
 Any match moves the whole candidate to Decide. The lead may downgrade a verdict, never upgrade one.
