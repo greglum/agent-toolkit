@@ -44,6 +44,8 @@ def init_repo(root: Path, name: str = "demo") -> Path:
     repo = root / name
     repo.mkdir(parents=True)
     git_cmd(repo, "init", "-b", "main")
+    git_cmd(repo, "config", "user.name", "Test Author")
+    git_cmd(repo, "config", "user.email", "author@example.com")
     (repo / "README.md").write_text("# Demo\n", encoding="utf-8")
     (repo / "keep.txt").write_text("base\n", encoding="utf-8")
     git_cmd(repo, "add", "README.md", "keep.txt")
