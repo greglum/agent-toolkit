@@ -45,10 +45,37 @@ def _yaml_can_start_quote(raw_line: str, pos: int) -> bool:
         idx -= 1
     if idx < 0 or tokens[idx].endswith(":"):
         return True
+    if tokens[: idx + 1] == ["---"]:
+        return True
     return all(tok in ("-", "?") for tok in tokens[: idx + 1])
 
 
-def _yaml_block_header(raw_line: str, comment_col: int | None) -> tuple[int, int | None] | None:
+def _yaml_strip_indicators(text: str, start: int) -> tuple[int, int | None]:
+    pos, last_indicator = start, None
+    n = len(text)
+    while pos < n and (
+        text[pos : pos + 2] in ("- ", "-\t", "? ", "?\t")
+        or (text[pos] in ("-", "?") and pos + 1 == n)
+    ):
+        last_indicator = pos
+        pos += 1
+        while pos < n and text[pos] in (" ", "\t"):
+            pos += 1
+    return pos, last_indicator
+
+
+def _yaml_strip_anchor_tags(tokens: list[str]) -> list[str]:
+    idx = 0
+    while idx < len(tokens) and (
+        (tokens[idx].startswith("&") and len(tokens[idx]) > 1) or tokens[idx].startswith("!")
+    ):
+        idx += 1
+    return tokens[idx:]
+
+
+def _yaml_block_header(
+    raw_line: str, comment_col: int | None, pending_parent_indent: int | None
+) -> tuple[int, int | None] | None:
     code_part = raw_line if comment_col is None else raw_line[:comment_col]
     trimmed = code_part.rstrip(" \t")
     tokens = trimmed.split()
@@ -57,27 +84,87 @@ def _yaml_block_header(raw_line: str, comment_col: int | None) -> tuple[int, int
     match = _YAML_BLOCK_RE.fullmatch(tokens[-1])
     if match is None:
         return None
-    prev_tokens = [tok for tok in tokens[:-1] if not tok.startswith(("&", "!"))]
+    prev_tokens = [
+        tok
+        for tok in tokens[:-1]
+        if not ((tok.startswith("&") and len(tok) > 1) or tok.startswith("!"))
+    ]
     if prev_tokens and not (
         prev_tokens[-1].endswith(":") or prev_tokens[-1] in ("-", "?", "---")
     ):
         return None
     leading = len(raw_line) - len(raw_line.lstrip(" "))
-    if not prev_tokens or prev_tokens == ["---"]:
+    content_col, last_indicator = _yaml_strip_indicators(trimmed, leading)
+    if prev_tokens == ["---"]:
         parent_indent = -1
-    elif tokens[0] in ("-", "?") and len(prev_tokens) >= 2 and prev_tokens[-1].endswith(":"):
-        parent_indent = code_part.find(prev_tokens[1], leading)
-    elif tokens[0] in ("-", "?") and prev_tokens == [tokens[0]]:
-        parent_indent = leading
-    elif prev_tokens[-1] in ("-", "?"):
-        parent_indent = code_part.rfind(prev_tokens[-1])
+    elif not prev_tokens:
+        if pending_parent_indent is not None and leading > pending_parent_indent:
+            parent_indent = pending_parent_indent
+        else:
+            parent_indent = -1 if leading == 0 else leading - 1
+    elif prev_tokens[-1] in ("-", "?") and last_indicator is not None:
+        parent_indent = last_indicator
     else:
-        parent_indent = leading
+        parent_indent = content_col
     digit_text = match.group(2) or match.group(3)
     if digit_text is None:
         return parent_indent, None
     digit = int(digit_text)
     return parent_indent, digit if parent_indent < 0 else parent_indent + digit
+
+
+def _yaml_classify_line(
+    code_part: str,
+    comment_col: int | None,
+    first_colon_col: int | None,
+    opened_quote: bool,
+    pending_parent_indent: int | None,
+) -> tuple[int | None, int | None]:
+    leading = len(code_part) - len(code_part.lstrip(" "))
+    content_col, last_indicator = _yaml_strip_indicators(code_part, leading)
+    if first_colon_col is not None:
+        rest_tokens = _yaml_strip_anchor_tags(code_part[first_colon_col + 1 :].split())
+        if not rest_tokens:
+            return None, content_col
+        if comment_col is None and not rest_tokens[0].startswith(("{", "[", "|", ">", "'", '"')):
+            return content_col, None
+        return None, None
+    if code_part == "---":
+        return None, -1
+    if code_part == "...":
+        return None, None
+    if code_part.startswith(("--- ", "---\t")):
+        rest_tokens = _yaml_strip_anchor_tags(code_part[3:].split())
+        if not rest_tokens:
+            return None, -1
+        if (
+            comment_col is None
+            and not opened_quote
+            and not rest_tokens[0].startswith(("{", "[", "|", ">", "'", '"'))
+        ):
+            return -1, None
+        return None, None
+    rest = code_part[content_col:]
+    if last_indicator is not None:
+        rest_tokens = _yaml_strip_anchor_tags(rest.split())
+        if not rest_tokens:
+            return None, last_indicator
+        if (
+            comment_col is None
+            and not opened_quote
+            and not rest_tokens[0].startswith(("{", "[", "|", ">", "'", '"'))
+        ):
+            return last_indicator, None
+        return None, None
+    if (
+        pending_parent_indent is not None
+        and leading > pending_parent_indent
+        and comment_col is None
+        and not opened_quote
+        and not rest.startswith(("%", "{", "[", "|", ">", "'", '"'))
+    ):
+        return pending_parent_indent, None
+    return None, None
 
 
 def scan_yaml(rel_path: str, text: str) -> list[CommentHit]:
@@ -89,6 +176,9 @@ def scan_yaml(rel_path: str, text: str) -> list[CommentHit]:
     block_active = False
     block_parent_indent = 0
     block_indent: int | None = None
+    plain_scalar_indent: int | None = None
+    pending_parent_indent: int | None = None
+    flow_depth = 0
 
     for line_no, raw_line in enumerate(lines, 1):
         if block_active:
@@ -109,7 +199,30 @@ def scan_yaml(rel_path: str, text: str) -> list[CommentHit]:
             else:
                 block_active = False
 
+        if quote_state is None and raw_line.strip(" \t") == "":
+            continue
+
+        indent = len(raw_line) - len(raw_line.lstrip(" "))
+        if (
+            quote_state is None
+            and plain_scalar_indent is not None
+            and plain_scalar_indent < 0
+            and (raw_line.startswith("---") or raw_line.startswith("..."))
+        ):
+            plain_scalar_indent = None
+        in_plain_cont = (
+            quote_state is None
+            and flow_depth == 0
+            and plain_scalar_indent is not None
+            and indent > plain_scalar_indent
+        )
+        if quote_state is None and not in_plain_cont:
+            plain_scalar_indent = None
+
+        began_in_quote = quote_state is not None
         comment_col: int | None = None
+        first_colon_col: int | None = None
+        opened_quote = False
         i, n = 0, len(raw_line)
         while i < n:
             ch = raw_line[i]
@@ -129,8 +242,9 @@ def scan_yaml(rel_path: str, text: str) -> list[CommentHit]:
                     quote_state = None
                 i += 1
                 continue
-            if ch in ('"', "'") and _yaml_can_start_quote(raw_line, i):
+            if not in_plain_cont and ch in ('"', "'") and _yaml_can_start_quote(raw_line, i):
                 quote_state = ch
+                opened_quote = True
                 i += 1
                 continue
             if ch == "#" and (i == 0 or raw_line[i - 1] in (" ", "\t")):
@@ -138,13 +252,52 @@ def scan_yaml(rel_path: str, text: str) -> list[CommentHit]:
                 raw = raw_line[i:]
                 hits.append(_make_line_hit(rel_path, lines, line_no, i, raw, 1))
                 break
+            if not in_plain_cont:
+                if ch in ("{", "[") and (flow_depth > 0 or _yaml_can_start_quote(raw_line, i)):
+                    flow_depth += 1
+                elif ch in ("}", "]") and flow_depth > 0:
+                    flow_depth -= 1
+                elif (
+                    ch == ":"
+                    and flow_depth == 0
+                    and first_colon_col is None
+                    and (i + 1 == n or raw_line[i + 1] in (" ", "\t"))
+                ):
+                    first_colon_col = i
             i += 1
 
         if quote_state is None:
-            header = _yaml_block_header(raw_line, comment_col)
+            if flow_depth > 0:
+                plain_scalar_indent = None
+                pending_parent_indent = None
+                continue
+            code_part = (raw_line if comment_col is None else raw_line[:comment_col]).rstrip(" \t")
+            if not code_part:
+                plain_scalar_indent = None
+                continue
+            header = (
+                None
+                if in_plain_cont
+                else _yaml_block_header(raw_line, comment_col, pending_parent_indent)
+            )
             if header is not None:
                 block_active = True
                 block_parent_indent, block_indent = header
+                plain_scalar_indent = None
+                pending_parent_indent = None
+            elif in_plain_cont:
+                pending_parent_indent = None
+            elif not began_in_quote:
+                plain_scalar_indent, pending_parent_indent = _yaml_classify_line(
+                    code_part,
+                    comment_col,
+                    first_colon_col,
+                    opened_quote,
+                    pending_parent_indent,
+                )
+            else:
+                plain_scalar_indent = None
+                pending_parent_indent = None
     return hits
 
 

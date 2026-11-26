@@ -31,7 +31,9 @@ Choose the relevant branch and account for its missing evidence:
 - **Connections or locks:** correlate the incident time with active versus idle sessions,
   waiting queries, blocking relationships, transaction age, and pool limits. Identify the
   pooler, version, mode, and application concurrency. Distinguish waiting for a connection
-  from waiting inside a query before proposing a setting change. When using cumulative
+  from waiting inside a query, and check for `idle in transaction` sessions caused by external
+  network or model calls running inside open transactions or shared non-pooled connections,
+  before proposing a setting change. When using cumulative
   statistics, record snapshot times, transaction boundaries and any available reset times.
   Refresh cached reads when needed. Compute deltas only across the same target and reset
   epoch, and account for reporting lag before assigning a change to the incident window.

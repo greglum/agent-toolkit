@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from retro_state import repo_key  # noqa: E402
 from record_view import block_text, feed_antigravity, numbered_records, view  # noqa: E402
-from session_records import discover, parse_time, read_export  # noqa: E402
+from session_records import discover, is_codex_external_import, parse_time, read_export  # noqa: E402
 
 SLOW_SECONDS, SLOW_HOOK_MS = 120, 10_000
 DENIALS = {'automode-unavailable': 'classifier_no_verdict', 'automode-blocked': 'classifier_blocked',
@@ -245,13 +245,19 @@ def main():
         now = sessions[-1]['mtime']
         limits.append(f'sessions capped at {args.max_sessions}; {remaining} newer remain for the next run')
     seen, read_issues, oversized, latest = set(), Counter(), 0, None
+    skipped_imports, stale_mtime = 0, 0
     stats = defaultdict(lambda: {'events': 0, 'sessions': set(), 'tokens': 0, 'programs': Counter(),
                                  'hashes': defaultdict(lambda: [0, set()])})
     slow_families, tokens, subagent_sessions = Counter(), 0, 0
     for number, info in enumerate(sessions, 1):
         session = Session(info['harness'], seen)
         if args.locate:
+            is_codex = info['harness'] == 'codex'
             for line, record in numbered_records(info['path'], issues=read_issues):
+                if (is_codex and line <= 50 and record.get('type') == 'event_msg'
+                        and isinstance(record.get('payload'), dict)
+                        and str(record['payload'].get('turn_id', '')).startswith('external-import-')):
+                    break
                 before = len(session.events)
                 session.feed(record, line)
                 for event in session.events[before:]:
@@ -264,10 +270,18 @@ def main():
         if issue:
             read_issues[issue] += 1
             continue
+        if info['harness'] == 'codex' and is_codex_external_import(records):
+            skipped_imports += 1
+            continue
+        in_window = False
         for index, record in enumerate(records, 1):
             session.feed(record, index)
             if session.ts and since < session.ts <= now:
+                in_window = True
                 latest = max(latest or 0, session.ts)
+        if not in_window and not any(e['ts'] and since < e['ts'] <= now for e in session.events):
+            stale_mtime += 1
+            continue
         tokens += session.output_tokens
         subagent_sessions += info['subagent']
         for event in session.events:
@@ -312,7 +326,9 @@ def main():
     coverage = {
         'window': {'kind': 'since' if args.since else 'days', 'start': iso(since), 'end': iso(now)},
         'discovery': discovery,
-        'sessions_read': len(sessions) - sum(read_issues.values()) - too_large,
+        'sessions_read': len(sessions) - sum(read_issues.values()) - too_large - skipped_imports - stale_mtime,
+        'external_imports_skipped': skipped_imports,
+        'stale_mtime_sessions_skipped': stale_mtime,
         'sessions_remaining_after_batch': remaining,
         'subagent_sessions_read': subagent_sessions,
         'marker_advance': iso(latest or (now if remaining else since)) if tracked and not gaps else None,

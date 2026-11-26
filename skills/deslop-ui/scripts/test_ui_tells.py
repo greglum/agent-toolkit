@@ -111,6 +111,26 @@ class ScannerContractTests(unittest.TestCase):
                     self.assertIn("V8", result.stdout)
                     self.assertEqual(result.stderr, "")
 
+    def test_new_weak_tells_detect_arrow_cta_italic_heading_and_layout_hazards(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "Hero.tsx"
+            cases = [
+                ('<a href="/docs">Learn more →</a>\n', "V15"),
+                ('<a href="/docs">Learn More -></a>\n', "V15"),
+                ('<a href="/docs">GET STARTED →</a>\n', "V15"),
+                ('<h1>Design <em>faster</em> today</h1>\n', "V16"),
+                ('<div className="transition-all w-[100vw]">Box</div>\n', "V17"),
+                ('<section className="w-screen">Wide</section>\n', "V17"),
+            ]
+            for content, group in cases:
+                with self.subTest(group=group):
+                    source.write_text(content, encoding="utf-8")
+                    result = self.scan(root, source)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertIn(group, result.stdout)
+                    self.assertEqual(result.stderr, "")
+
 
 if __name__ == "__main__":
     unittest.main()

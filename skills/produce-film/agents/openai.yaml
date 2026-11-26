@@ -1,0 +1,6 @@
+interface:
+  display_name: "Produce Film"
+  short_description: "Orchestrate 3D/SVG assets, timeline film QA, clips, and covers"
+  default_prompt: "Use $produce-film to coordinate assets, build and verify the film with an independent critique, and package requested cutdowns and covers."
+policy:
+  allow_implicit_invocation: false

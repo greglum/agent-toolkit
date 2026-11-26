@@ -59,7 +59,11 @@ fast-cut preset work. Captions or the transcript preserve the full accessible te
 the picture deliberately abbreviates it.
 
 Review sharp text and line art at final size, in motion and after encoding. Heavy texture,
-grain, subframe blur and upscaling can harm type and inflate render cost. Keep detail such as
+grain, subframe blur and upscaling can harm type and inflate render cost. Avoid single-frame
+image GAN upscalers (such as Real-ESRGAN applied frame by frame) on video or crisp UI/text:
+evaluating frames independently causes temporal boiling/flicker and hallucinates distorted
+glyphs. Re-render natively at target resolution or use a verified temporal-aware video
+restorer when footage truly requires restoration. Keep detail such as
 lyrics legible when motion-blurring the background. Measure any supersampling or parallel
 rendering benefit on a representative shot rather than importing another machine's estimate.
 
@@ -108,15 +112,22 @@ contacts and speech have been checked. Keep unverified lip sync or anatomy expli
    interior word boundaries). Check whether the transcript is verbatim (`ASR` systems can omit
    fillers, repetitions, and false starts still audible in the recording) and keep a cleaned
    reading copy separate. See `references/sources-earlier.md` for speech-editing provenance.
-3. **Select the speech cut first:** Assemble the main speech cut by selecting the better
-   complete take and removing only repetitions, fillers, and pauses that add no meaning.
-   Check retained sentences in context before moving any line into an intro so meaning holds.
+3. **Select the speech cut first:** Check lip-sync once per talking-head recording before
+   cutting. Assemble the main speech cut by selecting the better complete take (keeping
+   corrected retakes and cutting abandoned starts) and removing only repetitions, fillers, and
+   pauses that add no meaning. Leave about 50 ms of room-tone decay/onset at join edges so
+   words stay whole, avoid leaving isolated sub-1 s stutter fragments between two adjacent
+   cuts, and check retained sentences in context before moving any line into an intro.
 4. **Verify silence and gap cuts against audio:** Before cutting any low-audio interval or
    transcript gap, listen to the interval and surrounding audio on the selected source track.
    Adjust cut boundaries to preserve quiet speech, meaningful pauses, breaths, reactions,
    and complete words, checking uncertain edges against the recording and waveform.
 5. **Polish after cuts settle:** Add B-roll, reframing, and visual polish only after speech cut
-   decisions settle.
+   decisions settle. For screen recordings, frame tight on the active pane or read passage
+   (text >= ~2.5% of video height) so surrounding desktop chrome stays out; avoid micro-reframe
+   twitches of a few percent on the same subject, keep any camera inset fixed in its corner
+   rather than chasing content, and switch sparingly between full-screen camera and screen so
+   brief flashes do not disorient the viewer.
 
 Keep source time and output time distinct. For a unit-speed cut, a retained source cue lands
 at `output_start + cue_source_time - source_in`; speed changes and overlaps need the timeline's

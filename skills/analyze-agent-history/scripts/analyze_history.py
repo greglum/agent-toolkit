@@ -32,7 +32,7 @@ class PrivateArgumentParser(argparse.ArgumentParser):
         self.exit(1, 'Invalid arguments. Use --help for the accepted form.\n')
 
 
-def aggregate(paths, skip_oversized=False):
+def aggregate(paths, skip_oversized=False, since=None):
     totals = Counter()
     inputs = []
     file_digests = set()
@@ -53,7 +53,7 @@ def aggregate(paths, skip_oversized=False):
         identity = None
         messages = []
         if issue is None:
-            identity, messages, issue = native_messages(records, counts)
+            identity, messages, issue = native_messages(records, counts, since=since)
         summary['status'] = issue or ('partial' if counts['malformed_records'] or
                                      counts['unsupported_records'] or
                                      counts['oversized_records'] else 'parsed')
@@ -91,7 +91,8 @@ def aggregate(paths, skip_oversized=False):
                     categories[name] += 1
                     category_sessions[name].add(identity)
     incomplete = any(item['status'] not in ('parsed', 'duplicate_export',
-                     'delegated_or_inherited_session') for item in inputs)
+                     'delegated_or_inherited_session', 'external_import_session',
+                     'stale_mtime_session') for item in inputs)
     return {
         'schema': 'agent-history-candidates/v1',
         'status': 'partial' if incomplete else 'complete_for_supported_messages',
@@ -119,8 +120,10 @@ def main():
     if bool(args.exports) == bool(args.repo) or args.days < 1:
         parser.error('input_mode')
     discovery = None
+    since = None
     if args.repo:
-        sessions, discovery = discover(args.repo, time.time() - args.days * 86400, include_subagents=False)
+        since = time.time() - args.days * 86400
+        sessions, discovery = discover(args.repo, since, include_subagents=False)
         discovery['sessions_found'] = len(sessions)
         discovery['sessions_capped'] = max(0, len(sessions) - MAX_REPO_INPUTS)
         paths = [s['path'] for s in reversed(sessions[-MAX_REPO_INPUTS:])]
@@ -128,7 +131,7 @@ def main():
         parser.error('input_limit')
     else:
         paths = args.exports
-    report, incomplete = aggregate(paths, skip_oversized=bool(args.repo))
+    report, incomplete = aggregate(paths, skip_oversized=bool(args.repo), since=since)
     if discovery is not None:
         report['discovery'] = discovery
         incomplete = (

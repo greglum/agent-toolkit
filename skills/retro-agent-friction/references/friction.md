@@ -54,7 +54,12 @@ confirm one mechanism and keep it out of the report. Call-side events, such as
   (`matched_other_clone`). A deleted worktree resolves through its nearest existing parent and is
   counted as `matched_via_deleted_worktree`. A cwd that resolves nowhere is `unresolved_cwd`.
 - Files older than the window are skipped by modification time; events are then windowed by
-  record timestamp. Records over 1 MiB are skipped and counted under `limits`.
+  record timestamp, and files touched only by untimestamped metadata updates with no in-window
+  record timestamps are excluded from `sessions_read` and `output_tokens_source_reported`
+  (`stale_mtime_sessions_skipped`). Records over 1 MiB are skipped and counted under `limits`.
+- Codex external-agent import rollouts (`turn_id` starting with `external-import-`) are excluded
+  from counts and `--locate` (`external_imports_skipped`).
+- Antigravity `ERROR_MESSAGE` steps are counted under `api_error`.
 - Records are deduplicated by native ID across files, so forks and resumes count once.
 - Antigravity `conversations/*.db` files lacking a brain JSONL transcript are counted in
   `uncovered_stores` and never opened. Copilot sessions are not discovered.

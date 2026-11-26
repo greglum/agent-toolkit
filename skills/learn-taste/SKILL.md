@@ -60,7 +60,9 @@ State the expected behavior, when it applies, and the verified reason when that 
 changes future decisions. Link stable evidence when useful. Keep raw transcripts, private
 details, and unverified motivations out of shared guidance. Preserve intentional exceptions.
 A project decision belongs in the project. Change a reusable skill only when the lesson
-also applies outside that project or corrects the skill's general procedure.
+also applies outside that project or corrects the skill's general procedure; for catalog
+bundles, follow [skill refinement](references/skill-refinement.md) to pick `SKILL.md`,
+dated `references/`, or bundled `scripts/` plus a planted-defect test.
 
 Apply supported edits when documentation or skill maintenance is within the request. When a
 candidate falls outside authorized edit scope, surface it with these fields instead of

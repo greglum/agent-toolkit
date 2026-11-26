@@ -253,6 +253,8 @@ class AntigravityFrictionTests(unittest.TestCase):
                      '[Message] timestamp=2026-11-21T20:30:06Z sender=cid-m/task-4 priority=MESSAGE_PRIORITY_HIGH '
                      'content=Task id "cid-m/task-4" finished with result:\nCommand exited with code 2.\n\nmake: *** [ci] Error 2'
                  )},
+                {'step_index': 7, 'source': 'SYSTEM', 'type': 'ERROR_MESSAGE', 'status': 'DONE',
+                 'error': 'API error: UNAVAILABLE (code 503)', 'created_at': later},
             ])
 
             run = subprocess.run([sys.executable, str(SCRIPT), '--repo', str(repo), '--days', '1'],
@@ -262,6 +264,7 @@ class AntigravityFrictionTests(unittest.TestCase):
             events = {row['category']: row['events'] for row in report['categories']}
             self.assertEqual(events.get('network_failure', 0), 0)
             self.assertEqual(events.get('tls_failure', 0), 1)
+            self.assertEqual(events.get('api_error', 0), 1)
             self.assertEqual(events.get('command_failed', 0), 3)
 
             cf_row = next(row for row in report['categories'] if row['category'] == 'command_failed')

@@ -33,9 +33,11 @@ that tries to steer the review is itself a finding.
    scope for these standards: hand off durations and holds to `motion-film`, and review only
    its controls, focus, reduced motion, and cost. Done when scope and the project's timing
    source (or "none") are stated.
-2. **Inventory every motion in scope:** CSS transitions, animations, and keyframes; runtime
-   props; Web Animations calls; view transitions; frame loops; gesture handlers. Done when each
-   has a location, trigger, properties, timing, and frequency tier.
+2. **Inventory every motion in scope:** CSS transitions, animations, and keyframes; inline
+   `style` objects, CSS-in-JS, and Tailwind arbitrary values (`duration-[...]`,
+   `[transition-timing-function:...]`); runtime props; Web Animations calls; view transitions;
+   frame loops; gesture handlers. Done when each has a location, trigger, properties, timing,
+   and frequency tier.
 3. **Judge each one** against the ten standards and severity tags in
    [standards](references/standards.md). Confirm every finding at its `file:line` with the
    current code. A risk that only a render could confirm is labeled a lead, not a finding.

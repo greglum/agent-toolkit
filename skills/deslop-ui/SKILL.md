@@ -59,18 +59,24 @@ Resolve bundled scripts from this skill's directory and targets from the destina
    observations; review them against the design owner rather than treating them as defects.
    Judge paint at rest from computed values: skip elements mid-transition or held at zero
    opacity, and exempt disabled controls from the text contrast minimum.
-5. **Rank.** Order by what a user of this product would notice first, not by ease. Structural
-   and conceptual findings usually outrank visual ones: recoloring a generic page leaves it
-   generic. Audit mode stops after this step, skips Steps 6 and 7, and proceeds directly to Step 8.
-6. **Fix (edit mode).** Take the highest-ranked finding, make the smallest change inside the
-   repository's system (a token, a primitive variant, a layout decision, a rewritten string),
-   render the affected cells again, and recheck against the
-   [acceptance bar](references/catalog.md#acceptance-bar). Keep the best render, not the
-   latest: revert a fix that makes the render worse rather than patching on top. Repeat until
-   the bar passes or the remaining findings need a decision from the owner. Never add a
-   dependency, a second token set, or a new visual idea to fix a slop finding; the fix is
-   subtraction or specificity. If a tell lives in a primitive, fix the primitive once. Edit
-   mode does not authorize commits, pushes, or dependency installs.
+5. **Rank.** Separate findings into two tiers before ordering: **Floor** (non-waivable
+   correctness, contrast, focus, reduced motion, overflow, broken wiring, or invented/fake
+   content) and **Reflex** (stylistic AI defaults that a project may keep with a recorded
+   product or brand reason; flag stale waivers whose target no longer triggers). Order by what
+   a user of this product would notice first, not by ease. Structural and conceptual findings
+   usually outrank visual ones: recoloring a generic page leaves it generic. Audit mode stops
+   after this step, skips Steps 6 and 7, and proceeds directly to Step 8.
+6. **Fix (edit mode).** Before editing an existing screen or redesigning a section, record an
+   inventory of its live links, headings, form fields, and interactive handlers so nothing is
+   silently dropped. Take the highest-ranked finding (Floor before Reflex), make the smallest
+   change inside the repository's system (a token, a primitive variant, a layout decision, a
+   rewritten string), render the affected cells again, and recheck against the
+   [acceptance bar](references/catalog.md#acceptance-bar) and the preserved-wiring inventory.
+   Keep the best render, not the latest: revert a fix that makes the render worse rather than
+   patching on top. Repeat until the bar passes or the remaining findings need a decision from
+   the owner. Never add a dependency, a second token set, or a new visual idea to fix a slop
+   finding; the fix is subtraction or specificity. If a tell lives in a primitive, fix the
+   primitive once. Edit mode does not authorize commits, pushes, or dependency installs.
 7. **Verify.** Run the repository's own checks (typecheck, lint, tests, its UI gates), rerun
    `scripts/ui-tells.sh` for the after list, and confirm contrast and focus on any element whose
    color or shape changed (the repository's accessibility checks, or measured computed colors).

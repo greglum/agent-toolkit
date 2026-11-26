@@ -13,7 +13,8 @@ import re
 import sqlite3
 from urllib.parse import unquote, urlparse
 
-AGY_TYPES = ('USER_INPUT', 'PLANNER_RESPONSE', 'GENERIC', 'SYSTEM_MESSAGE', 'CHECKPOINT')
+AGY_TYPES = ('USER_INPUT', 'PLANNER_RESPONSE', 'GENERIC', 'SYSTEM_MESSAGE', 'CHECKPOINT', 'ERROR_MESSAGE')
+ISO_TIME_RE = re.compile(r'(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)(?:\.\d+)?(Z|[+-]\d\d:\d\d)?$')
 USER_REQ_RE = re.compile(r'<USER_REQUEST>\s*(.*?)\s*</USER_REQUEST>', re.S)
 DELEGATED_PREFIXES = ('You have just started. Your assignment', '[swarm] new board message')
 EXIT_CODE_RE = re.compile(r'^Command exited with code ([1-9]\d*)\.?\r?$', re.M)
@@ -51,7 +52,20 @@ def _is_delegated_transcript(records):
     return False
 
 
-def antigravity_messages(records, counts):
+def _parse_iso_time(value):
+    if not isinstance(value, str):
+        return None
+    match = ISO_TIME_RE.match(value)
+    if not match:
+        return None
+    zone = match[2] if match[2] and match[2] != 'Z' else '+00:00'
+    try:
+        return datetime.fromisoformat(match[1] + zone).timestamp()
+    except ValueError:
+        return None
+
+
+def antigravity_messages(records, counts, since=None):
     """Extract typed human prompts from Antigravity transcript JSONL."""
     first = records[0]
     seed = f"{first.get('created_at', '')}\0{first.get('type', '')}\0{str(first.get('content') or '')[:256]}"
@@ -60,10 +74,15 @@ def antigravity_messages(records, counts):
     if _is_delegated_transcript(records):
         counts['excluded_sessions'] += 1
         return identity, [], 'delegated_or_inherited_session'
+    if since is not None:
+        stamps = [ts for r in records if (ts := _parse_iso_time(r.get('created_at'))) is not None]
+        if stamps and max(stamps) < since:
+            counts['before_window_sessions'] += 1
+            return identity, [], 'stale_mtime_session'
     messages = []
     for record in records:
         kind = record.get('type')
-        if kind in ('PLANNER_RESPONSE', 'GENERIC', 'SYSTEM_MESSAGE', 'CHECKPOINT'):
+        if kind in ('PLANNER_RESPONSE', 'GENERIC', 'SYSTEM_MESSAGE', 'CHECKPOINT', 'ERROR_MESSAGE'):
             counts['non_message_records'] += 1
             continue
         if kind != 'USER_INPUT':
@@ -79,6 +98,11 @@ def antigravity_messages(records, counts):
                 or not created_at or not isinstance(content, str)):
             counts['malformed_records'] += 1
             continue
+        if since is not None:
+            ts = _parse_iso_time(created_at)
+            if ts is not None and ts < since:
+                counts['before_window_messages'] += 1
+                continue
         messages.append((f'step:{step}:{created_at}', _unwrap_user_request(content)))
     return identity, messages, None
 

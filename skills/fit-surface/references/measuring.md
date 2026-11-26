@@ -43,7 +43,9 @@ source is a lead until it renders.
   fire and exiting overlays stay mounted. Bring it to the front, or measure synchronously.
 - **Stale module.** After a large edit or a redeploy, the open tab can serve old code or dead
   chunk references that crash every route. Hard reload, and compare the served module with the
-  file before concluding an edit did nothing.
+  file before concluding an edit did nothing. Inside an agent sandbox, macOS FSEvents can also
+  deliver zero file-change events (and `CHOKIDAR_USEPOLLING=1` can be ignored when a bundler
+  selects FSEvents first), requiring explicit polling configuration in the dev server.
 - **False empty or error.** A first load can return auth errors and render empty states, and
   an HTTP 200 can carry an error body. Confirm real content rendered. Reload once before
   believing a blank page.

@@ -2,9 +2,9 @@
 name: diagram-design
 description: >-
   Create, redraw, or audit source-grounded architecture diagrams, static figures, and interactive node
-  maps with tracing, comparison, and SVG/PNG export. Use graph-engineering for code impact
-  analysis, system-anatomy for spatial cutaways, state-machine-audit for implicit statecharts,
-  and web-app-design for app UI.
+  maps with tracing, comparison, and SVG/PNG export. Use graph-engineering for code impact,
+  system-anatomy for cutaways, state-machine-audit for statecharts, svg-illustration for hand-drawn
+  art, and web-app-design for app UI.
 compatibility: Interactive graphs need Node.js 18+ (no runtime packages or network); static Mermaid/SVG works without Node. PNG/SVG downloads need a browser; automated browser checks use optional Playwright/axe-core, and prose/UI review uses optional deslop/deslop-ui (falling back to direct manual inspection when absent).
 ---
 

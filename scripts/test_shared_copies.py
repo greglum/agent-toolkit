@@ -23,6 +23,7 @@ SHARED = {
     ),
     ("analyze-agent-history", "retro-*"): (
         "scripts/session_records.py",
+        "scripts/repo_discovery.py",
         "scripts/antigravity_records.py",
     ),
     ("repository-cleanup", "refresh-worktrees"): (

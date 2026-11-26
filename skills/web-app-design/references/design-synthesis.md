@@ -33,6 +33,21 @@ agent to invent all the consequential choices.
 Before building, ask whether the same brief for another product would yield the same
 direction. If it would, the direction is generic; revise that part.
 
+## Reference originality check
+
+When designing from supplied reference pages, screenshots, or capture packs, separate common
+visual grammar (ordinary grids, standard sans-serif type, conventional footers) from copied
+identity or distinctive combinations:
+
+- Compare shipped copy, names, URLs, numbers/prices, images/assets, section sequences, and
+  distinctive signature effects against the supplied references.
+- Inspect actual bytes and repository history rather than trusting renamed files.
+- Replace copied copy, metrics, imagery, or signature combinations with this product's real
+  material; cosmetic recoloring never resolves a copied layout or asset.
+
+For a redesign of an existing surface, inventory existing links, headings, form fields, and
+handlers before editing and verify none were dropped afterward unless explicitly cut in scope.
+
 ## Arrival paths
 
 For a public landing or detail page, record the known incoming link or visitor question,
@@ -120,6 +135,7 @@ Check these non-obvious failure traps when carrying the design direction across 
 - **Composited contrast on translucent surfaces:** inspect actual composited colors in both light and dark themes when translucent badges, pills, or banners overlap background layers (an opaque pair that clears 4.5:1 can drop below AA at a 10% to 25% tint); express statuses with text or labels as well as color.
 - **Row and popover precision:** match control heights across a shared row, keep scroll boundaries inside their owner, anchor popovers to moving triggers, and verify hover, focus, active, disabled, and pending states on changed controls.
 - **Input preservation on failure:** keep user input on save failure, focus the first invalid field, preserve scroll position on refresh, and drive completion states from actual operation state rather than a timer.
+- **AI and agent state hierarchy:** skip spinners for sub-1s or optimistic updates; distinguish generic waiting labels from inspectable reasoning steps or known-layout skeletons; keep tool-call cards and human approval/permission prompts explicit instead of reusing generic alert dialogs; keep at most one live animated indicator per message or panel; prefer semantic tokens that flip under `.dark` over scattered raw `dark:` overrides; never commit paid component-registry tokens (such as `AFFECTUI_TOKEN`) to source.
 
 ## Fit the surface to its job
 
@@ -130,7 +146,7 @@ Check these non-obvious failure traps when carrying the design direction across 
 | List/table | Scanning, comparing, filtering, selecting and acting | Dense data interfaces and complete filtering flows | Long rows, empty filters, sort/selection state, pagination and row actions |
 | Form/settings | Decisions and input in a sensible order | Complete validation, saving and recovery flows | Preserved input, inline errors, first invalid focus, pending and failed save |
 | Detail/workbench | The object and its useful context | Master/detail, panels and long-content layouts | Back/context preservation, permissions, overflowing content and overlays |
-| Chat/assistant | Reading, composing, responding and inspecting results | Real multi-turn conversations and artifact workflows | Drafts, streaming/cancel/error, long code/tables, scroll position and input focus |
+| Chat/assistant | Reading, composing, responding, tool calls, and approvals | Real multi-turn conversations, reasoning traces, and artifact workflows | Drafts, streaming/cancel/error, waiting vs reasoning states, long code/tables, scroll position and input focus |
 | Landing/pricing | Understand the offer, assess trust, choose a next step | Relevant website composition, pricing and CTA examples | Truthful claims, meaningful links, narrow layout, accessible motion and forms |
 | Expressive experience | An explicitly requested brand or interactive story | Relevant motion/3D/shader references | Loading, reduced motion, keyboard, fallback and measured performance |
 
@@ -218,3 +234,13 @@ Adapt this to the task rather than filling every blank by assumption:
 
 The request specifies a result and boundaries. It does not require an external builder,
 marketplace package, purchased prompt, or a new design system.
+
+## Provenance
+
+Observed November 25, 2026 (original synthesis; no upstream prose copied): surface modes
+(`Persuade`, `Operate`, `Read`, `Experience`) and refinement-vs-redesign boundaries draw on
+`pbakaus/impeccable` at `2fc5e1459e` (Apache-2.0); hero-first verification and before/after
+preservation draw on `Nutlope/hallmark` at `04977e15f3` (MIT); originality evidence categories
+draw on `MengTo/Skills` `audit-reference-originality` at `a5b1d3d28b` (MIT); AI/agent state
+hierarchy and semantic-token notes draw on `flohoeller/affectui` at `f5cced0134` (MIT free
+tier) and `BoardUI/boardui` at `c87984b6bb` (MIT free tier).

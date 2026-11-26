@@ -23,11 +23,16 @@ name only user paths, stable handles, required state, commands, and observable r
    still needs credentials without printing secret values (per the no-secrets rule in `SKILL.md`).
 3. **Traps.** Each trap you met, with its symptom and how to tell it from a defect: the port
    moved, a setup or configuration page, a sign-in page, in-page tabs a route sweep misses,
-   a slow first compile, a browser that needs a flag in containers.
+   a slow first compile, or a sandboxed browser crashing by signal (`SIGTRAP` with null exit
+   code) where a tool could hang waiting for a debug port instead of failing fast. Prefer a
+   dedicated headless browser binary (`CHROME_PATH` or bundled Playwright Chromium) over an
+   installed desktop browser to avoid keychain stalls.
 4. **Features.** One entry per feature, in the format below. Past about ten features, use an
    index plus one file per feature in a sibling folder.
-5. **Cleanup.** Stop what the run started. Reset any fixture data an action changed. Keep
-   screenshots and other evidence at a path the record names.
+5. **Cleanup.** Stop what the run started, including making the process exit handler remove
+   temporary browser profiles even when the browser crashes by signal rather than normal exit.
+   Reset any fixture data an action changed. Keep screenshots and other evidence at a path the
+   record names.
 
 ## Feature entry
 

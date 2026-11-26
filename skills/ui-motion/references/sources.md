@@ -1,5 +1,18 @@
 # Sources and adaptation
 
+## November 25 motion-polish and scanner review
+
+Reviewed [Jakubantalik/transitions.dev](https://github.com/Jakubantalik/transitions.dev/tree/ec4d48f5aa)
+(`LICENSE`, `skills/transitions-polish/SKILL.md`, and `agent/README.md`), observed November 25,
+2026. The repository splits rights: `transitions/` and `skills/` use the custom Transitions.dev
+License (free personal and commercial use inside products, no redistribution as a competing
+motion pack or kit), while `agent/`, `cli/`, and `refine/` are MIT. Its hosted fix command
+(`npx transitions-agent fix`) sends affected source files to `api.transitions.dev` (metered
+Free and paid Business plans). Adopted usage-based token matching, open/close asymmetry versus
+reversible swaps, hover property coverage, and full-surface CSS/Tailwind scan scope in original
+prose inside `review-animations` (`standards.md`). No recipes, token scales, scripts, or hosted
+endpoints were imported or run. Recheck when upstream license terms or hosted boundaries change.
+
 ## October 27 visibility timing correction
 
 [MDN Page Visibility API](https://github.com/mdn/content/blob/21ed9a1338b207e8a39064583c19d9f720235235/files/en-us/web/api/page_visibility_api/index.md)

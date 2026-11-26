@@ -229,6 +229,46 @@ class FrictionCountsTests(unittest.TestCase):
         self.assertIn('x509', redact('tls: failed to verify certificate: x509: unknown authority'))
         self.assertIn('Operation not permitted', redact('mkdir: Operation not permitted'))
 
+    def test_stale_mtime_and_codex_external_import_do_not_inflate_friction_or_marker(self):
+        with tempfile.TemporaryDirectory() as home:
+            home = Path(home).resolve()
+            env = make_env(home)
+            repo = home / 'repo'
+            init_repo(repo, env)
+            old_ts = iso_at(-3 * 86400)
+            now_ts = iso_at(-10)
+            write(home / '.claude/projects/p/stale.jsonl', [
+                {'sessionId': 's-old', 'cwd': str(repo), 'timestamp': old_ts, 'type': 'assistant',
+                 'uuid': 'a1', 'message': {'id': 'm1', 'usage': {'output_tokens': 5000}, 'content': [
+                     {'type': 'tool_use', 'id': 't1', 'name': 'Bash', 'input': {'command': 'git status'}}]}},
+                {'sessionId': 's-old', 'cwd': str(repo), 'timestamp': old_ts, 'type': 'user',
+                 'uuid': 'r1', 'message': {'content': [
+                     {'type': 'tool_result', 'tool_use_id': 't1', 'is_error': True, 'content': 'timed out'}]}},
+                {'type': 'cost-state', 'sessionId': 's-old', 'totalCostUSD': 2.0},
+            ])
+            write(home / '.codex/sessions/2026/11/20/rollout-imp.jsonl', [
+                {'type': 'session_meta', 'timestamp': now_ts,
+                 'payload': {'id': 'imp-1', 'source': 'vscode', 'cwd': str(repo)}},
+                {'type': 'event_msg', 'timestamp': now_ts,
+                 'payload': {'type': 'task_started', 'turn_id': 'external-import-turn-1'}},
+                {'type': 'event_msg', 'timestamp': now_ts,
+                 'payload': {'type': 'item_completed', 'item': {
+                     'type': 'CommandExecution', 'id': 'e1', 'command': ['git', 'status'],
+                     'exit_code': 1, 'status': 'failed', 'aggregated_output': 'timed out'}}},
+            ])
+            run = subprocess.run(
+                [sys.executable, str(SCRIPT), '--repo', str(repo), '--days', '1', '--start-tracking'],
+                text=True, capture_output=True, check=False, env=env,
+            )
+            self.assertEqual((run.returncode, run.stderr), (0, ''))
+            report = json.loads(run.stdout)
+            self.assertEqual(report['coverage']['sessions_read'], 0)
+            self.assertEqual(report['coverage']['external_imports_skipped'], 1)
+            self.assertEqual(report['coverage']['stale_mtime_sessions_skipped'], 1)
+            self.assertEqual(report['totals']['output_tokens_source_reported'], 0)
+            self.assertEqual(report['categories'], [])
+            self.assertNotEqual(report['coverage']['marker_advance'], now_ts)
+
 
 if __name__ == '__main__':
     unittest.main()

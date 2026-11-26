@@ -52,7 +52,17 @@ class ScanError(Exception):
 def is_directive(body: str) -> bool:
     """Return True when stripped comment body starts with a recognized tool directive."""
     lowered = body.lstrip().lower()
-    return any(lowered.startswith(prefix) for prefix in DIRECTIVE_PREFIXES)
+    for prefix in DIRECTIVE_PREFIXES:
+        if prefix.endswith((":", "-", " ", "=")):
+            if lowered.startswith(prefix):
+                return True
+        elif lowered == prefix:
+            return True
+        elif lowered.startswith(prefix):
+            next_char = lowered[len(prefix)]
+            if not (next_char.isalnum() or next_char == "_"):
+                return True
+    return False
 
 
 def detect_language(path: Path, first_line: str) -> str | None:

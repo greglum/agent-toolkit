@@ -23,14 +23,18 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Build or improve a web surface | [web-app-design](../skills/web-app-design/SKILL.md) | [fit-surface](../skills/fit-surface/SKILL.md), [deslop-ui](../skills/deslop-ui/SKILL.md) | Layout, focus, accessibility and key user actions checked in the running app |
 | Let a model arrange trusted results | [bounded-generative-ui](../skills/bounded-generative-ui/SKILL.md) | Existing UI components and a fixed view | A validated layout with source, keyboard, and fallback checks |
 | Establish app verification | [app-verifier](../skills/app-verifier/SKILL.md) | The relevant design or behavior skill | Launch and feature checks rerun from the saved record |
+| Cut cold-launch time on a macOS desktop app | [half-bounce-launch](../skills/half-bounce-launch/SKILL.md) | [compare-experiments](../skills/compare-experiments/SKILL.md) for A/B sweeps; [write-swift](../skills/write-swift/SKILL.md) for AppKit/Swift work | Run 1 and warm median LaunchServices timings, passing Mach-O and dyld hygiene checks, and measured A/B deltas |
 | Choose and build interface motion | [find-animation-opportunities](../skills/find-animation-opportunities/SKILL.md), then [animate](../skills/animate/SKILL.md) | [review-animations](../skills/review-animations/SKILL.md) | Motion tested with real triggers, interruption and reduced motion, with its cost measured |
 | Fix existing interface motion | [ui-motion](../skills/ui-motion/SKILL.md) | [review-animations](../skills/review-animations/SKILL.md) | States that stay continuous in the running app and end in the correct final state |
-| Make film thumbnails or social covers | [thumbnail-production](../skills/thumbnail-production/SKILL.md) | Existing image-generation or composition tools; film production only when requested | Exports checked for each platform, an editable source and a private record of where each asset came from |
-| Make a film | [motion-film](../skills/motion-film/SKILL.md) | Its production and export references | A full render, a listening pass, checked exports and an editable handoff when asked |
+| Make film thumbnails or social covers | [thumbnail-production](../skills/thumbnail-production/SKILL.md) | Image or composition tools; film production only when requested | Checked platform exports, editable source, and private asset record |
+| Build 3D assets in Blender | [blender-scene](../skills/blender-scene/SKILL.md) | [motion-film](../skills/motion-film/SKILL.md) or [web-app-design](../skills/web-app-design/SKILL.md) | Linted bpy script, grounded imports, turnaround renders, and export |
+| Create or animate SVG art | [svg-illustration](../skills/svg-illustration/SKILL.md) | [motion-film](../skills/motion-film/SKILL.md) or [web-app-design](../skills/web-app-design/SKILL.md) | Passing SVG/palette lint, scoped IDs, zoomed review, and reduced-motion check |
+| Make a film | [motion-film](../skills/motion-film/SKILL.md) | Production and export references | Full render, freeze/seam checks, listening pass, and checked exports |
 | Trace the impact of a repository change | [graph-engineering](../skills/graph-engineering/SKILL.md) | Existing index and source checks; [diagram-design](../skills/diagram-design/SKILL.md) for a visual | Dependency paths tied to the source, uncertainty stated, affected code checked and the graph reconciled with the source after edits |
 | Get up to speed on new data in an unfamiliar domain | [onboard-data](../skills/onboard-data/SKILL.md), by name | [learn-domain](../skills/learn-domain/SKILL.md) and [map-data-source](../skills/map-data-source/SKILL.md) | A cited primer and glossary, a data dictionary with a meaning status per column, re-checkable claims and one ranked question list |
 | Learn an unfamiliar domain or industry | [learn-domain](../skills/learn-domain/SKILL.md) | [extract-documents](../skills/extract-documents/SKILL.md) to prepare document corpora | Every primer and glossary claim cited with a status, and SME questions tied to the decision and evidence |
 | Understand an unfamiliar dataset or database | [map-data-source](../skills/map-data-source/SKILL.md) | [telemetry-contract](../skills/telemetry-contract/SKILL.md) for sensor data with a known contract | Grain proven by exact counts, joins scored by containment and fan-out, and a dictionary with no guessed meanings |
+| Plan, rehearse, or audit a data migration | [reconcile-migration](../skills/reconcile-migration/SKILL.md) | Project migration runner and [postgres-investigate](../skills/postgres-investigate/SKILL.md) for query or lock limits | Every source table, schema-scoped column, drop rule, cutoff timestamp, and per-key hash reconciled without leaking row values |
 | Check sensor or telemetry data before analysis | [telemetry-contract](../skills/telemetry-contract/SKILL.md) | [telemetry-anomalies](../skills/telemetry-anomalies/SKILL.md) once the data meets its contract | Each channel checked for units, rate, range, saturation and time, with counts kept distinct and no silent repair |
 | Find faults in sensor telemetry | [telemetry-anomalies](../skills/telemetry-anomalies/SKILL.md) | [telemetry-contract](../skills/telemetry-contract/SKILL.md) first when the data is unchecked | Events within a stated false-alarm budget, scored at event level against a trivial baseline, never point-adjusted |
 | Validate a model on time-ordered or grouped data | [temporal-validation](../skills/temporal-validation/SKILL.md) | [compare-experiments](../skills/compare-experiments/SKILL.md) to compare candidate runs | A written temporal contract, an audit with no leakage findings, and results beside a naive baseline on the same folds |
@@ -42,6 +46,7 @@ permission. Use the shortest path that resolves the task's uncertainty.
 | Find the checks that keep letting defects through | [retro-verification](../skills/retro-verification/SKILL.md) | Nearest suite owner or [encode-correction](../skills/encode-correction/SKILL.md) (behavior test level) for a missing test, [encode-correction](../skills/encode-correction/SKILL.md) for a gate | A report of traced escapes, the layer each passed and the fix per layer |
 | Find which recent mistakes keep recurring, on request or on a schedule | [retro-guardrails](../skills/retro-guardrails/SKILL.md) | [encode-correction](../skills/encode-correction/SKILL.md) to implement a recommended control | A report with coverage, admitted findings with evidence, earlier controls checked, and the marker state |
 | Find repeated feedback in agent sessions | [analyze-agent-history](../skills/analyze-agent-history/SKILL.md) | [encode-correction](../skills/encode-correction/SKILL.md) only after verifying incidents | Counts of possible corrections with no message text, excluded sources named and coverage stated honestly |
+| Coordinate a requested swarm across models | [orchestrate-agents](../skills/orchestrate-agents/SKILL.md) | Native delegation or a supported cross-provider runner | Distinct owners, confirmed model runs, reviewed changes and checks on the integrated source |
 | Improve through repeated feedback | [loop-engineering](../skills/loop-engineering/SKILL.md) | Repository-owned checks and review; [codebase-metrics](../skills/codebase-metrics/SKILL.md) for scored assessment | Fixed acceptance criteria, check results tied to the exact content and a clear decision to stop |
 | Audit an implicit state machine or a risky event ordering | [state-machine-audit](../skills/state-machine-audit/SKILL.md) | The closest existing test or model checker when the question requires it | Source-backed transitions, a scoped result, and a chart derived from the same evidence |
 | Explain a system visually | [diagram-design](../skills/diagram-design/SKILL.md) for static diagrams or searchable graph maps; [system-anatomy](../skills/system-anatomy/SKILL.md) for spatial explainers | Source, interaction and rendered-output checks | Accurate relationships, working tracing and comparison, and checked exports |
@@ -69,7 +74,9 @@ Codex; respect the catalog's harness restrictions.
 | Review client/API integration | [review-integration](../skills/review-integration/SKILL.md) |
 | Clean out code comments, extract ADRs, draft excuse issues, and install a comment-ban ratchet | [delete-comment](../skills/delete-comment/SKILL.md) |
 | Run the full delegated animation loop | [polish-animations](../skills/polish-animations/SKILL.md) |
+| Coordinate film production end to end | [produce-film](../skills/produce-film/SKILL.md) |
 | Take branch work (or authorized in-scope dirty branch paths) to merged | [land-pr](../skills/land-pr/SKILL.md) |
+| Review, revise in isolation, and land dirty worktrees or default-branch edits | [land-dirty-work](../skills/land-dirty-work/SKILL.md) |
 | Prepare social drafts | [distribution-draft](../skills/distribution-draft/SKILL.md) |
 | Review pending changes, commits, or a PR in Codex | [review-pending-changes](../skills/review-pending-changes/SKILL.md), [review-recent-commits](../skills/review-recent-commits/SKILL.md), [review-pr](../skills/review-pr/SKILL.md) |
 | Commit/push or create a PR in Codex | [acp](../skills/acp/SKILL.md), [create-pr](../skills/create-pr/SKILL.md), with authority for the identified destination |
@@ -92,6 +99,13 @@ and permission to delegate depend on the harness and task.
 
 See [verification](verification.md)
 for the catalog's automated checks.
+
+## Self-improving skill loop
+
+When real-repo runs surface repeatable friction or blind spots, fold portable fixes back via
+[learn-taste](../skills/learn-taste/SKILL.md) ([protocol](../skills/learn-taste/references/skill-refinement.md)):
+strip repo-local details, update `SKILL.md`, `references/`, or `scripts/` with planted-defect
+tests, run `sh scripts/verify.sh`, and run `/harden-skill` or `$harden-skill` for major edits.
 
 ## PR lifecycle
 

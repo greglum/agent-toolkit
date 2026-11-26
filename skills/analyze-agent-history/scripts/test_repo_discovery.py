@@ -1,5 +1,6 @@
 """Repository session discovery CLI boundaries using synthetic stores only."""
 
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
@@ -12,6 +13,10 @@ import time
 import unittest
 
 SCRIPT = Path(__file__).with_name('analyze_history.py')
+
+
+def iso_at(offset_seconds=0):
+    return (datetime.now(timezone.utc) + timedelta(seconds=offset_seconds)).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
 
 
 class RepoDiscoveryTests(unittest.TestCase):
@@ -63,9 +68,11 @@ class RepoDiscoveryTests(unittest.TestCase):
             subprocess.run(['git', '-C', str(clone), 'remote', 'set-url', 'origin', origin], check=True, env=git)
             (locked / 'work').mkdir(parents=True)
 
+            now_iso = iso_at(-30)
+
             def claude(cwd, rows):
                 base = {'sessionId': cwd.name + secret, 'cwd': str(cwd), 'userType': 'external',
-                        'timestamp': '2026-10-30T00:00:00Z'}
+                        'timestamp': now_iso}
                 return [{**base, 'type': 'user', 'uuid': f'{cwd.name}-{n}', **row} for n, row in enumerate(rows)]
             cue = {'message': {'role': 'user', 'content': 'I already asked ' + secret}}
             sessions = {
@@ -138,7 +145,7 @@ class RepoDiscoveryTests(unittest.TestCase):
             repo = home / 'repo'
             self.init_repo(repo, commit=True)
             base = {'sessionId': 's', 'cwd': str(repo), 'userType': 'external',
-                    'timestamp': '2026-10-30T00:00:00Z', 'type': 'user'}
+                    'timestamp': iso_at(-30), 'type': 'user'}
             files = {
                 'old.jsonl': ([{**base, 'sessionId': 'old', 'uuid': 'u-old', 'message': {'content': 'I already asked'}}], 100),
                 'mid.jsonl': ([{**base, 'sessionId': 'mid', 'uuid': 'u-mid', 'message': {'content': 'Normal request.'}}, '{bad'], 200),
@@ -245,23 +252,24 @@ class RepoDiscoveryTests(unittest.TestCase):
             conn.commit()
             conn.close()
 
+            now_iso = iso_at(-30)
             (home / 'locked_ws' / 'work').mkdir(parents=True)
             self.write_nested(ag / 'brain/cid-main/.system_generated/logs/transcript.jsonl', [
                 {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
-                 'created_at': '2026-11-21T10:00:00Z',
+                 'created_at': now_iso,
                  'content': f'<USER_REQUEST>I already asked {secret}</USER_REQUEST>\n<ADDITIONAL_METADATA>Preserve</ADDITIONAL_METADATA>'},
             ])
             self.write_nested(ag / 'brain/cid-sub/.system_generated/logs/transcript.jsonl', [
                 {'step_index': 0, 'source': 'SYSTEM', 'type': 'SYSTEM_MESSAGE', 'status': 'DONE',
-                 'created_at': '2026-11-21T10:01:00Z', 'content': 'You have just started. Your assignment'},
+                 'created_at': now_iso, 'content': 'You have just started. Your assignment'},
             ])
             self.write_nested(ag / 'brain/cid-other/.system_generated/logs/transcript.jsonl', [
                 {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
-                 'created_at': '2026-11-21T10:02:00Z', 'content': 'I already asked'},
+                 'created_at': now_iso, 'content': 'I already asked'},
             ])
             self.write_nested(ag / 'brain/cid-mixed/.system_generated/logs/transcript.jsonl', [
                 {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
-                 'created_at': '2026-11-21T10:03:00Z', 'content': 'Mixed'},
+                 'created_at': now_iso, 'content': 'Mixed'},
             ])
             (ag / 'conversations/cid-main.db').write_bytes(b'')
             (ag / 'conversations/legacy-only.db').write_bytes(b'')
@@ -292,6 +300,36 @@ class RepoDiscoveryTests(unittest.TestCase):
                 self.assertEqual(blocked.returncode, 2)
                 b_report = json.loads(blocked.stdout)
                 self.assertIn('antigravity session store', b_report['discovery']['blocked'])
+
+    def test_stale_mtime_and_codex_external_import_excluded_from_repo_window(self):
+        with tempfile.TemporaryDirectory() as home:
+            home = Path(home).resolve()
+            repo = home / 'repo'
+            self.init_repo(repo, commit=True)
+            old_ts = iso_at(-3 * 86400)
+            now_ts = iso_at(-10)
+            self.write_nested(home / '.claude/projects/p1/stale.jsonl', [
+                {'sessionId': 's-old', 'cwd': str(repo), 'userType': 'external',
+                 'timestamp': old_ts, 'type': 'user', 'uuid': 'u-old',
+                 'message': {'content': 'I already asked to fix it.'}},
+                {'type': 'cost-state', 'sessionId': 's-old', 'totalCostUSD': 1.2},
+                {'type': 'mode', 'mode': 'normal', 'sessionId': 's-old'},
+            ])
+            self.write_nested(home / '.codex/sessions/2026/11/20/rollout-imp.jsonl', [
+                {'type': 'session_meta', 'timestamp': now_ts,
+                 'payload': {'id': 'imp-1', 'source': 'vscode', 'cwd': str(repo)}},
+                {'type': 'event_msg', 'timestamp': now_ts,
+                 'payload': {'type': 'task_started', 'turn_id': 'external-import-turn-1'}},
+                {'type': 'event_msg', 'timestamp': now_ts,
+                 'payload': {'type': 'user_message', 'message': 'I already asked once.'}},
+            ])
+            result = self.run_repo(repo, home)
+            self.assertEqual((result.returncode, result.stderr), (0, ''))
+            report = json.loads(result.stdout)
+            self.assertEqual(report['totals'].get('eligible_messages', 0), 0)
+            self.assertEqual(report['distinct_eligible_sessions'], 0)
+            statuses = {item['status'] for item in report['inputs']}
+            self.assertEqual(statuses, {'stale_mtime_session', 'external_import_session'})
 
 
 if __name__ == '__main__':

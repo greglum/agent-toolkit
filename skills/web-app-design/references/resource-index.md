@@ -109,14 +109,32 @@ were not established. Recheck the selected item before use.
 
 ## Design tooling references
 
-Observed **2026-10-26**. Consult these when the task needs machinery beyond visual
-inspiration. Source inspection establishes the interfaces below; neither tool was run.
-These are research options, not required installs or replacements for project design owners.
+Observed **2026-10-26** (refreshed **2026-11-25**). Consult these when the task needs machinery
+beyond visual inspiration. Source inspection establishes the interfaces below; none of these
+external tools were run locally. These are research options, not required installs or
+replacements for project design owners.
 
 | Reference | Use when | Material limit |
 | --- | --- | --- |
 | [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/28b3b8dee8c976df4fa3e94aed4e092ad43fcb03) | Palette, typography or stack advice needs searchable data and persisted recommendations | MIT source; font and asset rights remain separate. Search can return no match. Stack retrieval is separate from design-system generation; check applicability to the installed stack before adopting advice |
-| [Impeccable](https://github.com/pbakaus/impeccable/tree/989c484c091d26f10fa102767eefc0da2e62ec67) | A confirmed design-review need calls for structured detection or live browser variants | Apache-2.0 source. README describes an engine download and harness hooks on some installation paths; inspect the chosen path before authorized use. Detection is a review aid; runtime quality remains unverified |
+| [Impeccable](https://github.com/pbakaus/impeccable/tree/2fc5e1459e) | A confirmed design-review need calls for a 62-rule Rust static/browser detector (`--sarif`, `--report-unused-ignores`) or live browser variants | Apache-2.0 source (v4.11.1, Nov 26, 2026 UTC). Downloads a self-contained engine binary and installs edit hooks on some paths; live mode's copy-edit Apply can invoke local `codex`/`claude` with sandbox and approval bypass unless `IMPECCABLE_LIVE_COPY_AGENT=chat` or `off` is set. Inspect telemetry (`DO_NOT_TRACK=1`) and hooks before authorized use |
+| [Hallmark](https://github.com/Nutlope/hallmark/tree/04977e15f3) | A new landing-page workflow wants Floor/Reflex/Finish browser linting (`sloplint.mjs`), dealt theme materials, or Wikimedia Commons photo attribution | MIT source (v2.0.0, Nov 11, 2026). Browser checks need Puppeteer/Chrome; Wikimedia photo entries carry per-image CC0/CC-BY licenses rather than stock-site terms. Opinionated house rules (eyebrow/word caps) may conflict with an app's existing `DESIGN.md` |
+| [Meng To Skills](https://github.com/MengTo/Skills/tree/a5b1d3d28b) | Reference-study workflows (originality audits, stitched full-page captures, Three.js material/camera recipes, SVG spot illustration specs) | MIT source (217 skills, Nov 25, 2026). Broad showcase catalog with uneven verification depth across individual folders; inspect specific skill and demo rights before adapting ideas |
+
+## Agentic UI and motion registries
+
+Observed **2026-11-25**. Source and homepage text were inspected; none were installed or run.
+Check free vs. Pro boundaries, token secrets, and hosted endpoints before adoption.
+
+| Reference | Best use | License and material limit |
+| --- | --- | --- |
+| [affectUI](https://github.com/flohoeller/affectui/tree/f5cced0134) | Zero-dependency single-file React 19 `.tsx` components for agent trees, tool calls, traces, approvals, and chat via shadcn CLI/MCP | 75 free MIT items (`affectui.com`); Pro items require a one-time commercial license (from $249) and `AFFECTUI_TOKEN` env var (never commit tokens) |
+| [BoardUI](https://github.com/BoardUI/boardui/tree/c87984b6bb) | React 19 + Tailwind v4 + React Aria design system for dashboards and agentic chat (90 free items, semantic dark tokens, RTL) | MIT free repo; Pro (10 templates + 30 components) uses commercial BoardUI License; React Aria primitives require client modules (`"use client"`) in App Router |
+| [beUI](https://github.com/starc007/ui-components/tree/1d7fd24337) | Animated Motion + Tailwind React components (plus [beui-native](https://github.com/starc007/beui-native/tree/ab3e58aa75) for React Native) via shadcn CLI or public MCP (`mcp.beui.dev`) | MIT free repos; Pro tier (`pro.beui.dev`) is commercial and separate |
+| [Transitions.dev](https://github.com/Jakubantalik/transitions.dev/tree/ec4d48f5aa) | 48+ UI transition recipes, `transitions-agent` motion scanner/GitHub Action, and Refine tool | Dual license: custom Transitions.dev License on `transitions/` and `skills/` (free commercial product use, no redistribution as competing pack) + MIT tooling; `fix` sends affected files to `api.transitions.dev` (Free 10/mo, Business $59/mo) |
+| [Bencho](https://github.com/cabralorenzo/bencho/tree/84dfcee170) | 48 interactive React micro-interaction blocks and 24 Web Audio API synthesized interface sounds via shadcn registry | MIT for repo code (excludes brand, goat mark, and site photos; two sounds notice `cuelume`); Pro (180+ blocks, MCP) is commercial |
+| [OriginKit](https://github.com/vellum-ai/originkit/tree/d27526a2e2) | 50 free animated React/Framer components via MCP plugin | MIT MCP repo; fetching source needs a free `cmp_live_...` API key (10 fetches/day limit) |
+| [HorizonX](https://horizonx.so/) | Commercial UI kits, animated shaders, textures, Figma files, and MCP | Subscription ($24.99/mo); no public GitHub repo inspected; verify commercial terms before use |
 
 ## 21st.dev Magic proxy and request boundary
 

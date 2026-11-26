@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline design recipe search, draft briefs, and opaque sRGB pair checks."""
+"""Offline design recipe search, draft briefs, and sRGB contrast checks (opaque or alpha-composited)."""
 import argparse
 import json
 import math
@@ -40,7 +40,7 @@ def rgb(value):
 def parse_alpha(value, label):
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not (0.0 <= value <= 1.0):
         raise ValueError(f'{label} must be a finite number between 0 and 1')
-    return float(value)
+    return 0.0 if value == 0 else float(value)
 
 
 def composite_rgb(top, base, alpha):
@@ -65,18 +65,20 @@ def contrast(foreground, background, kind='normal', *, bg_alpha=None, backdrop=N
         raise ValueError(f'Unknown contrast kind: {kind}')
     if (bg_alpha is None) != (backdrop is None):
         raise ValueError('--bg-alpha and --backdrop must be used together')
-    bg_rgb = composite_rgb(rgb(background), rgb(backdrop), parse_alpha(bg_alpha, 'bg_alpha')) if bg_alpha is not None else rgb(background)
-    fg_rgb = composite_rgb(rgb(foreground), bg_rgb, parse_alpha(fg_alpha, 'fg_alpha')) if fg_alpha is not None else rgb(foreground)
+    a_bg = parse_alpha(bg_alpha, 'bg_alpha') if bg_alpha is not None else None
+    a_fg = parse_alpha(fg_alpha, 'fg_alpha') if fg_alpha is not None else None
+    bg_rgb = composite_rgb(rgb(background), rgb(backdrop), a_bg) if a_bg is not None else rgb(background)
+    fg_rgb = composite_rgb(rgb(foreground), bg_rgb, a_fg) if a_fg is not None else rgb(foreground)
     low, high = sorted((luminance_rgb(fg_rgb), luminance_rgb(bg_rgb)))
     ratio = (high + 0.05) / (low + 0.05)
     result = {'foreground': foreground, 'background': background, 'kind': kind,
               'ratio': ratio, 'threshold': THRESHOLDS[kind], 'passes': ratio >= THRESHOLDS[kind]}
-    if bg_alpha is not None:
-        result['bg_alpha'] = float(bg_alpha)
+    if a_bg is not None:
+        result['bg_alpha'] = a_bg
         result['backdrop'] = backdrop
         result['effective_background'] = rgb_to_hex(bg_rgb)
-    if fg_alpha is not None:
-        result['fg_alpha'] = float(fg_alpha)
+    if a_fg is not None:
+        result['fg_alpha'] = a_fg
         result['effective_foreground'] = rgb_to_hex(fg_rgb)
     return result
 
