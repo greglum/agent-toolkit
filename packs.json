@@ -18,9 +18,11 @@
       "global-code-review",
       "graph-engineering",
       "guided-review",
+      "half-bounce-launch",
       "iac-teardown",
       "loop-engineering",
       "postgres-investigate",
+      "reconcile-migration",
       "review-integration",
       "review-pending-changes",
       "review-pr",
@@ -40,6 +42,7 @@
       "continue-pr",
       "create-pr",
       "guided-review",
+      "land-dirty-work",
       "land-pr",
       "monitor-pr",
       "plan-pr-stack",
@@ -54,6 +57,7 @@
       "encode-correction",
       "harden-skill",
       "learn-taste",
+      "orchestrate-agents",
       "retro",
       "retro-agent-context",
       "retro-agent-friction",
@@ -63,6 +67,7 @@
     ],
     "design-and-motion": [
       "animate",
+      "blender-scene",
       "bounded-generative-ui",
       "deslop",
       "deslop-ui",
@@ -70,16 +75,20 @@
       "fit-surface",
       "polish-animations",
       "review-animations",
+      "svg-illustration",
       "ui-motion",
       "web-app-design"
     ],
     "film-and-content": [
+      "blender-scene",
       "content-marketing",
       "deslop",
       "distribution-draft",
       "motion-film",
+      "produce-film",
       "repurpose-long-video",
       "social-research",
+      "svg-illustration",
       "thumbnail-production"
     ],
     "data": [
@@ -90,6 +99,7 @@
       "onboard-data",
       "postgres-investigate",
       "reconcile-metric",
+      "reconcile-migration",
       "telemetry-anomalies",
       "telemetry-contract",
       "temporal-validation"
@@ -126,6 +136,11 @@
     "distribution-draft": [
       "deslop"
     ],
+    "land-dirty-work": [
+      "land-pr",
+      "refresh-worktrees",
+      "repository-cleanup"
+    ],
     "learn-domain": [
       "extract-documents"
     ],
@@ -141,6 +156,13 @@
       "animate",
       "review-animations",
       "ui-motion"
+    ],
+    "produce-film": [
+      "blender-scene",
+      "svg-illustration",
+      "motion-film",
+      "repurpose-long-video",
+      "thumbnail-production"
     ],
     "repurpose-long-video": [
       "motion-film"

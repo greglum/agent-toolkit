@@ -199,6 +199,33 @@ class HistoryCliTests(unittest.TestCase):
             self.assertEqual(categories['preservation_request']['messages'], 0)
             self.assertNotIn(secret, result.stdout)
 
+    def test_codex_external_import_and_antigravity_error_message_parse_cleanly(self):
+        with tempfile.TemporaryDirectory() as directory:
+            imported = self.write(directory, 'codex-import.jsonl', [
+                {'type': 'session_meta', 'payload': {'id': 'imp-1', 'source': 'vscode'}},
+                {'type': 'event_msg', 'timestamp': '2026-11-20T10:00:00.100Z',
+                 'payload': {'type': 'task_started', 'turn_id': 'external-import-turn-1'}},
+                {'type': 'event_msg', 'timestamp': '2026-11-20T10:00:00.100Z',
+                 'payload': {'type': 'user_message', 'message': 'I already asked once.'}},
+                {'type': 'event_msg', 'timestamp': '2026-11-20T10:00:00.100Z',
+                 'payload': {'type': 'user_message', 'message': 'Still broken here.'}},
+            ])
+            agy_err = self.write(directory, 'agy-err.jsonl', [
+                {'step_index': 0, 'source': 'USER_EXPLICIT', 'type': 'USER_INPUT', 'status': 'DONE',
+                 'created_at': '2026-11-21T10:00:00Z',
+                 'content': '<USER_REQUEST>Check status.</USER_REQUEST>'},
+                {'step_index': 1, 'source': 'SYSTEM', 'type': 'ERROR_MESSAGE', 'status': 'DONE',
+                 'error': 'UNAVAILABLE (503)', 'created_at': '2026-11-21T10:00:01Z'},
+            ])
+            result, report = self.invoke(imported, agy_err)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(report['status'], 'complete_for_supported_messages')
+            self.assertEqual(report['inputs'][0]['status'], 'external_import_session')
+            self.assertEqual(report['inputs'][1]['status'], 'parsed')
+            self.assertEqual(report['totals'].get('conflicting_message_versions', 0), 0)
+            self.assertEqual(report['totals'].get('unsupported_records', 0), 0)
+            self.assertEqual(report['totals']['eligible_messages'], 1)
+
 
 if __name__ == '__main__':
     unittest.main()

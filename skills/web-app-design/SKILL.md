@@ -27,15 +27,19 @@ versions, routes, and UI verification commands. Inspect the current running surf
 available. Trace the main journey and its state owners before changing layout or controls.
 
 Identify the audience, primary task, information density, relevant viewports and themes,
-and whether the surface is a working app, marketing page, or an intentionally expressive
-experience. Define success in user terms: what becomes easier to find, compare, enter, or do.
+and the surface mode chosen from this surface rather than the company: **Persuade** (landing,
+marketing, pricing), **Operate** (app UI, dashboards, tools, settings), **Read** (docs,
+articles, changelogs), or **Experience** (portfolios, interactive showcases). Define success in
+user terms: what becomes easier to find, compare, enter, or do.
 For an audit, inspect relevant references and source/rendered evidence, then deliver findings
 with locations, evidence, and proposed fixes. Skip Step 4 and write no app or design files.
 
-Consider what you would build today from scratch. Rebuild the surface inside the existing
-system when it clearly improves the task and the cost fits the request. Otherwise iterate
-and briefly name what the fresh design would do differently. Preserve behavior contracts,
-data meanings, permissions, accessibility, and user-owned work in either case.
+Consider what you would build today from scratch. Keep the boundary between refinement and
+redesign crisp: a refinement preserves incumbent identity, copy, and wiring; a redesign
+replaces the discarded visual world cleanly instead of half-polishing it, while inventorying
+and preserving live routes, content, form fields, and interactive wiring before and after.
+Preserve behavior contracts, data meanings, permissions, accessibility, and user-owned work in
+either case.
 
 Done when the changed journey, constraints, and responsible components are understood.
 
@@ -116,7 +120,9 @@ For deformable objects, tearing, foil, embossing, or other tactile 3D interactio
 [tactile 3D surfaces](references/tactile-3d.md) before choosing topology or shader mechanics.
 
 Use installed `frontend-design` here if helpful, or implement directly. Start with the primary
-journey and representative real content. Set layout and typography before decorative detail.
+journey and representative real content; on new public pages, render and verify the hero at
+desktop (for example 1280x800) and narrow widths before building lower sections so hierarchy
+and fold framing are fixed early. Set layout and typography before decorative detail.
 Use the app's existing components and state owners; share repeated behavior where its invariant
 belongs. CSS, native controls, and installed libraries come before new runtimes. Before relying
 on a browser feature whose support may vary or removing an existing fallback, read the
@@ -124,10 +130,12 @@ on a browser feature whose support may vary or removing an existing fallback, re
 
 Make the slice usable end to end, then extend the language across the requested scope,
 checking the non-obvious traps in [craft guidance](references/design-synthesis.md#craft-that-survives-real-content)
-and [surface requirements](references/design-synthesis.md#fit-the-surface-to-its-job). Implement
-applicable loading, empty, filtered-empty, error, permission, stale-data, unsaved-change, and
-recovery states. Use truthful data and label fixtures. Route substantial interaction motion to
-`ui-motion` when available.
+and [surface requirements](references/design-synthesis.md#fit-the-surface-to-its-job). When
+integrating custom `.glb` assets from `blender-scene` or contract-linted SVG scenes from
+`svg-illustration`, preserve their exported scale, palette, `id` prefix, and reduced-motion
+contracts. Implement applicable loading, empty, filtered-empty, error, permission, stale-data,
+unsaved-change, and recovery states. Use truthful data and label fixtures. Route substantial
+interaction motion to `ui-motion` when available.
 
 Done when all requested surfaces and relevant states use the chosen language and real
 controls work. A static mockup satisfies only a request for a mockup.

@@ -159,6 +159,9 @@ def feed_antigravity(session, r, line, bypass_re, program_fn, short_hash_fn):
     if kind == 'CHECKPOINT':
         session.emit('compaction', line)
         return
+    if kind == 'ERROR_MESSAGE':
+        session.emit('api_error', line)
+        return
     if kind == 'PLANNER_RESPONSE':
         session.agy_queue.clear()
         session.output_tokens += step['output_tokens']

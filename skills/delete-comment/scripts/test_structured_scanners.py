@@ -100,6 +100,111 @@ class StructuredScannerTests(unittest.TestCase):
             [(5, False, "# real comment after document end")],
         )
 
+    def test_yaml_indented_empty_nested_sequence_and_plain_continuations(self) -> None:
+        source = (
+            "empty_indented:\n"
+            "  |\n"
+            "next_after_empty: 1 # real after indented empty block\n"
+            "nonempty_indented:\n"
+            "  |\n"
+            "  # inside indented block\n"
+            "next_after_indented: 1 # real after indented block\n"
+            "explicit_indented:\n"
+            "  |2\n"
+            "  # inside explicit indent block at col 2\n"
+            "after_explicit: 1 # real after explicit indent block\n"
+            "deep_header:\n"
+            "    |\n"
+            "  # inside block less indented than header\n"
+            "after_deep_header: 1 # real after deep header block\n"
+            "items:\n"
+            "  - - run: |2\n"
+            "        # inside nested sequence block\n"
+            "      next: 1 # real after nested sequence block\n"
+            '  - "my key": |2\n'
+            "      # inside quoted-key sequence block\n"
+            "    after_qkey: 1 # real after quoted-key block\n"
+            "desc: Music from\n"
+            "  '90s # real inside multiline plain scalar\n"
+            "after_plain: 1 # real after multiline plain scalar\n"
+            '"qkey": Music from\n'
+            "  '90s # real inside quoted-key multiline plain\n"
+            "wrapped_plain:\n"
+            "  Music from the\n"
+            "  '90s # real inside wrapped mapping plain\n"
+            "wrapped_quoted:\n"
+            "  'quoted # ok' # real after next-line quote\n"
+            "list_plain:\n"
+            "  - First line\n"
+            "    '90s # real inside multiline list scalar\n"
+            "  -\n"
+            "    Wrapped list line\n"
+            "    '90s # real inside wrapped list plain\n"
+            "  - 'k': hello\n"
+            "      '90s # real inside list quoted-key plain\n"
+            "  - 'item # ok' # real after quoted list item\n"
+            "obj: {\n"
+            "  a: 1,\n"
+            "    'key # not comment': 2 # real in flow map\n"
+            "}\n"
+            "---\n"
+            "Root plain\n"
+            "  '90s # real in root wrapped plain\n"
+            "...\n"
+            "'end_quoted # ok' # real after root doc\n"
+            "note: Open [bracket in plain scalar\n"
+            "script: |\n"
+            "  # bash comment inside block after bracket\n"
+            "after_bracket_block: 1 # real after bracket block\n"
+            "brace_note: Open {brace in plain scalar\n"
+            "desc_after_brace: Music from\n"
+            "  '90s # real after brace plain\n"
+            "after_brace_plain: 1 # real2 after brace plain\n"
+        )
+        active = [h for h in scanners.scan_yaml("complex.yaml", source) if not h.exempted]
+        self.assertEqual(
+            [(h.line, h.inline, h.text) for h in active],
+            [
+                (3, True, "# real after indented empty block"),
+                (7, True, "# real after indented block"),
+                (11, True, "# real after explicit indent block"),
+                (15, True, "# real after deep header block"),
+                (19, True, "# real after nested sequence block"),
+                (22, True, "# real after quoted-key block"),
+                (24, True, "# real inside multiline plain scalar"),
+                (25, True, "# real after multiline plain scalar"),
+                (27, True, "# real inside quoted-key multiline plain"),
+                (30, True, "# real inside wrapped mapping plain"),
+                (32, True, "# real after next-line quote"),
+                (35, True, "# real inside multiline list scalar"),
+                (38, True, "# real inside wrapped list plain"),
+                (40, True, "# real inside list quoted-key plain"),
+                (41, True, "# real after quoted list item"),
+                (44, True, "# real in flow map"),
+                (48, True, "# real in root wrapped plain"),
+                (50, True, "# real after root doc"),
+                (54, True, "# real after bracket block"),
+                (57, True, "# real after brace plain"),
+                (58, True, "# real2 after brace plain"),
+            ],
+        )
+
+    def test_directive_matching_enforces_word_boundaries(self) -> None:
+        for body in (
+            "yamllint disable-line",
+            "yamllint",
+            "eslint-disable-next-line",
+            "noqa: F401",
+            "nolint:errcheck",
+            "type: ignore[arg-type]",
+            "checkov:skip=CKV_1",
+        ):
+            with self.subTest(exempt=body):
+                self.assertTrue(scanners.is_directive(body))
+        for body in ("yamllinting note", "shellchecking", "nosecure", "noqathing", "eslint_custom"):
+            with self.subTest(non_exempt=body):
+                self.assertFalse(scanners.is_directive(body))
+
     def test_toml_comments_and_all_string_forms(self) -> None:
         source = (
             "# top toml comment\n"

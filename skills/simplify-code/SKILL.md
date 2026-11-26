@@ -18,7 +18,11 @@ During ordinary code simplification, update only comments directly tied to an au
 edit and preserve all other comments.
 
 1. **Bind the scope.** Resolve tagged, relative, or absolute paths. Read applicable repository
-   instructions and record existing changes. A directory recurses by default; honor `--only <glob>`
+   instructions and record existing changes. When simplifying a shared repository where active
+   pull requests exist and a PR tool is available and authorized, check open PR file lists and
+   mark overlapping paths `excluded` unless asked otherwise; if PR lookup is unavailable
+   (offline, local-only, or unauthenticated), proceed and note that open PRs were not
+   checked. A directory recurses by default; honor `--only <glob>`
    (include matching files), `--exclude <glob>` (skip matching paths), `--shallow` (current
    directory only, no recursion), and `--dry-run` (report proposals without editing), and respect
    ignored files and dependency or build folders. Exclude generated files. If any named path does

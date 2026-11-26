@@ -25,12 +25,15 @@ When more than 2000 sessions match, the newest 2000 are kept and read newest fir
 count is reported in `discovery.sessions_capped`. In this mode a
 record over 1 MiB is skipped and counted instead of excluding the file. Claude subagent
 transcripts and Antigravity child sessions (`parent_conversation_id` set or `nesting_depth > 0`)
-are skipped as delegated when `include_subagents=False`. Legacy Antigravity
+are skipped as delegated when `include_subagents=False`. In `--repo --days` mode, individual
+records are also windowed by timestamp so older sessions touched only by untimestamped trailing
+metadata records are excluded as `stale_mtime_session`. Legacy Antigravity
 `conversations/*.db` files lacking a brain transcript are counted under
 `uncovered_stores.antigravity_sqlite_not_parsed` and never opened. Copilot stores are not discovered.
 
-The readers, `scripts/session_records.py` and `scripts/antigravity_records.py`, are shared:
-`retro-agent-friction` carries byte-identical copies. Change them here, then copy them there.
+The readers, `scripts/session_records.py`, `scripts/repo_discovery.py`, and
+`scripts/antigravity_records.py`, are shared: `retro-agent-friction` carries byte-identical copies.
+Change them here, then copy them there.
 
 ## Codex rollout JSONL
 
@@ -38,7 +41,8 @@ The first parsed record must be `session_meta` with `payload.id` and `payload.so
 Supported source values are `cli`, `vscode` and `mcp`. Source is a metadata assertion, not
 proof that a human supplied every message. Missing, custom or unknown provenance is excluded
 with partial coverage. Known internal, exec, subagent, parent, fork and inherited-history
-metadata exclude the entire session, including its first turn.
+metadata, as well as external-agent import rollouts (`event_msg` `payload.turn_id` starting with
+`external-import-`), exclude the entire session, including its first turn.
 
 Only `event_msg` with `payload.type: user_message`, a string `payload.message` and a
 nonempty stable `timestamp` contributes. Untimed user events make coverage partial. Newer
@@ -82,14 +86,14 @@ so a forked or resumed copy counts once. All other record types are non-message 
 ## Antigravity transcript JSONL
 
 A file is Antigravity when its first record carries integer `step_index`, string `created_at`,
-and a `type` in `USER_INPUT`, `PLANNER_RESPONSE`, `GENERIC`, `SYSTEM_MESSAGE`, or
-`CHECKPOINT`. Transcripts that begin with `SYSTEM_MESSAGE` swarm/subagent prompts or contain no
+and a `type` in `USER_INPUT`, `PLANNER_RESPONSE`, `GENERIC`, `SYSTEM_MESSAGE`, `CHECKPOINT`,
+or `ERROR_MESSAGE`. Transcripts that begin with `SYSTEM_MESSAGE` swarm/subagent prompts or contain no
 `USER_EXPLICIT` `USER_INPUT` are excluded as delegated. Only `USER_INPUT` records with
 `source: USER_EXPLICIT`, string `content`, integer `step_index`, and non-empty `created_at`
 contribute; `<USER_REQUEST>...</USER_REQUEST>` wrappers are unwrapped so `<ADDITIONAL_METADATA>`
-and `<USER_SETTINGS_CHANGE>` tags cannot generate false cue matches. Other step types count as
-non-message records. Message identity pairs a deterministic session seed with `step_index` and
-`created_at`.
+and `<USER_SETTINGS_CHANGE>` tags cannot generate false cue matches. `ERROR_MESSAGE` and other
+non-user step types count as non-message records. Message identity pairs a deterministic session
+seed with `step_index` and `created_at`.
 
 ## Text-free candidates
 

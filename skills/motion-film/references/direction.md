@@ -91,10 +91,16 @@ elements. Replaying the source frame as a background does not establish that its
 layers were reconstructed.
 
 Record the exact frame rate and decoded presentation times. Constant-rate frame numbers
-can map through the rational frame rate; variable-rate media needs its actual timestamps.
+can map through the rational frame rate; variable-rate media (most social clips) needs time
+resampling (`-vf fps=N`) and actual timestamps before indexing frames (mixing decoded frame
+indices with rawvideo nominal-fps padding can double or skew measured motion speed).
 Check cut boundaries in decoded frames after converting times to the renderer's units.
 Automatic cut scores are candidates: verify punch-ins, flashes and camera moves in
 consecutive frames before treating them as new shots.
+
+When translating a web brand spec (`DESIGN.md`) into a film, keep color and type atoms intact
+but re-scale typography and spacing in frame units (such as container width `cqw`) for camera
+viewing rather than copying web chrome or desktop pixel sizes.
 
 For existing burned-in captions, measure visible switch frames in the caption region;
 speech alignment supplies words but may lead or trail the picture. Match text using its

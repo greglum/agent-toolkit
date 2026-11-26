@@ -39,9 +39,20 @@ credible harmful failure beyond types and existing gates, improve the existing o
 ## Make feedback usable by an agent
 
 Run the focused check an editor can use during the change, then retain the full required gate
-for integration. Errors should locate the violation and state the supported correction. A
-fast feedback command must not imply that omitted security, browser, migration, or release
-checks passed. Avoid a new fast tier when existing commands already cover the need.
+for integration. Errors should locate the violation, keep passing-file output quiet so real
+failures are not buried, and state the exact repair command for that lane. A fast feedback
+command must not imply that omitted security, browser, migration, or release checks passed.
+Avoid a new fast tier when existing commands already cover the need.
+
+Isolate test suites at the fixture layer (`GIT_CONFIG_GLOBAL=/dev/null`, `GIT_CONFIG_NOSYSTEM=1`,
+a safe default locale such as `LC_ALL=C` for clean-shell subprocesses, and clearing ambient repo
+environment variables unless an explicit live-test gate opts in). Add a fast-fail collection
+guard when a test suite runs under the wrong interpreter or environment so it prints the locked
+runner command at once instead of failing later with misleading errors.
+
+When parallel worktrees of one clone run full-core suites concurrently, serialize those full-core
+lanes with an OS-released advisory lock in `git rev-parse --git-common-dir` (writable inside
+agent sandboxes, unlike fixed temp paths) rather than lowering worker counts.
 
 Inspect stale recipes as executable guidance: outdated setup, lockfile repair, merge advice,
 feature lists, and check commands can undo stronger current policy. Fix their current owner

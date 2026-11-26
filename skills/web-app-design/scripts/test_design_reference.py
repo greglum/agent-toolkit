@@ -123,6 +123,28 @@ class DesignReferenceCLI(unittest.TestCase):
                 self.assertEqual(result.returncode, 2)
                 self.assertIn('design-reference:', result.stderr)
 
+        double_comp = self.run_cli('contrast', '#c42b1c', '#c42b1c', '--bg-alpha', '0.14', '--backdrop', '#f5f1ea', '--fg-alpha', '0.7')
+        self.assertEqual(double_comp.returncode, 1, double_comp.stderr)
+        double_data = json.loads(double_comp.stdout)
+        self.assertFalse(double_data['passes'])
+        self.assertAlmostEqual(double_data['ratio'], 2.7782787165915805, places=12)
+        self.assertEqual(double_data['effective_background'], '#eed5cd')
+        self.assertEqual(double_data['effective_foreground'], '#d15e51')
+
+        neg_zero = self.run_cli('contrast', '#c42b1c', '#c42b1c', '--bg-alpha', '-0.0', '--backdrop', '#f5f1ea')
+        self.assertEqual(neg_zero.returncode, 0, neg_zero.stderr)
+        self.assertNotIn('-0.0', neg_zero.stdout)
+        neg_data = json.loads(neg_zero.stdout)
+        self.assertEqual(neg_data['effective_background'], '#f5f1ea')
+        self.assertAlmostEqual(neg_data['ratio'], opaque_data['ratio'], places=12)
+
+        full_alpha = self.run_cli('contrast', '#000', '#fff', '--bg-alpha', '1.0', '--backdrop', '#000000', '--fg-alpha', '1.0')
+        self.assertEqual(full_alpha.returncode, 0, full_alpha.stderr)
+        full_data = json.loads(full_alpha.stdout)
+        self.assertEqual(full_data['ratio'], 21.0)
+        self.assertEqual(full_data['effective_background'], '#ffffff')
+        self.assertEqual(full_data['effective_foreground'], '#000000')
+
 
 if __name__ == '__main__':
     unittest.main()

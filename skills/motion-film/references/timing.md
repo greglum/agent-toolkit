@@ -38,8 +38,11 @@ corrects them. Use it once per beat that matters, not on every step.
 - Linear is only for constant rates: progress, rotation, a steady scroll.
 - Interpolate scale and camera zoom perceptually (in log space). Linear scale looks slower as
   it grows. Do not zoom in and then straight back out.
-- Text, data, and camera settle without overshoot (critically damped). Small UI objects may
-  use a light spring, damping ratio about 0.75 to 0.85. Opacity and color never overshoot.
+- Text, data, and camera settle without overshoot (critically damped, damping ratio `1.0`).
+  Cards, logos, and product objects may use a light spring (damping ratio ~`0.75` to `0.85`,
+  one small bounce); playful characters or mascots may use ~`0.5` (two bounces). Evaluate
+  springs as closed-form analytic functions of time `t`, never per-frame velocity integration
+  that diverges when a renderer seeks out of order. Opacity and color never overshoot.
 - One ease and one duration on every element reads as generated. Vary them by role.
 
 ## Exits, stagger, and overlap
@@ -68,8 +71,12 @@ ease (ease-in out of the outgoing shot, ease-out into the incoming one). On a zo
 must change in the same direction on both sides. A change of direction needs a visible cause.
 Check the result with the consecutive-frame strip in `references/render-review.md`.
 
-## Narration sets the clock
+## Narration or score sets the clock
 
 When a scene is narrated, its duration comes from the measured take, and the picture reveals
 each part on the word that names it. The script budget and that reveal rule live in
 `references/narration.md` (Write the script). Trim words before stretching motion.
+
+For beat-driven or musical films, freeze one shared clock file (such as `timing.json` listing
+note or beat timestamps and derived frame numbers) as the first artifact so every hop, cut,
+camera move, and sound hit derives from the same source without manual per-shot drift.

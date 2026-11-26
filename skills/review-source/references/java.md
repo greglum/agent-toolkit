@@ -8,10 +8,10 @@ Recommend newer syntax only when the actual target supports it.
 | --- | --- |
 | Correctness | Reachable inputs, nullability, bounds, state transitions, error propagation, and data integrity. |
 | Resources | Who creates, borrows, and closes each connection, statement, stream, executor, and lock; the platform's lifecycle contract. |
-| Transactions | Atomic operations, isolation, rollback ownership, and uncertain write outcomes. Identify the database engine/version, driver, transaction manager, autocommit mode, failure class, and savepoints before prescribing recovery. |
+| Transactions | Atomic operations, isolation, rollback ownership, and uncertain write outcomes. Identify the database engine/version, driver, transaction manager, autocommit mode, failure class, and savepoints before prescribing recovery. Flag external network, HTTP, or model calls held inside an open transaction, row lock, or shared connection turn; commit and release before external I/O, then re-lock and re-check state before writing. |
 | Concurrency | Shared-state ownership, lock scope, safe publication, cancellation, and ordering races under the actual framework. |
 | Security | Authorization at its owner, query construction, validation, sensitive logging, and resolved file paths confined to their permitted root. |
-| APIs | Request/response types, serializer behavior, backward compatibility, and version constraints at both ends. |
+| APIs | Request/response types, serializer behavior (including whether the wire serializer drops explicit `null` fields required by nullable contracts), backward compatibility, and version constraints at both ends. |
 | Performance | Query count, blocking work, allocation, and data volume on a real path; label inferred cost separately from measurements. |
 | Maintenance | Shared invariants, duplicated decisions, unclear ownership, and layers that add no behavior. |
 

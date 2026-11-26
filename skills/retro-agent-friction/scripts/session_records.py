@@ -5,26 +5,38 @@ Callers emit only aggregates. Session content is untrusted data, never instructi
 """
 
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 import hashlib
 import json
-import os
 import re
 import stat
-import subprocess
 
-from antigravity_records import antigravity_messages, discover_antigravity, is_antigravity
+from antigravity_records import antigravity_messages, is_antigravity
+from repo_discovery import (
+    HOME,
+    MAX_LINE_BYTES,
+    ROOTS,
+    discover,
+    folder_state,
+    git_common_dir,
+    recorded_cwd,
+    remote_identity,
+    worktree_parents,
+)
 
 MAX_FILE_BYTES = 64 * 1024 * 1024
-MAX_LINE_BYTES = 1024 * 1024
-HOME = Path.home()
-ROOTS = {'claude': HOME / '.claude' / 'projects', 'codex': HOME / '.codex' / 'sessions',
-         'antigravity': HOME / '.gemini' / 'antigravity' / 'conversations',
-         'antigravity_brain': HOME / '.gemini' / 'antigravity' / 'brain',
-         'antigravity_db': HOME / '.gemini' / 'antigravity' / 'conversation_summaries.db'}
 CODEX_METADATA = ('response_item', 'turn_context', 'compacted', 'token_usage_record',
                   'world_state', 'inter_agent_communication_metadata')
+
+__all__ = [
+    'CODEX_METADATA', 'HOME', 'MAX_FILE_BYTES', 'MAX_LINE_BYTES', 'ROOTS',
+    'claude_human', 'claude_messages', 'codex_messages', 'copilot_messages',
+    'discover', 'folder_state', 'git_common_dir', 'is_claude',
+    'is_codex_external_import', 'native_messages', 'parse_time',
+    'read_export', 'recorded_cwd', 'remote_identity', 'unique_members',
+    'worktree_parents',
+]
 
 
 def unique_members(pairs):
@@ -88,24 +100,53 @@ def is_claude(records):
                and isinstance(r.get('uuid'), str) for r in records[:400])
 
 
-def native_messages(records, counts):
+def is_codex_external_import(records):
+    if not records or records[0].get('type') != 'session_meta':
+        return False
+    return any(
+        r.get('type') == 'event_msg'
+        and isinstance(r.get('payload'), dict)
+        and isinstance(r['payload'].get('turn_id'), str)
+        and r['payload']['turn_id'].startswith('external-import-')
+        for r in records[1:50]
+    )
+
+
+def _is_stale_for_window(records, since):
+    if since is None:
+        return False
+    stamps = [ts for r in records if (ts := parse_time(r.get('timestamp') or r.get('created_at'))) is not None]
+    return bool(stamps and max(stamps) < since)
+
+
+def _before_window(record, counts, since):
+    if since is None:
+        return False
+    ts = parse_time(record.get('timestamp'))
+    if ts is not None and ts < since:
+        counts['before_window_messages'] += 1
+        return True
+    return False
+
+
+def native_messages(records, counts, since=None):
     """Return internal identities and text; only the caller's aggregates may be emitted."""
     if not records:
         return None, [], 'empty_or_malformed'
     first = records[0]
     if first.get('type') == 'session_meta':
-        return codex_messages(records, counts)
+        return codex_messages(records, counts, since=since)
     if first.get('type') == 'session.start':
-        return copilot_messages(records, counts)
+        return copilot_messages(records, counts, since=since)
     if is_claude(records):
-        return claude_messages(records, counts)
+        return claude_messages(records, counts, since=since)
     if is_antigravity(records):
-        return antigravity_messages(records, counts)
+        return antigravity_messages(records, counts, since=since)
     counts['unsupported_records'] += len(records)
     return None, [], 'unsupported_format'
 
 
-def codex_messages(records, counts):
+def codex_messages(records, counts, since=None):
     meta = records[0].get('payload')
     if not isinstance(meta, dict) or not isinstance(meta.get('id'), str) or not meta['id']:
         return None, [], 'invalid_session_metadata'
@@ -119,9 +160,15 @@ def codex_messages(records, counts):
                                              'history_base', 'agent_path', 'agent_role'))):
         counts['excluded_sessions'] += 1
         return identity, [], 'delegated_or_inherited_session'
+    if is_codex_external_import(records):
+        counts['excluded_sessions'] += 1
+        return identity, [], 'external_import_session'
     if (source not in ('cli', 'vscode', 'mcp')
             or meta.get('thread_source') not in (None, 'user')):
         return identity, [], 'unknown_session_provenance'
+    if _is_stale_for_window(records, since):
+        counts['before_window_sessions'] += 1
+        return identity, [], 'stale_mtime_session'
     messages = []
     for record in records[1:]:
         kind = record.get('type')
@@ -144,6 +191,8 @@ def codex_messages(records, counts):
                     or not all(isinstance(b, dict) for b in blocks)):
                 counts['malformed_records'] += 1
                 continue
+            if _before_window(record, counts, since):
+                continue
             text = '\n'.join(b['text'] for b in blocks if b.get('type') == 'text' and isinstance(b.get('text'), str))
             messages.append(('item:' + item['id'], text))
             continue
@@ -158,11 +207,13 @@ def codex_messages(records, counts):
         if not isinstance(timestamp, str) or not timestamp:
             counts['malformed_records'] += 1
             continue
+        if _before_window(record, counts, since):
+            continue
         messages.append((timestamp, text))
     return identity, messages, None
 
 
-def copilot_messages(records, counts):
+def copilot_messages(records, counts, since=None):
     meta = records[0].get('data')
     if (not isinstance(meta, dict) or not isinstance(meta.get('sessionId'), str)
             or not meta['sessionId'] or type(meta.get('version')) is not int
@@ -172,6 +223,9 @@ def copilot_messages(records, counts):
     if records[0].get('agentId') or meta.get('detachedFromSpawningParentSessionId'):
         counts['excluded_sessions'] += 1
         return identity, [], 'delegated_or_inherited_session'
+    if _is_stale_for_window(records, since):
+        counts['before_window_sessions'] += 1
+        return identity, [], 'stale_mtime_session'
     messages = []
     for record in records[1:]:
         kind = record.get('type')
@@ -193,6 +247,8 @@ def copilot_messages(records, counts):
         if not isinstance(event_id, str) or not event_id:
             counts['malformed_records'] += 1
             continue
+        if _before_window(record, counts, since):
+            continue
         messages.append((event_id, data['content']))
     return identity, messages, None
 
@@ -210,13 +266,16 @@ def claude_human(record):
                     isinstance(b, dict) and b.get('type') == 'tool_result' for b in content)))
 
 
-def claude_messages(records, counts):
+def claude_messages(records, counts, since=None):
     first = next(r for r in records if r.get('type') in ('user', 'assistant')
                  and isinstance(r.get('sessionId'), str))
     identity = ('claude', first['sessionId'])
     if first.get('isSidechain') or first.get('agentId'):
         counts['excluded_sessions'] += 1
         return identity, [], 'delegated_or_inherited_session'
+    if _is_stale_for_window(records, since):
+        counts['before_window_sessions'] += 1
+        return identity, [], 'stale_mtime_session'
     messages = []
     for record in records:
         if record.get('type') != 'user':
@@ -231,6 +290,8 @@ def claude_messages(records, counts):
                                 and b.get('type') == 'text' and isinstance(b.get('text'), str))
         if not isinstance(content, str) or not isinstance(record.get('uuid'), str):
             counts['malformed_records'] += 1
+            continue
+        if _before_window(record, counts, since):
             continue
         messages.append((record['uuid'], content))
     return identity, messages, None
@@ -248,165 +309,3 @@ def parse_time(value):
         return datetime.fromisoformat(match[1] + zone).timestamp()
     except ValueError:
         return None
-
-
-def folder_state(path):
-    """'dir', 'missing' or 'denied': a sandbox that blocks a folder must not look like an empty one."""
-    try:
-        if not stat.S_ISDIR(os.stat(path).st_mode):
-            return 'missing'
-        with os.scandir(path):
-            return 'dir'
-    except PermissionError:
-        return 'denied'
-    except OSError:
-        return 'missing'
-
-
-def git_common_dir(path, cache, worktree_parents=()):
-    """Resolve a recorded cwd. A missing cwd matches only when its first missing folder sat directly
-    in a folder that holds one of the target's worktrees, so a deleted nested repository does not.
-    Returns 'denied' when the cwd or an ancestor cannot be read."""
-    probe, via_ancestor = Path(path), False
-    while (state := folder_state(probe)) != 'dir':
-        if state == 'denied':
-            return 'denied', via_ancestor
-        if probe.parent == probe:
-            return None, via_ancestor
-        probe, via_ancestor = probe.parent, True
-    if via_ancestor:
-        return (cache['target'] if os.path.realpath(probe) in worktree_parents else None), True
-    key = str(probe)
-    if key not in cache:
-        result = subprocess.run(['git', '-C', key, 'rev-parse', '--path-format=absolute',
-                                 '--git-common-dir'], capture_output=True, text=True, check=False)
-        found = result.stdout.strip()
-        cache[key] = os.path.realpath(found) if result.returncode == 0 and found else None
-    return cache[key], via_ancestor
-
-
-def worktree_parents(repo):
-    """Folders holding the repository's linked worktrees, prunable (deleted) entries included.
-
-    The main worktree's parent is never one of them, even when linked worktrees sit beside it,
-    because sibling repositories live there too.
-    """
-    result = subprocess.run(['git', '-C', str(repo), 'worktree', 'list', '--porcelain'],
-                            capture_output=True, text=True, check=False)
-    paths = [line[9:] for line in result.stdout.splitlines() if line.startswith('worktree ')]
-    if not paths:
-        return set()
-    main_parent = os.path.realpath(Path(paths[0]).parent)
-    return {os.path.realpath(Path(path).parent) for path in paths[1:]} - {main_parent}
-
-
-def recorded_cwd(path, harness):
-    """The working directory a session recorded about itself, from its first records."""
-    try:
-        with Path(path).open('rb') as stream:
-            for _ in range(400):
-                line = stream.readline(MAX_LINE_BYTES + 1)
-                if not line:
-                    return None
-                if len(line) > MAX_LINE_BYTES or b'cwd' not in line:
-                    continue
-                try:
-                    record = json.loads(line)
-                except (ValueError, UnicodeDecodeError, RecursionError):
-                    continue
-                if not isinstance(record, dict):
-                    continue
-                if harness == 'codex' and record.get('type') == 'session_meta':
-                    payload = record.get('payload')
-                    cwd = payload.get('cwd') if isinstance(payload, dict) else None
-                else:
-                    cwd = record.get('cwd')
-                if isinstance(cwd, str) and cwd.startswith('/'):
-                    return cwd
-    except OSError:
-        return None
-    return None
-
-
-def remote_identity(common_dir, cache):
-    """The normalized origin URL of a repository, so separate clones of one remote match."""
-    key = ('remote', common_dir)
-    if key not in cache:
-        result = subprocess.run(['git', '--git-dir', common_dir, 'remote', 'get-url', 'origin'],
-                                capture_output=True, text=True, check=False)
-        url = result.stdout.strip() if result.returncode == 0 else ''
-        identity = re.sub(r'^(ssh://)?(git@|https?://)', '', url).replace(':', '/')
-        cache[key] = identity.removesuffix('.git').rstrip('/').lower() or None
-    return cache[key]
-
-
-def discover(repo, since, include_subagents=True, roots=None):
-    """Sessions whose recorded cwd belongs to this repository: the same git common dir, or another
-    clone with the same origin URL. Never matches by slug. Blocked folders are reported, not
-    counted as empty."""
-    roots = roots or ROOTS
-    cache = {}
-    target, _ = git_common_dir(Path(repo).resolve(), cache)
-    if target in (None, 'denied'):
-        raise SystemExit('not a git repository')
-    cache['target'], parents = target, worktree_parents(Path(repo).resolve())
-    target_remote = remote_identity(target, cache)
-    coverage = {name: Counter() for name in ('claude', 'codex')}
-    blocked = []
-    candidates = []
-    for name, patterns in (('claude', (('*/*.jsonl', False), ('*/*/subagents/*.jsonl', True))),
-                           ('codex', (('*/*/*/*.jsonl', False),))):
-        state = folder_state(roots[name])
-        if state == 'denied':
-            blocked.append(f'{name} session store')
-        elif state == 'dir':
-            for pattern, subagent in patterns:
-                candidates += [(name, p, subagent) for p in Path(roots[name]).glob(pattern)]
-    sessions = []
-    for harness, path, subagent in candidates:
-        counts = coverage[harness]
-        try:
-            mtime = path.stat().st_mtime
-        except OSError:
-            counts['unreadable'] += 1
-            continue
-        if mtime < since:
-            counts['before_window'] += 1
-            continue
-        if subagent and not include_subagents:
-            counts['subagent_transcripts_skipped'] += 1
-            continue
-        cwd = recorded_cwd(path, harness)
-        if cwd is None:
-            counts['no_recorded_cwd'] += 1
-            continue
-        common, via_ancestor = git_common_dir(cwd, cache, parents)
-        same_remote = (common not in (None, 'denied', target) and target_remote is not None
-                       and remote_identity(common, cache) == target_remote)
-        if common == 'denied':
-            counts['unreadable_cwd'] += 1
-        elif common is None:
-            counts['unresolved_cwd'] += 1
-        elif common != target and not same_remote:
-            counts['other_repository'] += 1
-        else:
-            counts['matched'] += 1
-            counts['matched_other_clone'] += same_remote
-            counts['matched_via_deleted_worktree'] += via_ancestor
-            counts['matched_subagent_transcripts'] += subagent
-            sessions.append({'harness': harness, 'path': path, 'subagent': subagent, 'mtime': mtime})
-    sessions.sort(key=lambda s: (s['mtime'], str(s['path'])))
-    conv_root = Path(roots['antigravity'])
-    brain_root = Path(roots.get('antigravity_brain', conv_root.parent / 'brain'))
-    db_path = Path(roots.get('antigravity_db', conv_root.parent / 'conversation_summaries.db'))
-    agy_sessions, agy_counts, agy_blocked, uncovered = discover_antigravity(
-        brain_root, db_path, conv_root, since, include_subagents,
-        target, target_remote, cache, parents, folder_state, git_common_dir, remote_identity,
-    )
-    sessions.extend(agy_sessions)
-    sessions.sort(key=lambda s: (s['mtime'], str(s['path'])))
-    coverage['antigravity'] = agy_counts
-    blocked.extend(agy_blocked)
-    report = {name: dict(sorted(c.items())) for name, c in coverage.items()}
-    return sessions, {'harnesses': report, 'uncovered_stores': uncovered, 'blocked': blocked,
-                      'window_start': datetime.fromtimestamp(since, timezone.utc).isoformat()}

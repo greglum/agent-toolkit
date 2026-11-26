@@ -17,6 +17,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`animate`](../skills/animate/SKILL.md) | Build interface motion with purposeful timing, interruption, and reduced-motion behavior. | Automatic |
 | [`app-verifier`](../skills/app-verifier/SKILL.md) | Record and prove how to launch an app, reach its features, and check their results. | Automatic |
 | [`audit-ai-code`](../skills/audit-ai-code/SKILL.md) | Audit changed code after AI work for AI-authoring defects and apply minimal --fix edits when requested. | Automatic |
+| [`blender-scene`](../skills/blender-scene/SKILL.md) | Build, script, light, check, or export 3D props, mascot costumes, and scenes in Blender with portable bpy linting. | Automatic |
 | [`bounded-generative-ui`](../skills/bounded-generative-ui/SKILL.md) | Design, build, or review model-selected component layouts that preserve app-owned facts and evidence. | Automatic |
 | [`cloud-ops-audit`](../skills/cloud-ops-audit/SKILL.md) | Audit recurring cloud alerts, reconcile live spend and free-tier cliffs against IaC and docs, and check cross-cloud cost-bound parity. | Automatic |
 | [`codebase-metrics`](../skills/codebase-metrics/SKILL.md) | Score codebase or task/harness quality against a frozen eight-dimension profile and run recurring repository audits. | Automatic |
@@ -24,7 +25,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`content-marketing`](../skills/content-marketing/SKILL.md) | Plan and review source-backed campaigns (briefs, UTM links, matched-window reviews) for owned web, YouTube, and LinkedIn. | Automatic |
 | [`continue-pr`](../skills/continue-pr/SKILL.md) | Recover inherited work or reassess an old PR before continuing it. | Automatic |
 | [`create-pr`](../skills/create-pr/SKILL.md) | Create a PR after checking the repository, head, base, push destination, and existing PRs. | By name, Codex only |
-| [`delete-comment`](../skills/delete-comment/SKILL.md) | Audit and delete non-directive code comments, move decisions into ADRs, draft excuse issues, and set up a comment-ban ratchet. | By name |
+| [`delete-comment`](../skills/delete-comment/SKILL.md) | Audit and delete non-directive code and config comments, move decisions into ADRs, draft excuse issues, and set up a comment-ban ratchet. | By name |
 | [`delete-first`](../skills/delete-first/SKILL.md) | Remove dead code and overbuilt layers in the requested scope using blind refutation. | Automatic |
 | [`deslop`](../skills/deslop/SKILL.md) | Edit prose and interface copy for AI writing patterns while preserving meaning. | Automatic |
 | [`deslop-ui`](../skills/deslop-ui/SKILL.md) | Review and improve repetitive layouts, generic copy, and other AI-looking UI patterns. | Automatic |
@@ -40,8 +41,10 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`global-code-review`](../skills/global-code-review/SKILL.md) | Review a diff against user-specified and repository coding standards. | Automatic |
 | [`graph-engineering`](../skills/graph-engineering/SKILL.md) | Trace source-backed dependencies and blast radius for read-only impact questions or verified edits. | Automatic |
 | [`guided-review`](../skills/guided-review/SKILL.md) | Build a human reading guide for a PR or significant diff. | Automatic |
+| [`half-bounce-launch`](../skills/half-bounce-launch/SKILL.md) | Measure, audit, and optimize macOS desktop app cold-launch time toward a half-bounce interactive Frame 1 target. | Automatic |
 | [`harden-skill`](../skills/harden-skill/SKILL.md) | Audit, revise, and behavior-test an existing skill or declared portfolio across supported agent clients. | By name |
 | [`iac-teardown`](../skills/iac-teardown/SKILL.md) | Preflight traps and execute safe Terraform or OpenTofu stack decommissioning and cross-stack state migrations. | By name |
+| [`land-dirty-work`](../skills/land-dirty-work/SKILL.md) | Inspect uncommitted dirty work across checkouts and worktrees, verify intent, revise to standards in isolation, and land clean PRs. | By name |
 | [`land-pr`](../skills/land-pr/SKILL.md) | Take branch work (or authorized in-scope dirty branch paths) from ready to merged through review, fixes, gates, and repo-allowed merge. | By name |
 | [`learn-domain`](../skills/learn-domain/SKILL.md) | Build a cited domain primer, glossary, source map and ranked SME questions for an unfamiliar field. | Automatic |
 | [`learn-taste`](../skills/learn-taste/SKILL.md) | Carry verified lessons into project standards or skill guidance. | Automatic |
@@ -50,10 +53,13 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`monitor-pr`](../skills/monitor-pr/SKILL.md) | Watch PR events and independently assess CI, reviews, and readiness. | Automatic |
 | [`motion-film`](../skills/motion-film/SKILL.md) | Create and check films, with rendered, audio, export, and editable-handoff proof. | Automatic |
 | [`onboard-data`](../skills/onboard-data/SKILL.md) | Sequence domain learning and data mapping for a new project, then merge their open questions. | By name |
+| [`orchestrate-agents`](../skills/orchestrate-agents/SKILL.md) | Assign cross-provider workers, independent reviewers and an advisor with clear ownership and checkable evidence. | Automatic |
 | [`plan-pr-stack`](../skills/plan-pr-stack/SKILL.md) | Plan candidate dependency waves from a supplied PR snapshot, without claiming merge readiness. | Automatic |
 | [`polish-animations`](../skills/polish-animations/SKILL.md) | Coordinate the full interface-motion assessment, build, review, and verification loop. | By name |
 | [`postgres-investigate`](../skills/postgres-investigate/SKILL.md) | Investigate PostgreSQL query, lock, connection, and row-security behavior. | Automatic |
+| [`produce-film`](../skills/produce-film/SKILL.md) | Coordinate end-to-end film production across optional 3D/SVG assets, motion-film QA, short clips, and covers. | By name |
 | [`reconcile-metric`](../skills/reconcile-metric/SKILL.md) | Trace a disputed aggregate to source records and recalculate it independently. | Automatic |
+| [`reconcile-migration`](../skills/reconcile-migration/SKILL.md) | Plan, rehearse, or audit a database or legacy data migration and reconcile tables, columns, key hashes, and drop rules. | Automatic |
 | [`refresh-worktrees`](../skills/refresh-worktrees/SKILL.md) | Assess and refresh Git worktrees while preserving local and uncertain work. | Automatic |
 | [`repository-cleanup`](../skills/repository-cleanup/SKILL.md) | Recover useful unfinished work and clean verified completed local or remote branches, PRs, and worktrees. | Automatic |
 | [`repurpose-long-video`](../skills/repurpose-long-video/SKILL.md) | Select and export short clips from cleared local footage, supplied timings and fixed crops. | Automatic |
@@ -73,6 +79,7 @@ references and tools it needs. Extra runtime tools are listed in its `compatibil
 | [`skill-research`](../skills/skill-research/SKILL.md) | Vet linked sources or research the catalog and apply supported improvements. | By name |
 | [`social-research`](../skills/social-research/SKILL.md) | Research public posts and comments for outliers and source-backed audience questions. | Automatic |
 | [`state-machine-audit`](../skills/state-machine-audit/SKILL.md) | Trace implicit state, check risky transitions, and draw a source-backed statechart. | Automatic |
+| [`svg-illustration`](../skills/svg-illustration/SKILL.md) | Create, animate, or audit hand-crafted SVG spot illustrations and living line-art components with static SVG linting. | Automatic |
 | [`system-anatomy`](../skills/system-anatomy/SKILL.md) | Create or audit an interactive anatomy, cutaway, or spatial explanation grounded in source. | Automatic |
 | [`telemetry-anomalies`](../skills/telemetry-anomalies/SKILL.md) | Detect, calibrate and score anomalies in multichannel sensor telemetry at event level against a false-alarm budget. | Automatic |
 | [`telemetry-contract`](../skills/telemetry-contract/SKILL.md) | Check sensor data against a declared contract for units, rates, ranges, saturation, timestamps and ingest lag. | Automatic |

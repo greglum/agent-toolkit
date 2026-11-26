@@ -141,12 +141,30 @@ When two states visibly overlap mid-fade after timing is tuned, a brief small bl
 
 ## Living illustration
 
-For a drawn SVG or canvas subject on a rare-tier surface, such as an empty state or
-onboarding art. Give each subject one clock and compute every part as a pure function of its
-time. Split layers at their pivots and rotate each at its pivot. Run idle loops on seeded
-phases with periods that divide the loop length, so the loop closes without a jump. Frame 0
-is a finished drawing, and reduced motion freezes there. Pause the clock when the subject is
-off screen or the page is hidden. Frequent-tier chrome around it stays still.
+For an original hand-drawn or multi-part SVG spot illustration, route authoring and static
+contract linting to `svg-illustration`; keep `animate` for canvas or UI-control motion. For a
+drawn canvas or SVG subject on a rare-tier surface, such as an empty state or onboarding art,
+give each subject one clock and compute every part as a pure function of its time. Split layers
+at their pivots and rotate each at its pivot. Run idle loops on seeded phases with periods that
+divide the loop length, so the loop closes without a jump. Frame 0 is a finished drawing, and
+reduced motion freezes there. Pause the clock when the subject is off screen or the page is
+hidden. Frequent-tier chrome around it stays still.
+
+## Expressive rare-tier control
+
+Only for explicitly requested delight on a `rare`-tier control (never frequent or constant
+actions). Keep the native `<button>`, `<input>`, or form-associated control intact with focus,
+keyboard activation, and immediate state commit when all effects are turned off. Keep the
+control plain at rest and choreograph reactions into clear beats (anticipation, hit,
+follow-through, settle) on a single shared steppable clock so headless frame strips can inspect
+each beat without rAF throttling. Ensure decorative overlay canvases ignore pointer events and
+do not break modals or `overflow: hidden` ancestors. Strip decorative particle/impact effects
+under `prefers-reduced-motion` while keeping state feedback clear, and report stepped-frame
+checks separately from real-speed playback, touch, and screen-reader testing.
+
+Informed by `finktheartist/sakuga-vfx` at `c3dabb1739` (MIT, observed November 25, 2026);
+original synthesis, no upstream code or art copied. Recheck if overlay stacking or reduced
+motion policies change.
 
 ## View transition
 

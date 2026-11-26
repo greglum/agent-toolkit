@@ -5,6 +5,7 @@ decision that replaces it.
 
 Sources and provenance:
 - Anthropic's [frontend-design](https://github.com/anthropics/skills/blob/ca45fc496a3436251f191354091d557da31c15b5/skills/frontend-design/SKILL.md) skill (`ca45fc496a3436251f191354091d557da31c15b5`), Apache-2.0, observed 2026-10-28 (earlier local read `41bbe19` on 2026-10-07).
+- Floor vs. Reflex gate tiering, heading italic-accent/fake-chrome/dead-form tells, and before/after wiring preservation informed by `Nutlope/hallmark` at `04977e15f3` (MIT, observed 2026-11-25) and stale-waiver auditing informed by `pbakaus/impeccable` at `2fc5e1459e` (Apache-2.0, observed 2026-11-25). No upstream prose or detector rules copied.
 - Conceptual framing and tell categories informed by the Fountain Institute's seven tells (Humble), SmoothUI's "AI design slop" notes, Agrawal's design-anti-slop three-layer catalog, and GenDesigns' fifteen mistakes (read 2026-09-25; original URLs and licenses were not recorded at initial capture, and no upstream text is bundled).
 - Local departures: all pattern tables and acceptance checks are original catalog prose; preserves the target repository's design system and tokens, rejects universal aesthetic bans, and treats justified brand choices as kept.
 - Recheck trigger: recheck upstream `frontend-design` or re-verify public catalog sources if updating pattern classes or adding new automated scanner rules.
@@ -31,6 +32,8 @@ looks generated through decoration.
 | V13 | Icon stamps: an icon in a tinted rounded square before every heading | The generated feature-card default | Icon only when it disambiguates; otherwise the heading alone |
 | V14 | Stock photography or 3D clay illustration with no relation to the data | Filler | Real content, a real chart, or space |
 | V15 | Template chrome: an eyebrow label over every heading, middle-dot meta strings, an arrow appended to every link | Page-builder furniture repeated by habit | Labels and arrows only where they carry information, in the system's type roles |
+| V16 | Single italic word inside a roman heading, or hand-drawn macOS traffic-light window chrome around a card | Editorial-template and SaaS-mockup shorthand | Set the heading uniformly or break lines; use a real screenshot instead of fake window chrome |
+| V17 | `transition: all` / `transition-all` or `100vw` widths (Floor hazard) | Unintended layout-property animation and scrollbar-triggered horizontal overflow | List explicit compositor properties (`transform`, `opacity`) and use `width: 100%` with `overflow-x: clip` |
 
 ## Structural
 
@@ -62,6 +65,7 @@ looks generated through decoration.
 | C8 | Exclamation marks, "Welcome back!", "Oops!", "Awesome!" | Chat register in a tool | Statements: "Welcome, Cara", "Saved", "Upload failed because…" |
 | C9 | Explaining the obvious ("Click the button below to continue") | Copy filling space | Remove |
 | C10 | One action renamed across its flow ("Publish", then "Success!") | Each string written alone | One verb for the action, its pending label, and its confirmation |
+| C11 | Fake form submission ("Thanks!", "You're on the list") with no wired endpoint or real request (Floor defect) | Static mockup pretending to submit user data | Wire to the real endpoint or label the control unwired without fabricating a success state |
 
 ## Acceptance bar
 

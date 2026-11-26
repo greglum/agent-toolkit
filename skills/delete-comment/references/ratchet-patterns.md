@@ -1,8 +1,9 @@
 # Comment-Ban Ratchet Patterns
 
-> **Observed:** 2026-11-20. Checked tool and rule scope: ESLint v9+ flat config
-> (`context.sourceCode.getAllComments()`), Biome (no general comment-ban lint rule), and Ruff rule
-> groups `ERA001`, `FIX`, `RUF100`, `TD`.
+> **Observed:** 2026-11-21. Checked tool and rule scope: ESLint v9+ flat config
+> (`context.sourceCode.getAllComments()`), Biome (no general comment-ban lint rule), Ruff rule
+> groups `ERA001`, `FIX`, `RUF100`, `TD`, and `scripts/scanners.py` structured-file directives
+> (`yamllint`, `checkov:`, `tfsec:`, `trivy:`, `tflint-ignore:`, `sqlfluff:`, `noqa`).
 > **Recheck trigger:** Re-verify when adopting a new ESLint, Biome, or Ruff major version, or when
 > `scripts/scanners.py` `DIRECTIVE_PREFIXES` changes.
 

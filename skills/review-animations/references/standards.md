@@ -34,7 +34,8 @@ grade against these self-contained fallback bands:
    unjustified motion exceeding those thresholds.
 5. **Physical origin.** Anchored overlays grow from their trigger; dialogs stay centered;
    nothing grows from a point. **Block** miss: `scale(0)` entrance, or a trigger-anchored
-   overlay scaling from the wrong origin.
+   overlay scaling from the wrong origin. **Fix** miss: an unjustified pre-scale below about
+   `0.9` on UI chrome that reads as a zoom instead of a surface arrival.
 6. **Interruptible.** Rapidly triggered and gesture-driven motion retargets from the value on
    screen. **Block** miss: rapid-trigger motion that restarts (such as keyframes on toasts or
    toggles) or cannot be interrupted, a release violating its declared snap or inertia policy,
@@ -56,12 +57,21 @@ grade against these self-contained fallback bands:
    automatic motion (>5 s alongside other content) lacking its WCAG 2.2.2 pause, stop, or
    hide control ([W3C criterion and examples](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html),
    tested independently of reduced motion). **Fix** miss: ungated hover motion.
-9. **Asymmetric where someone decides.** A deliberate phase (press and hold, destructive
-   confirm) is slow; the system's answer is fast. **Fix** miss: symmetric timing on a
-   press-and-hold, or a release as slow as the hold.
+9. **Asymmetric where intent differs.** A deliberate phase (press and hold, destructive
+   confirm) is slow; the system's answer is fast. Overlays, modals, dropdowns, and panels
+   close faster and quieter than they open, with no overshoot or close delay; reversible
+   single-axis swaps (sliding tabs, accordions, side-by-side pages, icon or text swaps) stay
+   symmetric. Hover-in is direct and fast while hover-out may settle more softly, with zero
+   hover-out delay and transitions covering every property that changes on hover so nothing
+   snaps. **Fix** miss: symmetric timing on a press-and-hold, a release as slow as the hold,
+   an overlay exit slower or bouncier than its entrance, a delayed close or hover-out, or a
+   hover state that snaps an untargeted property.
 10. **Cohesive and owned.** Motion uses the product's tokens, matches its character (dense
     tool stays crisp; playful product can bounce more), shares one timing family, and lives
-    in the component that owns the state. Its animations and listeners end with that owner.
+    in the component that owns the state. Match motion tokens by what the motion does, never
+    by the nearest numeric value: a 300 ms modal close maps to the project's close token, not
+    a numerically closer slow token; leave values with no matching token usage untouched. Its
+    animations and listeners end with that owner.
     **Block** miss: an animation, listener, or completion that outlives its owner or
     overwrites newer state. **Fix** miss: hard-coded values where tokens exist, a parallel
     token set, an exit leaving by a different path than its entrance, or a stagger whose total
@@ -89,3 +99,11 @@ and [Jakub Krehel's swipe example](https://jakub.kr/work/drag-gesture), observed
 redistribution rights were not established. Local departure: review the product's gesture
 contract rather than imposing either example's physics. Recheck when the gesture primitive
 or upstream drag guides change.
+
+Usage-based token matching, open/close asymmetry versus reversible symmetric swaps, hover
+property coverage, and inline/Tailwind scan scope were synthesized in original prose after
+inspecting [transitions.dev](https://github.com/Jakubantalik/transitions.dev/tree/ec4d48f5aa)
+(`transitions-polish` and `agent/README.md`, observed November 25, 2026; custom Transitions.dev
+license restricts redistributing recipes/skills as a competing pack while tooling is MIT).
+No upstream recipes, token tables, or prose were copied; project motion tokens remain the
+authority. Recheck when project motion standards or upstream terms change.

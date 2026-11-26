@@ -2,7 +2,7 @@
 
 Use the bundled [recipe search](../scripts/design_reference.py) when a design brief needs a
 concrete starting direction. It searches twelve original task recipes, calculates declared
-opaque sRGB role-pair contrast, and produces a draft JSON or Markdown brief. It needs Python
+opaque sRGB role-pair contrast or explicit alpha-composited contrast, and produces a draft JSON or Markdown brief. It needs Python
 3.10+ and the bundled [corpus](../assets/design-recipes.json). No network, package, font or
 model call is involved.
 

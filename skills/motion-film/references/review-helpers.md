@@ -88,3 +88,23 @@ copied from the output being inspected. Exit 0 is `PASS`, 1 is `FAIL`, 2 is `UNA
 - Check installed FFmpeg CLI options after tool upgrades: FFmpeg 9 removed
   `-filter_complex_script` (use `-/filter_complex <file>`; observed October 23, 2026; recheck
   when upgrading FFmpeg or running custom filter-script pipelines).
+
+## Check motion, loop seams, and post-encode audio
+
+```sh
+python3 <motion-film>/scripts/check_motion.py film.mp4 \
+  --min-freeze 0.5 --allow-hold 4.0:5.5 --check-loop-seam --check-audio-peak --max-true-peak -1.0
+```
+
+[`check_motion.py`](../scripts/check_motion.py) uses installed `ffmpeg` to catch three defects
+that still frames and container probes miss. Exit 0 is `PASS`, 1 is `FAIL`, 2 is `UNAVAILABLE`.
+
+- **Unplanned freezes:** runs `freezedetect` across the primary video stream and fails on any
+  frozen stretch at or above `--min-freeze` outside declared `--allow-hold START:END` windows.
+- **Loop-seam duplicate frame (`--check-loop-seam`):** compares decoded frame 0 against the
+  last frame and fails if they are identical or within `--loop-max-mean-delta` (default `2.0`
+  mean RGB channel delta, catching lossy-encoded frame-N loop stutter). Larger difference still
+  needs visual velocity/pose review across the seam.
+- **Post-encode audio true peak (`--check-audio-peak`):** runs `ebur128=peak=true` on the
+  final encoded file and fails when true peak exceeds `--max-true-peak` (default `-1.0` dBTP),
+  catching AAC intersample peak clipping introduced after mixing.

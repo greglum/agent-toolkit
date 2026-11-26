@@ -3,7 +3,7 @@
 Use the project's existing capture and renderer interfaces. Record the source revision,
 browser/renderer, dimensions, fonts, palette, motion mode, fixed data, assets, scene, and time.
 Bundled CLI helper commands (`contact_sheet.py`, `compare_frames.py`, `pair_event_frames.py`,
-`probe_export.py`) live in `references/review-helpers.md`.
+`check_motion.py`, `probe_export.py`) live in `references/review-helpers.md`.
 
 ## Frames and handoffs
 
@@ -25,21 +25,30 @@ Bundled CLI helper commands (`contact_sheet.py`, `compare_frames.py`, `pair_even
    - Unless the owner sets other sizes, keep body text >= ~2.6% of the short side (28 px at
      1080), titles 4 to 9% of frame height, and hero text >= 1.8x the next text size, all
      inside safe margins. Shorten headlines that wrap past two lines rather than shrinking.
+   - Measure the hero subject's rendered pixel width in every main shot at delivery resolution
+     against the brief's minimum (first stills frequently frame too wide, shrinking characters
+     or product focal points into dots at phone scale).
    - Review a 360 px-wide sheet for phone destinations; text unreadable there fails.
    - Place captions as an overlay in the lower title-safe area; re-split overflowing caption
      groups rather than shrinking below minimum readable size or clipping. Keep only small
      critical labels out of the caption span and leave room for platform controls.
    - Check peak motion extent, blank frames, stranded layers, competing focal points, and
-     >= 4.5:1 contrast behind text/marks (never relying on color alone). Check each aspect
-     variant at its own size (`references/direction.md`, Choreograph the handoff).
+     >= 4.5:1 contrast behind text/marks (never relying on color alone). For overlapping
+     scene transitions whose combined opacity dips below 1, paint an opaque stage ground on
+     the master root so the default white page cannot flash through dark seams. Check each
+     aspect variant at its own size (`references/direction.md`, Choreograph the handoff).
    - For demonstrated clicks, inspect target visibility through approach, press, and result;
      for typing, inspect focus, character progression, blur, and populated field.
-5. Watch normal playback end to end for a new film (or the changed sequence and neighbors for
-   an update). Check holds, pacing, transitions, and player controls; verify changed flashes
-   against the flash rule in `SKILL.md`. Flag stretches with no new element against the
-   stillness limit in `references/timing.md`, weighing stillness leads against intended reading
-   holds before adding motion. Check muted playback and, for narrated films, audio-only comprehension. Profile costly filters/3D layers under playback conditions,
-   and run real-time checks (`references/live-browser.md`) for live browser films.
+5. Measure motion and watch normal playback end to end for a new film (or the changed sequence
+   and neighbors for an update). Run `check_motion.py` (or `ffmpeg -vf freezedetect`) on the
+   encoded draft so unintended frozen graphics cannot pass still-only inspection, and check
+   `--check-loop-seam` on loops and `--check-audio-peak` after final AAC encoding. Check holds,
+   pacing, transitions, and player controls; verify changed flashes against the flash rule in
+   `SKILL.md`. Flag stretches with no new element against the stillness limit in
+   `references/timing.md`, weighing stillness leads against intended reading holds before adding
+   motion. Check muted playback and, for narrated films, audio-only comprehension. Profile
+   costly filters/3D layers under playback conditions, and run real-time checks
+   (`references/live-browser.md`) for live browser films.
 
 ## Compare an adopted reference
 

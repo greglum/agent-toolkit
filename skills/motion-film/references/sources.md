@@ -1,5 +1,29 @@
 # Sources and adaptation
 
+## November 25 animation stack and motion QA
+
+Original refinements and bundled `scripts/check_motion.py`, observed November 25, 2026. No
+upstream prose, prompts, or code copied:
+
+- `@flxrnc`, *The Fable 5.2 Motion Playbook* (secondary extraction of post
+  `2120207374250049675` / Article `2120190721084862464`, published Nov 10, 2026) and FFmpeg
+  `17de9f8597` (`9.1.git`, `freezedetect` and `ebur128` docs): motivated `check_motion.py`
+  (automated freeze detection, frame-N duplicate loop-seam check, post-AAC true-peak check),
+  hero minimum pixel-width measurement, closed-form spring damping ratios, and shared
+  `timing.json` clock.
+- `heygen-com/hyperframes` at `c143250d6d` (Apache-2.0, Nov 26, 2026 UTC): `.agents/skills/seam-craft/SKILL.md`
+  (opaque `#root` stage-ground white-flash guard) and `FRAME.md` presets (translating web
+  `DESIGN.md` atoms into `cqw` frame units).
+- `Forward-Future/scarlet` at `fcb077e0ee` (MIT, Nov 26, 2026 UTC): `skills/dialogue-pass/SKILL.md`
+  and `skills/frame-screen/SKILL.md` (lip-sync pre-check, ~50 ms join padding, avoiding <1 s
+  stutter fragments, tight screen framing without micro-reframe twitches, fixed camera corner).
+- `JDhruv14/line-art-animation` at `c43d698913` (MIT, Nov 10, 2026): `references/matching.md`
+  (VFR `-vf fps=N` time resampling).
+- `xinntao/Real-ESRGAN` at `a4abfb2979` (BSD-3-Clause, Apr 2, 2024) plus independent video
+  super-resolution reviews: single-frame GAN temporal flicker and text hallucination caution.
+
+Recheck when FFmpeg filter syntax, codec targets, or destination renderer contracts change.
+
 ## November 11 live browser films and scored rounds
 
 `references/live-browser.md` records its own sources and limits in place.

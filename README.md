@@ -20,12 +20,15 @@ of his work. This repository holds the installable bundles and usage documentati
 | Audit cloud alerts, spend, and safe IaC teardowns | [cloud-ops-audit](skills/cloud-ops-audit/SKILL.md), [iac-teardown](skills/iac-teardown/SKILL.md) (by name) | Reconciled spend and alarm root causes, plus static IaC trap preflight |
 | Review selected agent-history exports | [analyze-agent-history](skills/analyze-agent-history/SKILL.md) | Text-free correction candidates and coverage limits |
 | Check a web page across widths and states | [fit-surface](skills/fit-surface/SKILL.md) | A measured layout and accessibility check |
+| Measure and speed up macOS app cold launch | [half-bounce-launch](skills/half-bounce-launch/SKILL.md) | LaunchServices/external timings, Mach-O/dyld hygiene checks, and startup PGO order-file steps |
 | Understand a large change before reviewing it | [guided-review](skills/guided-review/SKILL.md) | A reading guide tied to the actual diff |
 | Investigate a disputed dashboard number | [reconcile-metric](skills/reconcile-metric/SKILL.md) | An independent calculation with the difference explained |
+| Plan, rehearse, or audit a data migration | [reconcile-migration](skills/reconcile-migration/SKILL.md) | Reconciled table, column, key-hash, and drop-rule proof |
 | Find and check an implicit state machine | [state-machine-audit](skills/state-machine-audit/SKILL.md) | Source-backed transitions, a bounded check, and a statechart |
 | Explain a system and explore its relationships | [diagram-design](skills/diagram-design/SKILL.md) | A diagram or standalone graph viewer |
 | Explore a system's parts and behavior | [system-anatomy](skills/system-anatomy/SKILL.md) | A source-grounded interactive anatomy or cutaway |
-| Check a rendered film | [motion-film](skills/motion-film/SKILL.md) | Source, playback and export checks using its production tools |
+| Check a rendered film | [motion-film](skills/motion-film/SKILL.md), [produce-film](skills/produce-film/SKILL.md) (by name) | Source, freeze/seam, playback, and export checks, or full asset-to-cover orchestration |
+| Build 3D Blender assets or hand-drawn SVG art | [blender-scene](skills/blender-scene/SKILL.md), [svg-illustration](skills/svg-illustration/SKILL.md) | Linted portable bpy scripts and GLB exports, or contract-checked animated SVG art |
 | Export selected short clips | [repurpose-long-video](skills/repurpose-long-video/SKILL.md) | Local MP4s, caption sidecars and an edit list from supplied timings and crops |
 | Reconcile an extracted corpus | [extract-documents](skills/extract-documents/SKILL.md) | Requested-input coverage, file identities and explicit conversion failures |
 | Get up to speed on unfamiliar data and a new domain | [onboard-data](skills/onboard-data/SKILL.md) (by name), [learn-domain](skills/learn-domain/SKILL.md), [map-data-source](skills/map-data-source/SKILL.md) | A cited primer and glossary, an evidence-backed data dictionary and one ranked question list |
@@ -89,7 +92,8 @@ python3 scripts/install.py --dry-run --only fit-surface,guided-review
 ```
 
 Installed skills are links, so a pull updates their text. Preview using the names you
-installed. To add skills, rerun the installer with those names after reviewing its dry run;
+installed. To fold lessons from real-repo skill runs back into portable catalog bundles,
+use [learn-taste](skills/learn-taste/SKILL.md) (see [workflows](docs/workflows.md#self-improving-skill-loop)). To add skills, rerun the installer with those names after reviewing its dry run;
 leaving out `--only` selects the whole catalog.
 
 Stale links are reported and kept. If a name you installed has left the catalog, the run stops
@@ -167,7 +171,12 @@ proposed speech cuts and saved revisions. The [21st.dev reference](skills/web-ap
 records the legacy Magic proxy and hosted request boundary.
 
 The [campaign source notes](skills/motion-film/references/sources.md#reusable-campaigns-november-14-2026)
-credit the review of reusable motion campaigns and parameterized rendering.
+credit the review of reusable motion campaigns and parameterized rendering. The
+[motion QA notes](skills/motion-film/references/sources.md#november-25-animation-stack-and-motion-qa),
+[Blender portability guide](skills/blender-scene/references/portability-and-safety.md#sources-and-recheck-triggers),
+and [motion-polish source note](skills/ui-motion/references/sources.md#november-25-motion-polish-and-scanner-review)
+credit the animation-stack and UI-library reviews behind `check_motion.py`, `blender-scene`,
+`svg-illustration`, `produce-film`, and the `review-animations` and `web-app-design` updates.
 
 [Learn Taste](skills/learn-taste/SOURCE.md) credits the correction-to-guidance workflow and
 explains the scope of the adaptation.
